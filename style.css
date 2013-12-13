@@ -1,0 +1,50 @@
+/*
+Theme Name:     SAVI 2013
+Theme URI:      http://www.syllogic.in
+Description:    Child theme for Explorable theme
+Author:         Aurovrata Venet
+Author URI:     http://www.syllogic.in
+Template:       Explorable
+Version:        0.1.0
+*/
+@import url("../Explorable/style.css");
+#et_main_map {
+    height: 100%;
+    margin-top: 0px;
+}
+#main-area .container {
+    margin-top: 0px;
+}
+
+.et-map-post{
+width:580px;
+height:410px;
+}
+
+.et-map-post .track, #et-list-view .track {
+width: 15px;
+}
+
+.et-map-post .thumb, #et-list-view .thumb {
+width: 15px;
+}
+
+.et-place-content {
+padding-top: 0px;
+}
+
+
+.et-map-post .viewport {
+width: 450px;
+height:200px;
+text-align: justify;
+}
+
+.av-unit-info {
+    padding:10px;
+    margin-left:40px;
+}
+
+.et-place-main-text {
+    margin-bottom:20px;
+}
