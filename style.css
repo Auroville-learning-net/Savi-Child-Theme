@@ -1,5 +1,5 @@
 /*
-Theme Name:     SAVI 2013
+Theme Name:     SAVI 2014
 Theme URI:      http://www.syllogic.in
 Description:    Child theme for Explorable theme
 Author:         Aurovrata Venet
@@ -47,4 +47,19 @@ text-align: justify;
 
 .et-place-main-text {
     margin-bottom:20px;
+}
+
+/* Custom post opportunity styles */
+
+.oppor_post {
+	width: 600px;
+	height: 300px;
+	margin-left: 150px;
+	margin-top: 50px;
+	padding: 15px;
+	border:5px solid green;
+}
+
+.av_init_info {
+	float: right;
 }

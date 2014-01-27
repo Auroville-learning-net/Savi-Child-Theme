@@ -1,4 +1,11 @@
+<?php
+/*
+Template Name: AV Unit Archive
+*/
+?>
 <?php get_header(); ?>
+
+<p>Welcome to archive-av_unit</p>
 
 <?php if ( have_posts() ) : ?>
 
