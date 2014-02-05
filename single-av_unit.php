@@ -1,6 +1,8 @@
+
 <?php get_header(); ?>
 
 <?php $et_full_post = 'on' == get_post_meta( get_the_ID(), '_et_full_post', true ) ? true : false; ?>
+
 
 <div id="main-area">
 	<div class="container<?php if ( $et_full_post ) echo ' fullwidth'; ?>">
@@ -19,6 +21,11 @@
 							comments_template( '', true );
 					?>
                 <p> Welcome to Units</p>
+				<?php $post->ID = 56;?>
+				<?php echo the_meta();?>
+
+                <p> Bye to AV Units</p>				
+				
 				<?php endwhile; ?>
 
 				<?php if (et_get_option('explorable_integration_single_bottom') <> '' && et_get_option('explorable_integrate_singlebottom_enable') == 'on') echo(et_get_option('explorable_integration_single_bottom')); ?>
