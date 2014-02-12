@@ -7,7 +7,7 @@ Author URI:     http://www.syllogic.in
 Template:       Divi
 Version:        0.2.0
 */
-@import url("../Divi/style.css");
+@import url('../Divi/style.css');
 body{
 /*padding-top:0px; */
 
@@ -31,6 +31,52 @@ background: none repeat scroll 0% 0% transparent;
 	
 
 }
+.right_li1{
+	width:98%;
+	float:left;
+}
+.skil_gain{
+	width:98%;
+	height:50px;
+	background-color:F00;
+	float:left;
+
+}
+
+.spl{
+font-size:16px;
+font-weight:bolder;
+
+}
+.clear{
+	clear:both;
+}
+
+.main_title2{
+	margin-bottom: 10px;
+	margin-top:10px;
+	font-weight: 600;
+font-size: 20px;
+color: rgb(51, 51, 51);
+}
+
+#content_side{
+	width:48%;
+	float:left;
+
+}
+
+
+#content_opp{
+	width:50%;
+	float:left;
+
+}
+
+#content_opp li {
+	clear:both;
+}
+
 
 .unitHist h3{
 font-size:16px;

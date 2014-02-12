@@ -18,7 +18,7 @@
 						<div class="right_li">
 						<?php 
 				
-				 
+				   
 				  
 						$query = new WP_Query(array(  'post_type' => 'av_unit',  'post__in' => $av_unit));
 						if ( $query->have_posts() ){
@@ -61,62 +61,120 @@
 						<li>
 						<div class="left_li">Area</div>
 						<div class="right_li">
-					<?php
-						if ( have_posts() ){
 						
-						  while ( have_posts() ) : 
-								the_post();
+						
+						<?php 
+				
+				   
+				  
+						$query = new WP_Query(array( 'post_type' => 'av_opportunity'));
+						if ( $query->have_posts() ){
+						echo '<ul>';
+							while ( $query->have_posts() ) : 
+								$query->the_post();
 								$terms=get_the_terms(get_the_ID() , 'savi_opp_cat_work_area' ); 
-								echo '<ul>';
-						?>
-								<li>
-								<?php if ( $terms && ! is_wp_error( $terms ) ) {	
-											foreach ( $terms as $term ){  
-												if ($i =0)
+								
 								?>
-												<a href="<?php echo get_term_link( $term->slug, 'savi_opp_cat_work_area' )?>"><?php echo $term->name;?></a>	
-									<?php
+								<li>
+								
+									<?php if ( $terms && ! is_wp_error( $terms ) ) {
+										
+											
+											foreach ( $terms as $term ){  
+												if ($i =0)?>
+												<a href="<?php echo get_term_link( $term->slug, 'savi_opp_cat_work_area' )?>"><?php echo $term->name;?></a>
+												
+											<?php
 											} 
 											
-										}
-									?>
-								</li> 
-						 <?php 		
-						 endwhile;
+										}?>
+								</li>
+								
+								
+								
+						 
+						 <?php 	//echo get_post_meta( get_the_ID(), "landphone", true ); 
+						 	
+							endwhile;
 							echo '</ul>';
 						}
+						else{
 						?>
+						<div class="entry">
+<!--If no results are found-->
+	<p><?php esc_html_e('No Opportunity Found','Divi'); ?></p>
+	
+</div>
+					<?php	}
+						
+					
+				?>
+						
+						
+						
 						
 						</div>
 						</li>
 						<li>
 						<div class="left_li">Type</div>
 						<div class="right_li">
-						<?php
-						if ( have_posts() ){
 						
-						  while ( have_posts() ) : 
-								the_post();
+						
+						
+						<?php 
+				
+				   
+				  
+						$query = new WP_Query(array( 'post_type' => 'av_opportunity'));
+						if ( $query->have_posts() ){
+						echo '<ul>';
+							while ( $query->have_posts() ) : 
+								$query->the_post();
 								$terms=get_the_terms(get_the_ID() , 'savi_opp_cat_work_type' ); 
-								echo '<ul>';
-						?>
-								<li>
-								<?php if ( $terms && ! is_wp_error( $terms ) ) {	
-											foreach ( $terms as $term ){  
-												if ($i =0)
+								
 								?>
-												<a href="<?php echo get_term_link( $term->slug, 'savi_opp_cat_work_type' )?>"><?php echo $term->name;?></a>	
-									<?php
+								<li>
+								
+									<?php if ( $terms && ! is_wp_error( $terms ) ) {
+										
+											
+											foreach ( $terms as $term ){  
+												if ($i =0)?>
+												<a href="<?php echo get_term_link( $term->slug, 'savi_opp_cat_work_type' )?>"><?php echo $term->name;?></a>
+												
+											<?php
 											} 
 											
-										}
-									?>
-								</li> 
-						 <?php 		
-						 endwhile;
+										}?>
+								</li>
+								
+								
+								
+						 
+						 <?php 	//echo get_post_meta( get_the_ID(), "landphone", true ); 
+						 	
+							endwhile;
 							echo '</ul>';
 						}
+						else{
 						?>
+						<div class="entry">
+<!--If no results are found-->
+	<p><?php esc_html_e('No Opportunity Found','Divi'); ?></p>
+	
+</div>
+					<?php	}
+						
+					
+				?>
+						
+						
+						
+						
+						
+						
+						
+						
 						</div>
 						</li>
 						
@@ -153,11 +211,11 @@
 				
 				   
 				  
-						
-						if ( have_posts() ){
+						$query = new WP_Query(array( 'post_type' => 'av_opportunity'));
+						if ( $query->have_posts() ){
 						echo '<ul>';
-							while ( have_posts() ) : 
-								the_post();
+							while ( $query->have_posts() ) : 
+								$query->the_post();
 								$terms=get_the_terms(get_the_ID() , 'savi_opp_tag_languages' ); 
 								
 								?>
@@ -188,7 +246,7 @@
 						?>
 						<div class="entry">
 <!--If no results are found-->
-	<p><?php esc_html_e('No Languages Found','Divi'); ?></p>
+	<p><?php esc_html_e('No Opportunity Found','Divi'); ?></p>
 	
 </div>
 					<?php	}
@@ -209,11 +267,11 @@
 				
 				   
 				  
-						
-						if ( have_posts() ){
+						$query = new WP_Query(array( 'post_type' => 'av_opportunity'));
+						if ( $query->have_posts() ){
 						echo '<ul>';
-							while ( have_posts() ) : 
-								the_post();
+							while ( $query->have_posts() ) : 
+								$query->the_post();
 								$terms=get_the_terms(get_the_ID() , 'savi_opp_tag_soft' ); 
 								
 								?>
@@ -244,7 +302,7 @@
 						?>
 						<div class="entry">
 <!--If no results are found-->
-	<p><?php esc_html_e('No Software Found','Divi'); ?></p>
+	<p><?php esc_html_e('No Opportunity Found','Divi'); ?></p>
 	
 </div>
 					<?php	}
@@ -318,3 +376,72 @@
 
 
 <?php get_footer(); ?>
+
+
+
+
+
+<?php 
+				
+				 
+				  
+						$query = new WP_Query(array(  'post_type' => 'av_unit',  'post__in' => $av_unit));
+						if ( $query->have_posts() ){
+						echo '<ul>';
+							while ( $query->have_posts() ) : 
+								$query->the_post();
+								
+								
+								?>
+								<li>
+								
+										<a href="<?php echo get_permalink(); ?>"><?php echo  the_title(); ?></a> 
+								</li>
+								
+								
+								
+						 
+						 <?php 	//echo get_post_meta( get_the_ID(), "landphone", true ); 
+						 	
+							endwhile;
+							echo '</ul>';
+						}
+						else{
+						?>
+						<div class="entry">
+<!--If no results are found-->
+	<p><?php esc_html_e('No Opportunity Found','Divi'); ?></p>
+	
+</div>
+					<?php	}
+						
+					
+				?>
+					
+					
+					
+						<?php
+						if ( have_posts() ){
+						
+						  while ( have_posts() ) : 
+								the_post();
+								$terms=get_the_terms(get_the_ID() , 'savi_opp_cat_work_area' ); 
+								echo '<ul>';
+						?>
+								<li>
+								<?php if ( $terms && ! is_wp_error( $terms ) ) {	
+											foreach ( $terms as $term ){  
+												if ($i =0)
+								?>
+												<a href="<?php echo get_term_link( $term->slug, 'savi_opp_cat_work_area' )?>"><?php echo $term->name;?></a>	
+									<?php
+											} 
+											
+										}
+									?>
+								</li> 
+						 <?php 		
+						 endwhile;
+							echo '</ul>';
+						}
+						?>
