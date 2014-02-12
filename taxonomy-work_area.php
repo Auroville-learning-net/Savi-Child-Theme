@@ -3,7 +3,7 @@
 <div id="main-area">
 	<div class="container">
 		<?php get_template_part( 'includes/breadcrumbs', 'index' ); ?>
-        <h2>Taxonomy-work_area.php</h2>
+        <h2>Taxonomy-work_type.php</h2>
 		<div id="content" class="clearfix">
 			<div id="left-area">
 				<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
