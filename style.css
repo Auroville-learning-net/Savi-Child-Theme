@@ -1,52 +1,132 @@
 /*
 Theme Name:     SAVI 2014
 Theme URI:      http://www.syllogic.in
-Description:    Child theme for Explorable theme
-Author:         Aurovrata Venet
+Description:    Child theme for Divi theme
+Author:         Aurovrata Venet, Hariraj K.
 Author URI:     http://www.syllogic.in
-Template:       Explorable
-Version:        0.1.0
+Template:       Divi
+Version:        0.2.0
 */
-@import url("../Explorable/style.css");
-#et_main_map {
-    height: 100%;
-    margin-top: 0px;
-}
-#main-area .container {
-    margin-top: 0px;
+@import url("../Divi/style.css");
+body{
+/*padding-top:0px; */
+
+background: none repeat scroll 0% 0% transparent; 
 }
 
-.et-map-post{
-width:580px;
-height:410px;
+.excerpt_post{
+	width:100%;
+	float:left;
+	margin-bottom:15px;
 }
 
-.et-map-post .track, #et-list-view .track {
-width: 15px;
+.left_li{
+	width:50%;
+	float:left;
+	font-weight:bolder;
+}
+.right_li{
+	width:48%;
+	float:left;
+	
+
 }
 
-.et-map-post .thumb, #et-list-view .thumb {
-width: 15px;
+.unitHist h3{
+font-size:16px;
+font-weight:bolder;
+}
+.unitTeam h3{
+font-size:16px;
+font-weight:bolder;
 }
 
-.et-place-content {
-padding-top: 0px;
+#Containter_opp{
+	width:100%;
+	float:left;
 }
 
-
-.et-map-post .viewport {
-width: 450px;
-height:200px;
-text-align: justify;
+.image_in{
+	margin:5px 0px 5px 5px;
+}
+.shortcode{
+	margin:5px 0px 5px 5px;
 }
 
-.av-unit-info {
-    padding:10px;
-    margin-left:40px;
+.table{
+	margin-bottom:15px;
+	width:100%;
+	float:left;
+	}
+
+#lefts{
+	width:50%;
+	float:left;
+
 }
 
-.et-place-main-text {
-    margin-bottom:20px;
+#rights{
+	width:50%;
+	float:left;
+
+}
+
+#main-header { 
+/*
+
+top: 0; 
+background-color: #fff; 
+position: fixed; 
+width: 100%; 
+z-index: 99999; 
+padding: 18px 0 0 0; 
+~min-height: 43px; 
+box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1); 
+-moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1); 
+-webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1); 
+-moz-transition: all 0.2s ease-in-out; 
+-webkit-transition: all 0.2s ease-in-out; 
+transition: all 0.2s ease-in-out;
+
+width: 60%; 
+opacity:0.8;
+margin:0 auto;
+margin-left: 20%; */
+ }
+
+.listing{
+padding:5px;
+width:60%;
+margin:0 auto;
+}
+
+#list{
+list-style: none;
+margin:0;
+padding:0;
+font:11px ;
+border:1px solid #000;
+}
+#list li.header div{
+background-color:#CCC;
+font-weight:bold;
+} 
+#list li div{
+display:block;
+float:left;
+padding:3px 5px;
+
+}
+#list li div.Date{
+width:30%;background-color:#FFF
+}
+#list li div.Task{
+width:30%;
+background-color:#FFF
+}
+#list li div.Assign{
+width:30%;
+background-color:#FFF
 }
 
 /* Custom post opportunity styles */
