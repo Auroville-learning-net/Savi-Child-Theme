@@ -1,15 +1,11 @@
-<?php
-$postType = $_GET['postType'];
-get_header(); 
-$unitIDs = array();
- ?>
+<?php get_header(); ?>
 
 <div id="main-content">
 	<div class="container">
 	
-        
+        <h2>Software : <?php single_tag_title(); ?></h2>
 		<div id="content" class="clearfix">
-		<h2>Work Type : <?php single_cat_title(); ?></h2>
+		
 			<div id="left-area">
 				<?php if ( have_posts() ) { 
 				while ( have_posts() ) {
@@ -42,10 +38,10 @@ $unitIDs = array();
 				}?>
 			</div> <!-- end #left-area -->
 
+
 			<?php get_sidebar(); ?>
 		</div> <!-- end #content -->
 	</div> <!-- end .container -->
 </div> <!-- end #main-area -->
 
 <?php get_footer(); ?>
-				   

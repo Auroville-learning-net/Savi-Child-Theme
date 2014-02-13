@@ -1,91 +1,169 @@
 <?php get_header(); ?>
+<div id="main-content">
+	<div class="container">
+		<div id="content-area" class="clearfix">
+			<div id="left-area">
+			
+		<?php
+			if ( have_posts() ) :
+				while ( have_posts() ) : the_post();
+				$terms_daily_tasks=get_post_meta( get_the_ID(), "daily_tasks", true );
+				$terms_skills_gain=get_post_meta( get_the_ID(), "skills_gain", true );
+				
+					 
 
-arc - opp
-<?php
-	$args = array(
-		'post_type' => 'av_unit'
-	);
-	query_posts($args);
+				?>
+					<div id="left-grid">
+					<div id="left-image">
+					<?php
+					$thumb = '';
 
-?>
+					$width = (int) apply_filters( 'et_pb_index_blog_image_width', 300 );
 
-<?php
-if ( have_posts() ) :
-	while ( have_posts() ) : the_post();
+					$height = (int) apply_filters( 'et_pb_index_blog_image_height', 200 );
+					$classtext = 'et_pb_post_main_image';
+					$titletext = get_the_title();
+					$thumbnail = get_thumbnail( $width, $height, $classtext, $titletext, $titletext, false, 'Blogimage' );
+					$thumb = $thumbnail["thumb"];
+
+					if ( 'on' == et_get_option( 'divi_thumbnails_index', 'on' ) && '' !== $thumb ) : ?>
+						<a href="<?php the_permalink(); ?>">
+							<?php print_thumbnail( $thumb, $thumbnail["use_timthumb"], $titletext, $width, $height ); ?>
+						</a>
+						<?php
+							endif;
+						?>
+					</div>
+					<div id="left-Content">
+					<article id="post-<?php the_ID(); ?>" <?php post_class( 'et_pb_post' ); ?>>
+					<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+					<div class="table1">
+					<ul>
+					<li>
+						<div class="left_li_arc">Unit Name :</div>
+						<div class="right_li">
+						<?php 
+						$id= get_post_meta(get_the_ID(), "av_unit", true );
+						$query = new WP_Query(array(  'post_type' => 'av_unit',  'post__in' => array($id)));
+						if ( $query->have_posts() ){
+						echo '<ul>';
+							while ( $query->have_posts() ) : 
+								$query->the_post();	?>
+								<li>
+										<a href="<?php echo get_permalink(); ?>"><?php echo  the_title(); ?></a> 
+								</li>
+						 <?php 	//echo get_post_meta( get_the_ID(), "landphone", true ); 
+						 	
+							endwhile;
+							echo '</ul>';
+						}
+						else{
+						?>
+						<div class="entry">
+<!--If no results are found-->
+	<p><?php esc_html_e('No Opportunity Specified','Divi'); ?></p>
 	
-	$av_units[$post->ID]= array
-	(
-			'post_id'=>$post->ID,
-			'thumbnail'=>get_the_post_thumbnail($post->ID, 'thumbnail'),
-	         'post_link'=>get_page_link($post->ID),
-	         'post_title'=>get_the_title(),
-	);
-	endwhile;
-else :
-	echo wpautop( 'Sorry, no posts were found' );
-endif;
+</div>
+					<?php	}
+						
+					
+				?>	
+						</div>
+					</li>
+					<li>
+						<div class="left_li_arc">Daily Tasks</div>
+						<div class="right_li"><?php echo $terms_daily_tasks ?></div>
+					</li>
+					<li>
+						<div class="left_li_arc">Skills Gain</div>
+						<div class="right_li"><?php echo $terms_skills_gain ?></div>
+					</li>
+					<li>
+						<div class="left_li_arc"> Work area : </div>
+						<div class="right_li">
+					<?php 
+						$query = new WP_Query(array( 'meta_key' => 'av_unit', 'meta_value' => get_the_ID(),'meta_compare' => '=' , 'post_type' => 'av_opportunity' ));
+						if ( $query->have_posts() ){
+					
+							while ( $query->have_posts() ) : 
+								$query->the_post();
+								$terms=get_the_terms(get_the_ID() , 'savi_opp_cat_work_area' ); 
+								$term_work_type=get_the_terms(get_the_ID() , 'savi_opp_cat_work_type' ); 
+								
+								
+								?>
+							
+									<?php if ( $terms && ! is_wp_error( $terms ) ) {
+											echo '(';
+											$i=0;
+											foreach ( $terms as $term ){  
+												if ($i >0) echo ',';?>
+												<a href="<?php echo get_term_link( $term->slug, 'savi_opp_cat_work_area' )?>"><?php echo $term->name;?></a>
+											<?php $i++;
+											} 
+											echo ')';
+										}?>
+								
+						 <?php 	//echo get_post_meta( get_the_ID(), "landphone", true ); 
+						 	
+							endwhile;
+							
+						}
+						else{
+						?>
+						<div class="entry">
 
-?>
-
-<?php wp_reset_postdata(); ?>
-
-
-<?php
-	$args = array(
-		'posts_per_page' => 20,
-		'post_type' => 'av_opportunity'
-	);
-	query_posts($args);
-
-?>
+							<p><?php esc_html_e('No Work area Specified','Divi'); ?></p>
 	
-<?php
-if ( have_posts() ) :
-	while ( have_posts() ) : the_post();
-	echo '<div class="oppor_post">';	
+						</div>
+					<?php	}
+				?>
+					</div>
+					</li>
+					<li>
+						<div class="left_li_arc"> Work Type : </div>
+						<div class="right_li"><?php 
+						if ( $terms && ! is_wp_error( $terms ) ) {
+											echo '(';
+											$i=0;
+						foreach($term_work_type as $value){
+						if ($i >0) echo ',';?>
+								<a href="<?php echo get_term_link( $value->slug, 'savi_opp_cat_work_type' )?>"><?php echo $value->name;?></a>
+								<?php
+								 $i++;
+											} 
+											echo ')';
+						}
+					
+						?>
+											
+					</div>
+					</li>
+					</ul>
+					</div>
+						
 
-	echo '<a href="' . get_page_link($post->ID) . '"<h2>' . get_the_title() . '</h2> </a>';
-	
-	echo get_the_post_thumbnail( );
-	
-	the_excerpt("More...");
-	
-	
-	$av_unit = get_post_meta($post->ID, 'av_unit', true );
+					</article> <!-- .et_pb_post -->
+					</div>
+					</div>
+			<?php
+					endwhile;
+					
 
-	$temp_av_units = $av_units;
-	
-	foreach ($av_units as $post_values) {
-		if (in_array($av_unit, $post_values)) {
-			$av_post_id = $post_values[post_id];
-			echo '<div class = "av_init_info">';
-			echo '<a href="' . $av_units[$av_post_id]['post_link'] . '">' . $av_units[$av_post_id]['thumbnail'] . '</a>';
-			echo '</div>';
+					if ( function_exists( 'wp_pagenavi' ) )
+						wp_pagenavi();
+					else
+						get_template_part( 'includes/navigation', 'index' );
+				else :
+					get_template_part( 'includes/no-results', 'index' );
+				endif;
+			?>
+			
+			</div> <!-- #left-area -->
 
-			break;
-		}
-	}	
-	
-	echo '<div class="av_unit">'; echo '<b>AV Unit: </b>';	echo esc_html(get_post_meta($post->ID, 'av_unit', true));              				echo '</div>';
-	echo '<div class="contactPerson">'; echo '<b>Contact Person:</b>';	echo esc_html(get_post_meta($post->ID, 'contactPerson', true));        			echo '</div>';
-	echo '<div class="contactPhone">'; echo '<b>Contact Phone:</b>'; echo esc_html(get_post_meta($post->ID, 'contactPhone', true));        	 		echo '</div>';
-	echo '<div class="contactEmail">'; echo '<b>Contact Email:</b>';	echo esc_html(get_post_meta($post->ID, 'contactEmail', true));          		echo '</div>';
-	echo '<div class="projectname">'; echo '<b>Project Name:</b>';	echo esc_html(get_post_meta($post->ID, 'projectname', true));          			echo '</div>';
-	echo '<div class="duration">'; echo '<b>Duration:</b>';	echo esc_html(get_post_meta($post->ID, 'duration', true));              			echo '</div>';
-	echo '<div class="number_of_volunteers">'; echo '<b>Number of Volunteers:</b>';	 echo esc_html(get_post_meta($post->ID, 'number_of_volunteers', true)); echo '</div>';
-	echo '<div class="architect_semester">'; echo '<b>Architect Semester: </b>';	echo esc_html(get_post_meta($post->ID, 'architect_semester', true));   echo '</div>';	
-	echo '<div class="computerrequired">'; echo '<b>Computer Required:</b>';	echo esc_html(get_post_meta($post->ID, 'computerrequired', true));   	   echo '</div>';
-	echo '<div class="revisions">';echo '<b>Revisions:</b>'; echo esc_html(get_post_meta($post->ID, 'revisions', true));            				echo '</div>';
-	echo '<div class="startdate">';echo '<b>Start Date:</b>'; echo esc_html(get_post_meta($post->ID, 'startdate', true));            				echo '</div>';
-	echo '<div class="enddate">'; echo '<b>End Date</b>';	echo esc_html(get_post_meta($post->ID, 'enddate', true));              				echo '</div>';
-	echo '<div class="timing">';	echo '<b>Timing:</b>'; echo esc_html(get_post_meta($post->ID, 'timing', true));               				echo '</div>';
-	echo '<div class="morningtimings">'; echo '<b>Morning Timing:</b>';	echo esc_html(get_post_meta($post->ID, 'morningtimings', true));        	echo '</div>';
-	echo '<div class="timings">';	echo 'Timings: </b>'; echo esc_html(get_post_meta($post->ID, 'afternoontimings', true));    echo '</div>';
-	echo '</div>';
-	endwhile;
-else :
-	echo wpautop( 'Sorry, no posts were found' );
-endif;
-?>
+			<?php get_sidebar(); ?>
+		</div> <!-- #content-area -->
+	</div> <!-- .container -->
+</div> <!-- #main-content -->
 
 <?php get_footer(); ?>

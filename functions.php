@@ -22,14 +22,14 @@ function nav_items( $items, $menu, $args )
 {
     foreach( $items as $item ) 
     {
-        if( 'Work Type' == $item->post_title)
+        if( 'Work Area (Units)' == $item->post_title)
             $wtParent = $item->ID;
     }
 	//echo "Parent".$wtParent;
 	foreach( $items as $item ) 
     {
         if( $wtParent == $item->menu_item_parent)
-            $item->url .= '&postType=av_unit';
+            $item->url .= '?postType=av_unit';
     }
     return $items;
 }
