@@ -5,7 +5,22 @@
 	<div class="container">
 		<div id="content-area" class="clearfix">
 			<div id="left-area">
-			<?php while ( have_posts() ) : the_post(); ?>
+			<?php while ( have_posts() ) : the_post(); 
+					$term_work_type=get_the_terms(get_the_ID() , 'savi_opp_cat_work_type' ); 
+					$terms_work_area=get_the_terms(get_the_ID() , 'savi_opp_cat_work_area' ); 
+					$terms_skills_gain=get_post_meta( get_the_ID(), "skills_gain", true );
+					$terms_daily_tasks=get_post_meta( get_the_ID(), "daily_tasks", true );
+					
+					$terms_startdate=get_post_meta( get_the_ID(), "startdate", true );
+					
+					$terms_languages=get_the_terms(get_the_ID() , 'savi_opp_tag_languages' ); 
+					$terms_soft=get_the_terms(get_the_ID() , 'savi_opp_tag_soft' ); 
+					$terms_duration=get_post_meta( get_the_ID(), "duration", true );
+					$terms_morning=get_post_meta( get_the_ID(), "morningtimings", true );
+					$terms_afternoon=get_post_meta( get_the_ID(), "afternoontimings", true );
+					$content= get_the_content();
+
+			?>
 				<?php if (et_get_option('divi_integration_single_bottom') <> '' && et_get_option('divi_integrate_singlebottom_enable') == 'on') echo(et_get_option('divi_integration_single_bottom')); ?>
 
 				<article id="post-<?php the_ID(); ?>" <?php post_class( 'et_pb_post' ); ?>>
@@ -14,28 +29,18 @@
 					<div id="content_opp">
 					<ul>
 					<li >
-						<div class="left_li">Units</div>
-						<div class="right_li">
+						<div><span class="left_li_s">Unit</span>
+						<span class="right_li_l">
 						<?php 
-				
-				 
-				  
-						$query = new WP_Query(array(  'post_type' => 'av_unit',  'post__in' => $av_unit));
+						$id= get_post_meta(get_the_ID(), "av_unit", true );
+						$query = new WP_Query(array(  'post_type' => 'av_unit',  'post__in' => array($id)));
 						if ( $query->have_posts() ){
 						echo '<ul>';
 							while ( $query->have_posts() ) : 
-								$query->the_post();
-								
-								
-								?>
+								$query->the_post();	?>
 								<li>
-								
 										<a href="<?php echo get_permalink(); ?>"><?php echo  the_title(); ?></a> 
 								</li>
-								
-								
-								
-						 
 						 <?php 	//echo get_post_meta( get_the_ID(), "landphone", true ); 
 						 	
 							endwhile;
@@ -45,225 +50,102 @@
 						?>
 						<div class="entry">
 <!--If no results are found-->
-	<p><?php esc_html_e('No Opportunity Found','Divi'); ?></p>
+	<p><?php esc_html_e('No Opportunity Specified','Divi'); ?></p>
 	
 </div>
 					<?php	}
 						
 					
-				?>
-						
-						
-						
-						
-						</div>
+				?>	
+							</span>
 						</li>
 						<li>
-						<div class="left_li">Area</div>
-						<div class="right_li">
-					<?php
-						if ( have_posts() ){
-						
-						  while ( have_posts() ) : 
-								the_post();
-								$terms=get_the_terms(get_the_ID() , 'savi_opp_cat_work_area' ); 
-								echo '<ul>';
-						?>
-								<li>
-								<?php if ( $terms && ! is_wp_error( $terms ) ) {	
-											foreach ( $terms as $term ){  
-												if ($i =0)
-								?>
-												<a href="<?php echo get_term_link( $term->slug, 'savi_opp_cat_work_area' )?>"><?php echo $term->name;?></a>	
-									<?php
+						<div><p><span class="left_li_s">Area</span>
+								<?php if ( $terms_work_area && ! is_wp_error( $terms_work_area ) ) {
+										$i=0;
+										foreach ( $terms_work_area as $terms_work_area ){  
+										if ($i >0) echo ',';?>
+											<a href="<?php echo get_term_link( $terms_work_area->slug, 'savi_opp_cat_work_area' )?>"><?php echo $terms_work_area->name;?></a>
+												
+										<?php $i++;
 											} 
 											
 										}
-									?>
-								</li> 
-						 <?php 		
-						 endwhile;
-							echo '</ul>';
-						}
-						?>
-						
-						</div>
+										else esc_html_e('No Languages Specified','Divi'); ?></p></div>
 						</li>
 						<li>
-						<div class="left_li">Type</div>
-						<div class="right_li">
-						<?php
-						if ( have_posts() ){
+						<div><p class=""><span class="left_li_s">Type</span>
+								<?php if ( $term_work_type && ! is_wp_error( $term_work_type ) ) {	
+										$i=0;
+										foreach ( $term_work_type as $term_work_type ){  
+										if ($i >0) echo ',';?>
+											<a href="<?php echo get_term_link( $term_work_type->slug, 'savi_opp_cat_work_type' )?>"><?php echo $term_work_type->name;?></a>
+										<?php $i++;
+											} 
+										}
+										else esc_html_e('No Languages Specified','Divi'); ?>
+						</p></div>
+						</li>
 						
-						  while ( have_posts() ) : 
-								the_post();
-								$terms=get_the_terms(get_the_ID() , 'savi_opp_cat_work_type' ); 
-								echo '<ul>';
-						?>
-								<li>
-								<?php if ( $terms && ! is_wp_error( $terms ) ) {	
-											foreach ( $terms as $term ){  
-												if ($i =0)
-								?>
-												<a href="<?php echo get_term_link( $term->slug, 'savi_opp_cat_work_type' )?>"><?php echo $term->name;?></a>	
-									<?php
+						<li>
+						<div><span class="left_li_s">Skills Gain</span> 
+						<?php echo $terms_skills_gain ?></div>
+						</li>
+						<li>
+						<div><span class="left_li_s">Daily Tasks</span> <?php echo $terms_daily_tasks ?></div>
+						</li>
+						<li>
+						<div class="left_li_s">Start Date</div>
+						<div class="right_li_m"><?php 
+						$new_format_date = date("M d, Y", strtotime($terms_startdate));
+						echo $new_format_date;
+						?></div>
+						</li>
+						<li>
+						<div class="left_li_m">Duration (in hour)</div>
+						<div class="right_li_me"><?php echo $terms_duration ?></div>
+						</li>
+						<li>
+						<div class="left_li_m">Morning Timings</div>
+						<div class="right_li_me"><?php echo $terms_morning ?></div>
+						</li>
+						<li>
+						<div class="left_li_m">Afternoon Timings</div>
+						<div class="right_li_me"><?php echo $terms_afternoon ?></div>
+						</li>
+						<li>
+						<div><p><span class="left_li_s">Languages</span>
+								<?php if ( $terms_languages && ! is_wp_error( $terms_languages ) ) {
+										$i=0;
+										foreach ( $terms_languages as $terms_languages ){  
+										if ($i >0) echo ',';?>
+											<a href="<?php echo get_term_link( $terms_languages->slug, 'savi_opp_tag_languages' )?>"><?php echo $terms_languages->name;?></a>
+												
+										<?php $i++;
 											} 
 											
 										}
-									?>
-								</li> 
-						 <?php 		
-						 endwhile;
-							echo '</ul>';
-						}
-						?>
-						</div>
-						</li>
-						
-						<li>
-						<div class="left_li">Skills Gain</div>
-						<div class="right_li"><?php echo get_post_meta( get_the_ID(), "skills_gain", true ); ?></div>
+										else esc_html_e('No Languages Specified','Divi'); ?></p></div>
 						</li>
 						<li>
-						<div class="left_li">Daily Tasks</div>
-						<div class="right_li"><?php echo get_post_meta( get_the_ID(), "daily_tasks", true ); ?></div>
-						</li>
-						<li>
-						<div class="left_li">Start Date</div>
-						<div class="right_li"><?php echo get_post_meta( get_the_ID(), "startdate", true ); ?></div>
-						</li>
-						<li>
-						<div class="left_li">Duration(in hour)</div>
-						<div class="right_li"><?php echo get_post_meta( get_the_ID(), "duration", true ); ?></div>
-						</li>
-						<li>
-						<div class="left_li">Morning Timings</div>
-						<div class="right_li"><?php echo get_post_meta( get_the_ID(), "morningtimings", true ); ?></div>
-						</li>
-						<li>
-						<div class="left_li">Afternoon Timings</div>
-						<div class="right_li"><?php echo get_post_meta( get_the_ID(), "afternoontimings", true ); ?></div>
-						</li>
-						<li>
-						<div class="left_li">Languages</div>
-						<div class="right_li">
-						
-						
-						<?php 
-				
-				   
-				  
-						
-						if ( have_posts() ){
-						echo '<ul>';
-							while ( have_posts() ) : 
-								the_post();
-								$terms=get_the_terms(get_the_ID() , 'savi_opp_tag_languages' ); 
-								
-								?>
-								<li>
-								
-									<?php if ( $terms && ! is_wp_error( $terms ) ) {
-										
-											
-											foreach ( $terms as $term ){  
-												if ($i =0)?>
-												<a href="<?php echo get_term_link( $term->slug, 'savi_opp_tag_languages' )?>"><?php echo $term->name;?></a>
+						<div><p><span class="left_li_s">Software</span>
+								<?php if ( $terms_soft && ! is_wp_error( $terms_soft ) ) {
+										$i=0;
+										foreach ( $terms_soft as $terms_soft ){  
+										if ($i >0) echo ',';?>
+											<a href="<?php echo get_term_link( $terms_soft->slug, 'savi_opp_tag_soft' )?>"><?php echo $terms_soft->name;?></a>
 												
-											<?php
+										<?php $i++;
 											} 
 											
-										}?>
-								</li>
-								
-								
-								
-						 
-						 <?php 	//echo get_post_meta( get_the_ID(), "landphone", true ); 
-						 	
-							endwhile;
-							echo '</ul>';
-						}
-						else{
-						?>
-						<div class="entry">
-<!--If no results are found-->
-	<p><?php esc_html_e('No Languages Found','Divi'); ?></p>
-	
-</div>
-					<?php	}
-						
-					
-				?>
-						
-						
-						</div>
-						</li>
-						<li>
-						<div class="left_li">Software</div>
-						<div class="right_li">
-						
-						
-						
-						<?php 
-				
-				   
-				  
-						
-						if ( have_posts() ){
-						echo '<ul>';
-							while ( have_posts() ) : 
-								the_post();
-								$terms=get_the_terms(get_the_ID() , 'savi_opp_tag_soft' ); 
-								
-								?>
-								<li>
-								
-									<?php if ( $terms && ! is_wp_error( $terms ) ) {
-										
-											
-											foreach ( $terms as $term ){  
-												if ($i =0)?>
-												<a href="<?php echo get_term_link( $term->slug, 'savi_opp_tag_soft' )?>"><?php echo $term->name;?></a>
-												
-											<?php
-											} 
-											
-										}?>
-								</li>
-								
-								
-								
-						 
-						 <?php 	//echo get_post_meta( get_the_ID(), "landphone", true ); 
-						 	
-							endwhile;
-							echo '</ul>';
-						}
-						else{
-						?>
-						<div class="entry">
-<!--If no results are found-->
-	<p><?php esc_html_e('No Software Found','Divi'); ?></p>
-	
-</div>
-					<?php	}
-						
-					
-				?>
-						
-						
-						
-						
-						</div>
+										}
+										else esc_html_e('No Software Specified','Divi'); ?></p></div>
 						</li>
 					<ul>
 					</div>
 					
 	<div id="content_side">
 				<?php
-					
-
 					$thumb = '';
 
 					$width = (int) apply_filters( 'et_pb_index_blog_image_width', 400 );
@@ -283,7 +165,7 @@
 <h1 class="main_title2">Other Details</h1>
 					<div class="entry-content">
 					<?php
-						the_content();
+						echo $content;
 
 						wp_link_pages( array( 'before' => '<div class="page-links">' . __( 'Pages:', 'Divi' ), 'after' => '</div>' ) );
 					?>

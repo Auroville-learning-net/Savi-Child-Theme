@@ -1,7 +1,13 @@
 <?php get_header(); ?>
 
+<?php 
+if ( have_posts() ) : ?>
+<div id="map-view">
+	<?php get_template_part( 'includes/fullwidth_map', 'archive-av_unit' ); ?>
 
+	</div>
 
+<?php else : ?>
 
 <div id="main-content">
 	<div class="container">
@@ -16,9 +22,9 @@
 				<?php
 					$thumb = '';
 
-					$width = (int) apply_filters( 'et_pb_index_blog_image_width', 400 );
+					$width = (int) apply_filters( 'et_pb_index_blog_image_width', 1080 );
 
-					$height = (int) apply_filters( 'et_pb_index_blog_image_height', 270 );
+					$height = (int) apply_filters( 'et_pb_index_blog_image_height', 9999 );
 					$classtext = 'et_pb_post_main_image';
 					$titletext = get_the_title();
 					$thumbnail = get_thumbnail( $width, $height, $classtext, $titletext, $titletext, false, 'Blogimage' );
@@ -61,7 +67,7 @@
 		</div> <!-- #content-area -->
 	</div> <!-- .container -->
 </div> <!-- #main-content -->
-
+<?php endif; ?>
 
 
 <?php get_footer(); ?>

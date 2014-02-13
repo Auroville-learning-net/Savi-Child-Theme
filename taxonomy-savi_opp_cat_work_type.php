@@ -3,6 +3,7 @@ $postType = $_GET['postType'];
 get_header(); 
 $unitIDs = array();
 ?>
+tax - wt
 <div id="main-area">
 	<div class="container">
 		<?php get_template_part( 'includes/breadcrumbs', 'index' ); ?>

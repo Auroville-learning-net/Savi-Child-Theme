@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-
+tax - wa
 <div id="main-area">
 	<div class="container">
 		<?php get_template_part( 'includes/breadcrumbs', 'index' ); ?>

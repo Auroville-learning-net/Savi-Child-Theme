@@ -19,22 +19,44 @@ background: none repeat scroll 0% 0% transparent;
 	float:left;
 	margin-bottom:15px;
 }
-
 .left_li{
-	width:50%;
+width:50%;
 	float:left;
 	font-weight:bolder;
 }
-.right_li{
+.left_li_s{
+	margin-right:7px;
+	float:left;
+	font-weight:bolder;
+}
+.right_li_m{
 	width:48%;
 	float:left;
 	
 
 }
-.right_li1{
+
+
+.right_li_m1{
 	width:98%;
 	float:left;
 }
+
+.left_li_m{
+width:35%;
+	float:left;
+	font-weight:bolder;
+}
+.right_li_l{
+	width:80%;
+	float:left;
+}
+.right_li_me{
+	width:65%;
+	float:left;
+}
+
+
 .skil_gain{
 	width:98%;
 	height:50px;
