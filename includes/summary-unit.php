@@ -26,7 +26,7 @@
 					<div class="table1">
 					<ul>
 					<li>
-						<div class="left_li_arc"><h2>Unit Name :</div>
+						<div class="left_li_arc">Unit Name </div>
 						<div class="right_li"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></div>
 					</li>
 					<li>
@@ -34,36 +34,36 @@
 						<div class="right_li"><?php the_excerpt(); ?></div>
 					</li>
 					<li>
-						<div class="left_li_arc"> Location : </div>
+						<div class="left_li_arc"> Location  </div>
 						<div class="right_li"><?php echo get_post_meta( get_the_ID(), "_et_listing_custom_address", true ); ?></div>
 					</li>
 					<li>
-						<div class="left_li_arc"> Work area : </div>
+						<div class="left_li_arc"> Work area  </div>
 						<div class="right_li">
 					<?php 
 						$query = new WP_Query(array( 'meta_key' => 'av_unit', 'meta_value' => get_the_ID(),'meta_compare' => '=' , 'post_type' => 'av_opportunity' ));
 						if ( $query->have_posts() ){
-					
 							while ( $query->have_posts() ) : 
 								$query->the_post();
+								$names = array();
+								$slugs = array();
 								$terms=get_the_terms(get_the_ID() , 'savi_opp_cat_work_area' ); 
-								?>
-							
-									<?php if ( $terms && ! is_wp_error( $terms ) ) {
-											echo '(';
-											$i=0;
-											foreach ( $terms as $term ){  
-												if ($i >0) echo ',';?>
-												<a href="<?php echo get_term_link( $term->slug, 'savi_opp_cat_work_area' )?>"><?php echo $term->name;?></a>
-											<?php $i++;
-											} 
-											echo ')';
-										}?>
-								
-						 <?php 	//echo get_post_meta( get_the_ID(), "landphone", true ); 
-						 	
+								if ( $terms && ! is_wp_error( $terms ) ) {
+									foreach ( $terms as $term ){ 
+									    $names[]=$term->name;
+									    $slugs[$term->name]=$term->slug;
+									}
+								}
 							endwhile;
-							
+							$unames=array_unique($names);
+							echo '(';
+							$i=0;
+							foreach ( $unames as $tname ){  
+								if ($i >0) echo ', ';?>
+								<a href="<?php echo get_term_link( $slugs[$tname], 'savi_opp_cat_work_area' )?>"><?php echo $tname;?></a>
+						<?php   $i++;
+							} 
+							echo ')';
 						}
 						else{
 						?>

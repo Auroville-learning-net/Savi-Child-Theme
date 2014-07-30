@@ -1,0 +1,52 @@
+form#login {
+    background-color: #FFFFFF;
+    border-top: 3px solid #7B0099;
+    display: none;
+    padding: 5px;
+    position: fixed;
+    z-index: 999;
+}
+#login div#loginFields > p {
+    line-height: 0.5em;
+    padding-bottom: 5px;
+    text-align: right;
+}
+#login div#loginFields > p#lostPass {
+    text-align: center;
+}
+#login div#loginFields input {
+    border: 1px solid #D3D3D3;
+    padding: 1px 2px;
+    width: 100px;
+}
+#login div#loginFields label {
+    margin-right: 5px;
+}
+
+form#login p.status{
+    display: none;
+    line-height: 0.5em;
+    padding-bottom: 5px;
+    text-align: center;
+}
+form#login div#loginFields a.close {
+    background: none repeat scroll 0 0 #F0F0F0;
+    border: 1px solid #D3D3D3;
+    color: #00266A;
+    font-size: 11px;
+    margin-right: 4px;
+    padding: 1px 25px;
+}
+#login div#loginFields input.submit_button {
+    color: #00266A;
+    padding: 0 2px;
+    width: 86px;
+}
+.login_overlay{
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    opacity: 0.9;
+    position: fixed;
+    z-index: 998;
+}

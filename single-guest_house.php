@@ -1,29 +1,17 @@
-
 <?php get_header(); ?>
-
 <?php $et_full_post = 'on' == get_post_meta( get_the_ID(), '_et_full_post', true ) ? true : false; ?>
-
-
 <div id="main-area">
 	<div class="container<?php if ( $et_full_post ) echo ' fullwidth'; ?>">
 		<?php get_template_part( 'includes/breadcrumbs', 'single' ); ?>
-
 		<div id="content" class="clearfix">
 			<div id="left-area">
-				<?php if (et_get_option('explorable_integration_single_top') <> '' && et_get_option('explorable_integrate_singletop_enable') == 'on') echo (et_get_option('explorable_integration_single_top')); ?>
-
-				<?php while ( have_posts() ) : the_post(); ?>
-
-					<?php get_template_part( 'content', get_post_format() ); ?>
-
-					<?php
+				<?php if (et_get_option('explorable_integration_single_top') <> '' && et_get_option('explorable_integrate_singletop_enable') == 'on') echo (et_get_option('explorable_integration_single_top')); 
+					  while ( have_posts() ) : the_post(); 
+						get_template_part( 'content', get_post_format() );  
 						if ( comments_open() && 'on' == et_get_option( 'explorable_show_postcomments', 'on' ) )
 							comments_template( '', true );
 					?>
-                <p> Welcome to Guest House</p>
-				<?php echo the_meta();?>
-
-                <p> Bye to Guest House</p>				
+            				
 				
 				<?php endwhile; ?>
 
