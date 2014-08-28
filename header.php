@@ -143,7 +143,7 @@
 								$savi_role = get_user_meta($user_id, 'savi_role', true);
 								//echo $user_id.'user_id';
 								//echo $savi_role;
-								if($savi_role == 'opportunity-contact-person' ){
+								if($savi_role == 'opportunity-owner' ){
 									$quickNav = wp_nav_menu( array( 'theme_location' => 'quick-opp-menu', 'container' => '', 'fallback_cb' => '', 'menu_class' => $menuClass, 'menu_id' => 'quick-menu', 'echo' => false ) );
 									if ( '' == $quickNav ) : //in case the menus have not been setup
 									?>

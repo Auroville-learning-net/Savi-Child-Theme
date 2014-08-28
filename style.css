@@ -413,10 +413,15 @@ input[type=checkbox]#select-icon:checked + label{
     width: 756px;
 }
 /* sortable opp list */
- #sortable { list-style-type: decimal; margin: 0; padding: 0; width: 75%; }
+#sortable { list-style-type: decimal; margin: 0; padding: 0; width: 100%; }
 #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; cursor: move; }
 #sortable li span { position: absolute; margin-left: -1.3em; margin-top: -25px; }
 #sortable li a.opp-icon-info{  float:right; }
+.ui-sortable{
+list-style-type: decimal !important;
+list-style-position: inside;
+}
+
 
 .page-template-my-opportunity-page-php .et_pb_post{
 	margin-bottom: 0;
@@ -425,5 +430,79 @@ input[type=checkbox]#select-icon:checked + label{
 }
 .dashicons, .dashicons-before:before {
 	margin: -2px;
-    padding: 0 13px;
+    padding: 0;
+	width: auto;
 }
+.dashicons-info:before {
+	padding-right: 5px;
+	position: relative;
+	top: 4px;
+}
+.expressed_volunteer, .no-volunteer, .new-volunteers, .mentor-opportunities, .page-id-3013 h5, .active-volunteers li{
+	margin-left: 50px;
+	font-size: 16px;
+}
+.past-volunteers li{
+	margin-left: 50px;
+	font-size: 16px;
+	color:#999;
+}
+.opp_vol_prof{
+	margin-left: 43px;
+	margin-top: 5px;
+}
+.bold{
+	font-weight:bolder;
+}
+/* My Opportunity page for a mentor */
+#mentor-opportunities .ui-icon-arrowthick-2-n-s{
+	width:20px;
+	float:left;
+	display:block;
+	margin: 3px;
+}
+#mentor-opportunities  .ui-sortable-handle {
+	cursor: move;
+}
+a.dashicons.dashicons-info:hover {
+	color: #FF781E;
+}
+#mentor-opportunities h5{
+	font-weight:bolder;
+}
+#mentor-opportunities li{
+	padding: 5px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+#mentor-opportunities form{
+	margin-left: 50px;
+	
+}
+#mentor-opportunities input[type=submit], #mentor-opportunities input[type=button]{
+	margin-top: 10px;
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 3px 5px;
+}
+.dashicons-no{
+	float:right;
+	color:#f00 !important;
+	padding: 3px 5px;
+}
+.ajax_image{
+  position: relative;
+  z-index: 9;
+  height:100%;
+  width:100%;
+ /* bottom: 50px;*/
+  left: 45%;
+}
+.ajax_image img {
+	position: absolute;
+	bottom: 25px;
+}
+#post-1331 p:last-of-type {
+padding-bottom: 15px;
+}
+

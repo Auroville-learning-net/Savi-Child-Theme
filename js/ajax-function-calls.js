@@ -3,7 +3,7 @@ jQuery(document).ready(function($){
    		var div = $(this).parent().find('div#selectResult');
    		$('label[for="select-icon"]').hide();
    		$('#loading_image').show();
-   		$.post('/beta2/wp-admin/admin-ajax.php', {
+   		$.post('/savi2/wp-admin/admin-ajax.php', {
    			action: 'sy_register_opportunity',
    			post_id: $(this).attr('value'),
    			user_id: $(this).attr('name'),
@@ -15,4 +15,5 @@ jQuery(document).ready(function($){
    			});
    		//return false;
 	});
+
 });

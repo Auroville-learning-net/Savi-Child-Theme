@@ -1,5 +1,6 @@
 <?php
 define( 'SAVI_2014_VERSION', '0.3' );
+
 /* Disable WordPress Admin Bar for all users but admins. */
 add_filter('show_admin_bar', '__return_false');
 /*
@@ -33,6 +34,7 @@ add_action( 'wp_enqueue_scripts', 'child_theme_styles' );
 */
 require_once(get_stylesheet_directory().'/includes/formidable-pro-hooks.php');
 require_once(get_stylesheet_directory().'/includes/admin-dashboard-mod.php');
+require_once(get_stylesheet_directory().'/includes/shortcode-savi.php');
 
 /*
  ---------------- BOOKKEEPING - Scripts, Stylessheets, wp_query modification---------
@@ -40,35 +42,64 @@ require_once(get_stylesheet_directory().'/includes/admin-dashboard-mod.php');
 add_action( 'wp_enqueue_scripts', 'savi_scripts' );
 function savi_scripts(){
 	$template_dir = get_stylesheet_directory_uri();
-	//header
 	wp_enqueue_script('jquery');
-	wp_enqueue_script( 'google-maps-api', 'http://maps.google.com/maps/api/js?sensor=false', array( 'jquery' ), '1.0', false );
-	wp_enqueue_script( 'gmap3', $template_dir . '/js/gmap3.min.js', array( 'jquery' ), '1.0', false );
-	wp_enqueue_script( 'jquery-ui',  '//code.jquery.com/ui/1.11.0/jquery-ui.js', array( 'jquery' ), '1.0', false );
-	//footer
-	wp_enqueue_script( 'savi-ajax', $template_dir . '/js/ajax-function-calls.js', array( 'jquery' ), '1.0', true );
+	switch (true){
+		case is_page_template( 'my-opportunity-page.php' ) :
+			wp_enqueue_script( 'jquery-ui',  '//code.jquery.com/ui/1.11.0/jquery-ui.js', array( 'jquery' ), '1.0', false );
+			wp_enqueue_script( 'jquery-inline-editable', $template_dir . '/js/jquery.inlineedit.js', array( 'jquery' ), '1.0', true );
+			break;
+		case is_singular( 'av_unit' ) :
+			wp_enqueue_script( 'google-maps-api', 'http://maps.google.com/maps/api/js?sensor=false', array( 'jquery' ), '1.0', false );
+			wp_enqueue_script( 'gmap3', $template_dir . '/js/gmap3.min.js', array( 'jquery' ), '1.0', false );
+			break;
+		case is_page( 'opportunity-selection-preference' ):
+			wp_enqueue_script( 'jquery-ui',  '//code.jquery.com/ui/1.11.0/jquery-ui.js', array( 'jquery' ), '1.0', false );
+			break;
+	}
+	//required for all pages
+	wp_enqueue_script( 'savi-ajax', $template_dir . '/js/ajax-function-calls.js', array( 'jquery' ), '1.0', true );	
+	
 }
-add_action('wp_footer', 'savi_javascript_footer');
-function savi_javascript_footer(){ ?>
+add_action( 'wp_footer', 'savi_load_scripts_in_footer' );
+function savi_load_scripts_in_footer(){
+	switch(true){
+		case is_page( 'opportunity-selection-preference' ): 
+			savi_javascript_sortable_list();
+			break;
+	}
+}
+function savi_javascript_sortable_list($id="sortable", $fieldId="orderedOpps", $editable=false){ ?>
  <script>
 		jQuery(document).ready(function($) {
-			//$( "#sortable" ).sortable();
-			$("#sortable").sortable({
+			$("#<?php echo $id; ?>").sortable({
 				stop : function(event, ui){
-					var oppList = $(this).sortable('serialize');
-					$("#orderedOpps").val(oppList); 
+					var list = $(this).sortable('serialize');
+					$("#<?php echo $fieldId; ?>").val(list); 
 				}
 				});
-			$( "#sortable" ).disableSelection();
+			$( "#<?php echo $id; ?>" ).disableSelection();
 		});
 		/* This js only for target blank in left-area <a> this js */
+		<?php if($editable):?>
 		jQuery(function($) {
-		  $('#left-area a').attr('target', '_blank');
-		});
+			var $removeLink = $('#<?php echo $id; ?> li a.delete'),
+				$itemList = $('#<?php echo $id; ?>');
+		 
+			// Remove todo
+			$itemList.delegate("a.delete", "click", function(e) {
+				var $this = $(this);
+				// Fade out the list item then remove from DOM
+				$this.parent().fadeOut(function() { 
+					$this.parent().remove();
+					var list = $("#<?php echo $id; ?>").sortable('serialize');
+					$("#<?php echo $fieldId; ?>").val(list);
+				});
+			});
+		 });
+		<?php endif;?>
 </script>
 <?php
 } 
-
 add_action( 'wp_enqueue_scripts', 'savi_header_styles' );
 function savi_header_styles(){
 	$template_dir = get_stylesheet_directory_uri();
@@ -324,9 +355,8 @@ function sy_register_opportunity(){
 		 	foreach($allexpressOpportunities as $key=>$expressOpportunity) {
                  $expressOpportunitiesID = $expressOpportunity['express_opportunity'];
                  if($expressOpportunitiesID != $postId){
-              		 $allexpressOpportunityInfo = array (  "express_opportunity" => $expressOpportunitiesID, );
-                          
-               	 $newexpressOpportunities[$i++] = $allexpressOpportunityInfo;
+              		 $allexpressOpportunityInfo = array (  "express_opportunity" => $expressOpportunitiesID, );     
+					 $newexpressOpportunities[$i++] = $allexpressOpportunityInfo;
                 }
 		 	}
 		   $textResult = "Unselected!";
@@ -365,7 +395,7 @@ function extra_user_profile_fields( $user ) { ?>
             ?>
 			<select name="savi_role" id="savi_role">
 				  <option value="volunteers" <?php echo ($selected == "volunteers")?  'selected="selected"' : '' ?>>Volunteers</option>
-				  <option value="opportunity-contact-person" <?php echo ($selected == "opportunity-contact-person")?  'selected="selected"' : '' ?>>Opportunity Contact Person</option>  
+				  <option value="opportunity-owner" <?php echo ($selected == "opportunity-owner")?  'selected="selected"' : '' ?>>Opportunity Owner</option>  
 			</select>
 			<span class="description"><?php _e("Please enter your Savi Role."); ?></span>
 		</td>
@@ -382,8 +412,41 @@ if ( !current_user_can( 'edit_user', $user_id ) ) { return false; }
   update_user_meta( $user_id, 'savi_role', $_POST['savi_role'] ); 
 }
 
+/* =======================================================
+  this ajax hook is used for to updated post meta when mentor
+  my volunteer filter the volunteer.
+  ========================================================*/
+add_action( 'wp_ajax_savi_volunteer_update_order', 'savi_volunteer_update_order' );
+	function savi_volunteer_update_order() {
+	$opp_id = $_REQUEST['oppID'];
+	$vol_IDs = $_REQUEST['vol_IDs'];
+	/*==============================================
+	this code for updating post meta
+	===============================================*/
+	$current_time_updated = array();
+	$current_time_updated = get_post_meta($opp_id,'ordered_new_volunteer_date',true);
+	
+	$current_time = current_time( 'mysql' );
+	//$current_time_updated = $current_timeMeta[0];
+	$arraySized = sizeof($current_time_updated);	
+	if ($arraySized > 0 && is_array($current_time_updated)) {
+		$current_time_updated[] = $current_time;
+	}
+	else {
+		$current_time_updated[0] = $current_time;
+	}
+	$orderList = array();
+	$strArray = explode("&", $vol_IDs);
+	$i = 0;
+	foreach ($strArray as $str){
+		$array = explode("=", $str);
+		$returndata[$i] = trim($array[1]); //the 2nd element is the actual value we want to preserve
+		$i = $i + 1;
+	}
 
-
-
+	update_post_meta( $opp_id, 'ordered_new_volunteer',$returndata);
+	update_post_meta( $opp_id, 'ordered_new_volunteer_date', $current_time_updated);
+	exit();
+}
 
 ?>

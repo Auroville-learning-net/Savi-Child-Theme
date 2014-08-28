@@ -47,7 +47,14 @@ function savi_remove_row_actions ( $actions) {
         //unset( $actions['edit'] );   // edit
         unset( $actions['view'] );    // view
         unset( $actions['trash'] );    // trash
-        $actions['approve-user'] ="<a href='edit.php?post_type=view_1&action=inline-approval&post=$ID' >Approve User</a>";
+        $profile_incomplete = get_post_meta($ID,'profile_incomplete',true);
+        if($profile_incomplete =="yes"){
+			unset( $actions['edit'] ); 
+		}
+	    else{
+			$actions['approve-user'] ="<a href='edit.php?post_type=view_1&action=inline-approval&post=$ID' >Approve User</a>";
+	    }
+        
        break; 
        case 'view_2':
         unset( $actions['inline hide-if-no-js'] );  // quick edit
@@ -129,7 +136,6 @@ add_action( 'add_meta_boxes', 'ai1ec_custom_event_meta_box_container', 102);
 add_action( 'save_post', 'ai1ec_custom_event_save_postdata',1,2); 
 
 }
-
 function ai1ec_post_type_init() {
 	
 	if ( function_exists( 'ai1ec_initiate_constants' ) && defined( 'AI1EC_POST_TYPE' ) ) :
@@ -141,8 +147,8 @@ function ai1ec_post_type_init() {
         unset( $wp_post_types[ AI1EC_POST_TYPE ] );
 		
 		$labels = array(
-			'name'               => Ai1ec_I18n::_x( 'Workshops & Seminars', 'Custom post type name' ),
-			'singular_name'      => Ai1ec_I18n::_x( 'Workshop & Seminar', 'Custom post type name (singular)' ),
+			'name'               => Ai1ec_I18n::_x( 'Events', 'Custom post type name' ),
+			'singular_name'      => Ai1ec_I18n::_x( 'Events', 'Custom post type name (singular)' ),
 			'add_new'            => Ai1ec_I18n::__( 'Add New Workshop' ),
 			'add_new_item'       => Ai1ec_I18n::__( 'Add New Workshop' ),
 			'edit_item'          => Ai1ec_I18n::__( 'Edit Workshop & Seminar' ),
@@ -152,8 +158,8 @@ function ai1ec_post_type_init() {
 			'not_found'          => Ai1ec_I18n::__( 'No Workshops & Seminars found' ),
 			'not_found_in_trash' => Ai1ec_I18n::__( 'No Workshops & Seminars found in Trash' ),
 			'parent_item_colon'  => Ai1ec_I18n::__( 'Parent Work Shop & Seminar' ),
-			'menu_name'          => Ai1ec_I18n::__( 'Workshops & Seminars' ),
-			'all_items'          => 'All Workshops & Seminars',
+			'menu_name'          => Ai1ec_I18n::__( 'Events' ),
+			'all_items'          => 'All Events',
 		);
 			
 		$supports = array( 'title', 'editor', 'custom-fields', 'thumbnail' );
@@ -954,6 +960,7 @@ function savi_custom_remove_menu_items() {
 global $submenu;
 
 	remove_submenu_page( 'main-menu_page','main-menu_page' );
+	remove_menu_page( 'edit.php?post_type=project');
 	remove_menu_page( 'edit.php?post_type=view_0');
 	remove_menu_page( 'edit.php?post_type=view_1');
 	remove_menu_page( 'edit.php?post_type=view_2');
@@ -965,7 +972,7 @@ global $submenu;
 	unset($submenu['edit.php?post_type=ai1ec_event'][15]);
         unset($submenu['edit.php?post_type=ai1ec_event'][16]);
         remove_meta_box('tagsdiv-events_tags', 'ai1ec_event', 'side');
-        add_submenu_page( 'edit.php?post_type=ai1ec_event', 'Add New Seminar', 'Add New Seminar', 'manage_options', 'post-new.php?post_type=ai1ec_event&event_type=seminar','', 10); 
+        add_submenu_page( 'edit.php?post_type=ai1ec_event', 'Add New Seminar', 'Add New Seminar', 'manage_categories', 'post-new.php?post_type=ai1ec_event&event_type=seminar','', 10); 
 //echo"<pre>",print_r($submenu),"</pre>"; die;
 }
 
@@ -1058,8 +1065,9 @@ function savi_change_admin_menu() {
  add_action( 'admin_menu', 'savi_page_settings_menu' );
  add_action( 'admin_init', 'savi_page_settings' );
 function savi_page_settings() {
-	$labels = array("Inital_Enquiry","Profile_Reviews","Opportunity_Selection","Dormant_Account",
-                       "Reminder1","Reminder2","Reminder3","Pre_Visa_Entry_Letter","Pre_Visa","Confirm_Visa");
+	$labels = array("Inital_Enquiry","Profile_Reviews","Opportunity_Selection","Opportunity_Confirmation",
+                       "Reminder1","Reminder2","Reminder3","Pre_Visa_Entry_Letter","Pre_Visa","Confirm_Visa"
+                       ,"Induction_Instructions","Volunteer_Profile_Offer","Instruction_for_Auroville_VISA_Application");
    for($i=0;$i<=count($labels);$i++){
      register_setting( 'default', $labels[$i] );   	
    	
@@ -1072,13 +1080,16 @@ function validate_page_options($input) {
   						array("Inital Enquiry","Approval of Volunteer's Registration by the Adminstrator"),
   						array("Profile Reviews","When the profile has been approved and the volunteer is ready to select opportunities"),
   						array("Opportunity Selection","When the Opportunity has been selected for the volunteer"  ),
-  						array("Dormant Account","When the volunteer's registration has been rendered dormant"),
+  						array("Opportunity Confirmation","When the Opportunity has been confirmed mail send to the volunteer"),
   						array("Reminder1","When the volunteer has not respond after approval of rergistration -reminder1"),
   						array("Reminder2","When the volunteer has not respond after approval of rergistration -reminder2"),
   						array("Reminder3","When the volunteer has not respond after approval of rergistration -reminder3"),
   						array("Pre Visa Entry Letter","Generate of Entry Letter"),
   						array("Pre Visa","Sending the soft copy of the Visa Letter to Voluteer"),
-  						array("Confirm Visa","Confirmation of the Visa and fixing of the  Arrival Date. Informing what to expect upon arrival at Auroville (india of course))")
+  						array("Confirm Visa","Confirmation of the Visa and fixing of the  Arrival Date. Informing what to expect upon arrival at Auroville (india of course))"),
+  						array("Induction Instructions","Sending email of Induction instructions to the vlounteer"),
+  						array("Volunteer Profile Offer","Sending email of mentor when opportunites reviews selcted for the vlounteer"),
+  						array("Instruction for Auroville VISA application","Instruction to volunteer about the Auroville VISA application")
   );
 
         $valid = array();
@@ -1104,19 +1115,23 @@ function savi_page_settings_pdf_email() {
   						array("Inital Enquiry","Approval of Volunteer's Registration by the Adminstrator"),
   						array("Profile Reviews","When the profile has been approved and the volunteer is ready to select opportunities"),
   						array("Opportunity Selection","When the Opportunity has been selected for the volunteer"  ),
-  						array("Dormant Account","When the volunteer's registration has been rendered dormant"),
+  						array("Opportunity Confirmation","When the Opportunity has been confirmed mail send to the volunteer"),
   						array("Reminder1","When the volunteer has not respond after approval of rergistration -reminder1"),
   						array("Reminder2","When the volunteer has not respond after approval of rergistration -reminder2"),
   						array("Reminder3","When the volunteer has not respond after approval of rergistration -reminder3"),
   						array("Pre Visa Entry Letter","Generate of Entry Letter"),
   						array("Pre Visa","Sending the soft copy of the Visa Letter to Voluteer"),
-  						array("Confirm Visa","Confirmation of the Visa and fixing of the  Arrival Date. Informing what to expect upon arrival at Auroville (india of course))")
+  						array("Confirm Visa","Confirmation of the Visa and fixing of the  Arrival Date. Informing what to expect upon arrival at Auroville (india of course))"),
+  						array("Induction Instructions","Sending email of Induction instructions to the vlounteer"),
+  						array("Volunteer Profile Offer","Sending email of mentor when opportunites reviews selcted for the vlounteer"),
+  						array("Instruction for Auroville VISA application","Instruction to volunteer about the Auroville VISA application")
   );
- $labels = array("Inital_Enquiry","Profile_Reviews","Opportunity_Selection","Dormant_Account",
-                       "Reminder1","Reminder2","Reminder3","Pre_Visa_Entry_Letter","Pre_Visa","Confirm_Visa");
+ $labels = array("Inital_Enquiry","Profile_Reviews","Opportunity_Selection","Opportunity_Confirmation",
+                       "Reminder1","Reminder2","Reminder3","Pre_Visa_Entry_Letter","Pre_Visa","Confirm_Visa"
+                       ,"Induction_Instructions","Volunteer_Profile_Offer","Instruction_for_Auroville_VISA_Application");
                        
   $pages_array = array();
-   $pages = get_pages(array( 'post_status' => 'publish,private')); 
+   $pages = get_pages(array( 'post_status' => 'private')); 
  //  print_r($pages);
  $i =0;
    foreach ( $pages as $page ) {
@@ -1145,7 +1160,7 @@ function savi_page_settings_pdf_email() {
    echo "</tr>";
    echo "</tfoot>";
    echo"<tbody>";
-   for($i=0;$i<=9;$i++){
+   for($i=0;$i<=12;$i++){
    	  $template_assigned = get_option($labels[$i]);
   		 echo"<tr>";
   		 echo "<td>".$iterms[$i][0]."</td>";
@@ -1172,13 +1187,39 @@ add_filter( 'custom_menu_order', 'wpse_73006_submenu_order' );
 
 function wpse_73006_submenu_order( $menu_ord ) 
 {
-    global $submenu;
-
+    global $submenu,$menu,$current_user;
+    		$user_role = $current_user->roles[0];
     // Enable the next line to see all menu orders
-    //echo '<pre>'.print_r($submenu,true).'</pre>';
-
+    //echo '<pre>',print_r($submenu['edit.php?post_type=ai1ec_event']),'</pre>';
+ 
     $arr = array();
-    $arr[] = $submenu['edit.php?post_type=ai1ec_event'][5];     //my original order was 5,10,15,16,17,18
+    $arr1 = array();
+ 
+    
+    if($user_role == "editor" )
+    {
+   		$arr1[] = $menu[2];   
+   		$arr1[] = $menu[3];   
+   		$arr1[] = $menu[4];   
+   		$arr1[] = $menu[28];   
+   		$arr1[] = $menu[6];   
+   		$arr1[] = $menu[29];   
+   		$arr1[] = $menu[30];   
+   		$arr1[] = $menu[27];   
+   		$arr1[] = $menu[32];   
+ 		   $arr1[] = $menu[59];   
+   		$menu = $arr1;
+   		
+   		 $arr[] = $submenu['edit.php?post_type=ai1ec_event'][5];     
+          $arr[] = $submenu['edit.php?post_type=ai1ec_event'][10];
+          $arr[] = $submenu['edit.php?post_type=ai1ec_event'][20];
+          $arr[] = $submenu['edit.php?post_type=ai1ec_event'][17];
+          $arr[] = $submenu['edit.php?post_type=ai1ec_event'][18];
+          $arr[] = $submenu['edit.php?post_type=ai1ec_event'][19];
+  } 
+  else{
+   
+     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][5];     
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][10];
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][23];
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][17];
@@ -1187,8 +1228,11 @@ function wpse_73006_submenu_order( $menu_ord )
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][20];
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][21];
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][22];
-    $submenu['edit.php?post_type=ai1ec_event'] = $arr;
-
+   
+  
+  }		
+   $submenu['edit.php?post_type=ai1ec_event'] = $arr;  
+    //echo "<pre>", print_r($submenu['edit.php?post_type=ai1ec_event']); die;
     return $menu_ord;
 }
 
@@ -1225,15 +1269,31 @@ function mfields_set_default_object_terms( $post_id ) {
        }
 }
 add_action( 'save_post', 'mfields_set_default_object_terms', 100, 2 ); 
-//add_action( 'create_savi_opp_cat_work_area', 'workarea_create', 10, 2 );
-/*
-function workarea_create($term_id,$t_id )
-{     
-     $term_name = get_term( $term_id, 'savi_opp_cat_work_area' );
-   
-     wp_insert_term( $term_name,'events_categories');
-}*/
+add_action( 'create_savi_opp_cat_work_area', 'workarea_create', 10, 2 );
+add_action( 'edit_savi_opp_cat_work_area', 'workarea_edit', 10, 2 );
+add_action( 'delete_savi_opp_cat_work_area', 'workarea_delete', 10, 2 );
 
+function workarea_create($term_id,$t_id )
+{     $term = get_term_by('id',$term_id,'savi_opp_cat_work_area');
+	  wp_insert_term( $term->name,'events_categories',array('slug' => $term->slug."WA_". $term_id));
+}
+function workarea_edit($term_id,$t_id)
+{     
+	global $wpdb;
+	 $ev_ter_id = $wpdb->get_var("SELECT term_id FROM wp_terms WHERE slug LIKE '%wa_".$term_id."%'");
+	 $new_term_name = $wpdb->get_var("SELECT name FROM wp_terms WHERE term_id =".$term_id);
+	 $new_term_slug = $wpdb->get_var("SELECT slug FROM wp_terms WHERE term_id =".$term_id);
+	 $new_term = get_term_by('id',$term_id,'savi_opp_cat_work_area');
+	  wp_update_term( $ev_ter_id,'events_categories',array('name' => $new_term_name,'slug' => $new_term_slug."WA_". $term_id));
+	
+}
+function workarea_delete($term_id,$t_id)
+{     
+	global $wpdb;
+	 $ev_ter_id = $wpdb->get_var("SELECT term_id FROM wp_terms WHERE slug LIKE '%wa_".$term_id."%'");
+	 	  wp_delete_term( $ev_ter_id,'events_categories');
+	
+}
 
 /* Generate the custom quick view link to the custom post view_0 to view_7  starts  */
 
@@ -1305,7 +1365,8 @@ function savi_manipulate_views( $what, $views )
 function savi_quick_view_pre_get_posts( $query ) {
     if ( !is_admin() )
         return;
-$postType = $_GET['post_type'];
+	$postType = $_GET['post_type'];
+	$meta_key = $meta_value = "";
     if ( isset( $query->query_vars[ 'post_type' ] ) ) {
         $post_type = $query->query_vars[ 'post_type' ];
         switch($postType){
@@ -1358,5 +1419,147 @@ $postType = $_GET['post_type'];
 }
 
 add_action('pre_get_posts','savi_quick_view_pre_get_posts');
+
+/* =======================================================
+  this ajax hook is used for to updated the confirm that 
+  you have received Sealed VISA Request letter from 
+  register courier.
+  ========================================================*/
+function savi_received__visa_request_letter() {
+   
+	   $post_id = $_REQUEST['post_id'];
+	   $action = $_REQUEST['ajax_visa_action'];
+      	$confirm_receipt_sealed_envelop = get_post_meta($post_id, 'confirm_receipt_sealed_envelop', true);
+      	if($action =='confirm_receipt_sealed_envelop') :
+      	     if(empty($confirm_receipt_sealed_envelop)):
+				  $blogtime = current_time( 'mysql' ); 
+				  update_post_meta($post_id,'confirm_receipt_sealed_envelop',$blogtime); 
+				  
+				 $user_id= get_post_meta($post_id,'user_id',true);
+				 $user_info = get_userdata( $user_id );
+				 $clientEmail = $user_info->user_email;
+				 $site_url = get_bloginfo('wpurl');
+				 $option_name = 'Instruction_for_Auroville_VISA_Application';
+				 $templatePage = (int) get_option($option_name);
+				 $printTemplate = get_post($templatePage);
+				 $content = apply_filters('the_content',$printTemplate->post_content);
+			     $printContent = str_replace("[SAVI_profile_full_name]", get_the_title($post_id), $content);  // Replace the fieldnames with the fieldvalues
+				 add_filter( 'wp_mail_content_type', create_function('', 'return "text/html";') );
+				 $subject = "Instruction for Auroville VISA application: ".$site_url."";
+				 wp_mail($clientEmail, $subject, $printContent);	
+				  
+				  echo $action;
+			  else:
+			     echo "already_receipt_sealed_enveloped_confirmed";
+			  endif;	  
+      			exit;			
+			endif;  		
+
+}
+
+add_action( 'wp_ajax_savi_received__visa_request_letter', 'savi_received__visa_request_letter' );
+/*==============================================================================
+ * hook to called the file having the serialize work area and work type
+ * this hook work once
+ * ===========================================================================*/
+
+add_action( 'init', 'savi_create_work_area_type', 100 );
+function savi_create_work_area_type(){
+	 $upload_dir = wp_upload_dir();
+	 $file_path =  $upload_dir ['basedir'] . "/savi_customtaxonomy" ;
+	 if(file_exists($file_path."/WorkAreas.csv")){
+		 savi_create_work_area();
+		
+		 if (@unlink($file_path."/WorkAreas.csv"))
+		  {
+			 //  echo ("Deleted $file_path/WorkAreas.csv");
+		 }
+		
+	 }
+	 if(file_exists($file_path."/WorkType.csv")){
+		 savi_create_work_type();
+		 
+		 if (@unlink($file_path."/WorkType.csv"))
+		  {
+			 // echo "<br>".("Deleted $file_path/WorkType.csv");
+		   }
+		
+	 }
+
+}
+function savi_create_work_area(){
+	
+	$upload_dir = wp_upload_dir();
+	$file_path =  $upload_dir ['basedir'] . "/savi_customtaxonomy" ;
+	$work_area_array = array();
+	$row1 = 1;
+	if (($handle1 = fopen($file_path."/WorkAreas.csv", "r")) !== FALSE) {
+		while (($data1 = fgetcsv($handle1) ) !== FALSE ) {
+		   if($row1!=1){
+				$key1 = trim($data1[0]);
+				$value1 = trim($data1[1]);
+				$work_area_array[$key1] = $value1;
+				//echo $key." ".$value."<br>";
+		   }
+		   $row1++;
+		 }
+	fclose($handle1);
+   }
+  foreach($work_area_array as $new_work_area_key => $new_work_area_value){
+		
+			if ($new_work_area_value != '') {
+				$parent = get_term_by('slug',sanitize_title($new_work_area_value),'savi_opp_cat_work_area');
+				if(empty($parent)){
+					$parent = get_term_by('name',$new_work_area_value,'savi_opp_cat_work_area');
+				}
+			} else {
+			   $parent = 0;
+			}
+			if($parent == 0){
+				wp_insert_term ($new_work_area_key,'savi_opp_cat_work_area');
+			}else{
+				wp_insert_term ($new_work_area_key,'savi_opp_cat_work_area',array('parent'=> $parent->term_id));
+				
+			} 
+  }		 
+    
+}
+function savi_create_work_type(){
+	
+	$upload_dir = wp_upload_dir();
+	$file_path =  $upload_dir ['basedir'] . "/savi_customtaxonomy" ;
+	$work_type_array = array();
+	$row = 1;
+	if (($handle = fopen($file_path."/WorkType.csv", "r")) !== FALSE) {
+		while (($data = fgetcsv($handle) ) !== FALSE ) {
+		   if($row!=1){
+				$key = trim($data[0]);
+				$value = trim($data[1]);
+				$work_type_array[$key] = $value;
+				//echo $key." ".$value."<br>";
+		   }
+		   $row++;
+		 }
+	fclose($handle);
+   }
+   foreach($work_type_array as $new_work_type_key => $new_work_type_value){
+		
+			if ($new_work_type_value != '') {
+				$parent = get_term_by('slug',sanitize_title($new_work_type_value),'savi_opp_cat_work_type');
+				if(empty($parent)){
+					$parent = get_term_by('name',$new_work_type_value,'savi_opp_cat_work_type');
+				}
+			} else {
+			   $parent = 0;
+			}
+			if($parent == 0){
+				wp_insert_term ($new_work_type_key,'savi_opp_cat_work_type');
+			}else{
+				wp_insert_term ($new_work_type_key,'savi_opp_cat_work_type',array('parent'=> $parent->term_id));
+				
+			} 
+  }		 
+   
+}
 
 ?>
