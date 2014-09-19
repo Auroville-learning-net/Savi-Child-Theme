@@ -1,48 +1,72 @@
 <?php
 $postType = $_GET['postType'];
 get_header(); 
-$unitIDs = array();
+switch( $postType ) { // step 1:check if client wants Events		
+	case 'ai1ec_event':
+		$postName = 'Events';
+		break;
+	case 'av_unit': // step 2:check if client wants unit			 				
+		$postName = 'Units';
+		break;
+	case 'av_project': // step 2:check if client wants projects								
+		$postName = 'Projects';
+		break;
+	default: // default is av_opportunity
+		$postName = 'Opportunities';
+		break;
+}
  ?>
 
 <div id="main-content">
 	<div class="container">
-	
-        <h2>Languages : <?php single_tag_title(); ?></h2>
+        <h2><?php echo $postName;?> for Languages : <?php single_tag_title(); ?></h2>
 		<div id="content" class="clearfix">
-		
 			<div id="left-area">
-				<?php if ( have_posts() ) { 
-				while ( have_posts() ) {
-						the_post();
-						
-						if ( $postType == "" ) { // step 1:check if client wants opportunities or units
-							get_template_part( 'includes/summary', 'opportunity' ); 
-						}else{ // step2: client wants units, so check unit ID in each opportunity, store in array
-								//echo "<div> Unit ".get_post_meta( get_the_ID(), "av_unit", true )."</div>";
-								$unitIDs[] = get_post_meta( get_the_ID(), "av_unit", true );
-							}
-						}
-						if ( $postType != "" ) { // step 3: build a WP query to get all avunit custom posts from DB
-							$units = array_unique($unitIDs);
-							//echo "<div> Unit IDs:<pre>",print_r($units),"</pre></div>";
-							$query = new WP_Query(array('post__in' => $units, post_type => 'av_unit'));
-							if ( $query->have_posts() ){
-								while ( $query->have_posts() ) { 
-									$query->the_post(); 
-									include( 'includes/units-taxonomy.php'); 
+				<?php 
+					if ( have_posts() ) { 
+						while ( have_posts() ) {
+							the_post();
+							switch( $postType ) { // step 1:check if client wants Events		
+								case 'ai1ec_event':
+									get_template_part( 'includes/ai1ec', 'event' );	
+									break;
+								case 'av_unit': // step 2:check if client wants unit	
+									// echo get_the_ID();
+									get_template_part( 'includes/summary', 'unit' );			 				
+									break;
+								case 'av_project': // step 2:check if client wants projects	
+									get_template_part( 'includes/summary', 'project' );												
+									break;
+								default: // default is av_opportunity
+									get_template_part( 'includes/summary', 'opportunity' );	
+									break;
 								}
-							}
-						}	
-				}else{
-					if ( $postType == "" ) {
-						get_template_part( 'includes/no', 'opportunity' ); 
+						}
+						if ( function_exists( 'wp_pagenavi' ) )
+								wp_pagenavi();
+						else{ ?>
+							<div class="pagination clearfix">
+								<div class="alignleft"><?php next_posts_link('&laquo; More '.$postName) ?></div>
+								<div class="alignright"><?php previous_posts_link('Previous '.$postName.' &raquo;') ?></div>
+							</div>
+					<?php }
 					}else{
-						get_template_part( 'includes/no', 'units' ); 
-					}
-				}?>
-			</div> <!-- end #left-area -->
-
-
+						switch( $postType ) { // step 1:check if client wants Events		
+							case 'ai1ec_event':
+								get_template_part( 'includes/no', 'events' ); 
+								break;
+							case 'av_unit': // step 2:check if client wants unit	
+								get_template_part( 'includes/no', 'units' ); 
+								break;
+							case 'av_project': // step 2:check if client wants projects	
+								get_template_part( 'includes/no', 'projects' ); 
+								break;
+							default: // default is av_opportunity
+								get_template_part( 'includes/no', 'opportunity' ); 
+								break;
+						}
+					} ?>
+				</div> <!-- end #left-area -->
 			<?php get_sidebar(); ?>
 		</div> <!-- end #content -->
 	</div> <!-- end .container -->

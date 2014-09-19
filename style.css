@@ -505,4 +505,17 @@ a.dashicons.dashicons-info:hover {
 #post-1331 p:last-of-type {
 padding-bottom: 15px;
 }
-
+#opp-click-info{
+	display: inline;
+    font-size: 20px;
+    font-weight: bolder;
+    margin-left: 5px;
+    margin-top: 10px;
+    position: absolute;
+}
+.single-av_opportunity #respond{
+	clear:both;
+}
+.page-template-volunteers-my-opportunity-page-php #left-area h4 {
+	color: #133FEF;
+}

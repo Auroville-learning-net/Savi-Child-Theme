@@ -20,6 +20,7 @@
 					$content= get_the_content();
 					$oppID = get_the_ID();
 					$showcontact = FALSE;	
+					$express_opp_button = FALSE;	
 						global $wpdb;
 						$user_ID = get_current_user_id();
 						//echo $user_ID;
@@ -36,27 +37,35 @@ and		wp_posts.ID = wp_postmeta.post_id");
 					switch($profilepost){
 						case 'view_0':
 							$showcontact=false;
+							$express_opp_button=false;
 						break;
 						case 'view_1':
 							$showcontact=false;
+							$express_opp_button=false;
 						break;
 						case 'view_2':
 							$showcontact=false;
+							$express_opp_button=true;
 						break;
 						case 'view_3':
 							$showcontact=true;
+							$express_opp_button=true;
 						break;
 						case 'view_4':
 							$showcontact=false;		
+							$express_opp_button=false;		
 						break;
 						case 'view_5':
 							$showcontact=false;
+							$express_opp_button=false;
 						break;
 						case 'view_6':
 							$showcontact=false;
+							$express_opp_button=false;
 						break;
 						case 'view_7':
 							$showcontact=false;
+							$express_opp_button=false;
 						break;
 					}
 					
@@ -90,7 +99,7 @@ and		wp_posts.ID = wp_postmeta.post_id");
 									?>
 									<div class="entry">
 										<!--If no results are found-->
-											<p><?php esc_html_e('No Opportunity Specified','Divi'); ?></p>
+											<?php esc_html_e('No Opportunity Specified','Divi'); ?>
 									</div>
 								<?php	} ?>	
 										</span>
@@ -229,6 +238,8 @@ and		wp_posts.ID = wp_postmeta.post_id");
 									 
 									 <?php if($is_opportunity_exists == 'yes'): ?> checked='checked' <?php endif;?> />
 									 <label for="select-icon"></label>
+									 <label id="opp-click-info">Please Click the Logo to Select the opportunity</label>
+									 <input type="hidden" id="hidden_blog_url" value="<?php bloginfo('url'); ?>" />
 									 <div id="loading_image" style="display:none"><img src="<?php echo $loading_image ?>" alt="" ></div>
 									<!--div id="selectResult"><p>Post ID :<?php #echo $oppID; ?>, User :<?php #echo wp_get_current_user()->ID ?></p></div-->
 								</div>

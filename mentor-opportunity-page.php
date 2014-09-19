@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: My Opportunity Page
+Template Name: Mentor My Opportunity Page
 */
  get_header(); 
  ?>
@@ -79,6 +79,9 @@ Template Name: My Opportunity Page
 									$post_type = get_post_type( $profile_post_id ); // get the profile post type
 									switch($post_type){
 										//here we get the view_3 new volunteer ID's
+										case 'view_1':
+										case 'view_2':
+										break;
 										case 'view_3': //volunteer has expressed interest in this opportunity
 											$new_volunteers[$vol_user_ID] = $volunteer_user;		 // get the new volunteer ID's	
 										break;
@@ -123,14 +126,14 @@ Template Name: My Opportunity Page
 										foreach($new_volunteers as  $vUser){
 											$volunteerList.= "vol[]=".$vUser->ID."&";
 											if(!empty($vUser->display_name)){ //Incase the User has been delete it has filter here
-												echo  '<li id="vol_'.$vUser->ID.'" class="ui-state-default ui-sortable-handle"  style=""><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><a href="'. get_author_posts_url($vUser->ID).'">'.$vUser->display_name.'</a><a href="javascript:void(0)" class="dashicons dashicons-no delete"></a></li>';
+												echo '<li id="vol_'.$vUser->ID.'" class="ui-state-default ui-sortable-handle"  style=""><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><a href="'. get_author_posts_url($vUser->ID).'">'.$vUser->display_name.'</a><a href="javascript:void(0)" class="dashicons dashicons-no delete"></a></li>';
 											}
 										}
 										$volunteerList = substr($volunteerList, 0, -1); //remove last '&' char
 									}else{
 										$volunteerList = "vol[]=".$new_volunteers[0]->ID;
 										if(!empty($new_volunteers[0]->display_name)){ //Incase the User has been delete it has filter here
-											echo  '<li><a  href="'. get_author_posts_url($new_volunteers[0]->ID).'">'.$new_volunteers[0]->display_name.'</a><a href="javascript:void(0)" class="dashicons dashicons-no delete"></a></li>';
+											echo '<li><a  href="'. get_author_posts_url($new_volunteers[0]->ID).'">'.$new_volunteers[0]->display_name.'</a><a href="javascript:void(0)" class="dashicons dashicons-no delete"></a></li>';
 										}
 									}
 									echo '</ol>';
@@ -143,7 +146,7 @@ Template Name: My Opportunity Page
 								}
 								//Display the Post volunteers Profiles
 								if( !empty($grey_volunteers) ){
-									//print_r($grey_volunteers);
+									//echo "<pre>",print_r($grey_volunteers),"</pre>";
 									echo '<li><h5>Past Profiles</h5><ul class="past-volunteers">';
 									foreach($grey_volunteers as  $vUser){
 										if(!empty($vUser->display_name)){ //Incase the User has been delete it has filter here

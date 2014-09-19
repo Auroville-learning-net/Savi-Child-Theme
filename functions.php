@@ -44,7 +44,7 @@ function savi_scripts(){
 	$template_dir = get_stylesheet_directory_uri();
 	wp_enqueue_script('jquery');
 	switch (true){
-		case is_page_template( 'my-opportunity-page.php' ) :
+		case is_page_template( 'mentor-opportunity-page.php' ) :
 			wp_enqueue_script( 'jquery-ui',  '//code.jquery.com/ui/1.11.0/jquery-ui.js', array( 'jquery' ), '1.0', false );
 			wp_enqueue_script( 'jquery-inline-editable', $template_dir . '/js/jquery.inlineedit.js', array( 'jquery' ), '1.0', true );
 			break;
@@ -121,9 +121,9 @@ function sy_add_rewrite_rules($aRules) {
 	return $aRules;
 }
 /* Custom wp_query for taxonomy template for work area and work type */
-add_action('pre_get_posts','sy_tax_alter_query');
-function sy_tax_alter_query($query) {
-	if(!$query->is_main_query()) return $query;
+add_action('pre_get_posts','savi_taxonomy_alter_query',1000);
+function savi_taxonomy_alter_query($query) {
+	if(is_admin() || !$query->is_main_query()) return $query;
 	//gets the global query var object
 	global $wp_query;
 	$postType = $_GET['postType']; // get the post type form url
@@ -131,98 +131,58 @@ function sy_tax_alter_query($query) {
 	if($eventType == '') $eventType= 'workshop-2'; // if the event category is workshop display workshop by default
 	//archive of ai1ec_event event post type
 	switch(true){
-			case is_tax('savi_opp_cat_work_area'):
-			case is_tax('savi_opp_cat_work_type'):
-				switch($postType) {
-						case 'ai1ec_event': //events
-							$args = array( 'post_type' => $postType, 
-														 'tax_query' => array(
-																	array(
-																		'taxonomy' => 'events_categories',
-																		'field' => 'slug',
-																		'terms' => $eventType,
-																	)
-																)
-															);
-							$query->query_vars = $args; 
-						break;	
-						case 'av_unit': //units
-							$wpQuery = new WP_Query($wp_query->query_vars);
-							$unitIDs = array();
-							if($wpQuery->have_posts()) {
-								while($wpQuery->have_posts()) {
-									$wpQuery->the_post();
-									$unitIDs[] = get_post_meta( get_the_ID(), "av_unit", true );
-								}
-								/* Restore original Post Data 
-							 * NB: Because we are using new WP_Query we aren't stomping on the 
-							 * original $wp_query and it does not need to be reset with 
-							 * wp_reset_query(). We just need to set the post data back up with
-							 * wp_reset_postdata().
-							 */
-							  wp_reset_postdata();
-							}
-							$units = array_unique($unitIDs);
-							//$query-> set('post_type' ,	'av_opportunity');
-							$query-> set('post_type' ,	$postType);
-							$query-> set('post__in',$units);
-						break;	
-						case 'project': //projects
-						break;
-						case 'av_opportunity': //opportunities
-						break;	
-						default:
-						break;	
-				}
-	}
-	/*
-	if(is_tax('savi_opp_cat_work_type')  && $query->is_main_query() ){	 // check taxonomy is Work Type
-		if($postType == 'ai1ec_event'){  // only for post type ailec event
-			
-				  $args = array( 'post_type' => $postType, // else seminar
-					 'tax_query' => array(
-								array(
-									'taxonomy' => 'events_categories',
-									'field' => 'slug',
-									'terms' => $eventType,
-								),
-							)
-						);
-			$query->query_vars = $args; 
-		}else{
-		//	echo 'else';
-			$query-> set('post_type' ,	'av_opportunity'); // post type av_opportunity and av_unit
-		}		
-	}elseif(is_tax('savi_opp_cat_work_area')  && $query->is_main_query() ){ // check taxonomy is Work Area
-				if($postType == 'ai1ec_event'){  // only for post type ailec event
-						  $args = array( 'post_type' => $postType, // else seminar posts
-							 'tax_query' => array(
-										array(
-											'taxonomy' => 'events_categories',
-											'field' => 'slug',
-											'terms' => $eventType,
-										),
-									)
-								);
+		case is_tax('savi_opp_cat_work_area'):
+		case is_tax('savi_opp_cat_work_type'):
+		case is_tax('savi_opp_tag_soft'):
+		case is_tax('savi_opp_tag_languages'):
+			switch($postType) {
+				case 'ai1ec_event': //events
+					$args = array( 'post_type' => $postType, 
+								 'tax_query' => array(
+											array(
+												'taxonomy' => 'events_categories',
+												'field' => 'slug',
+												'terms' => $eventType,
+											)
+										)
+									);
 					$query->query_vars = $args; 
-			}else{
-				$query-> set('post_type' ,	'av_opportunity');  // post type av_opportunity and av_unit
-			}	
-		}
-	elseif(is_archive( ) && $query->is_main_query() ) { // check archive of the 
-		if($eventType != '') { //check event type have value(seminar or Workshop) 
-		  $args = array( 'post_type' => 'ai1ec_event', // else seminar posts
-							'tax_query' => array(
-										array(
-											'taxonomy' => 'events_categories',
-											'field' => 'slug',
-											'terms' => $eventType,
-										),
-									)
-								);
-		$query->query_vars = $args;
-		}
-	} */
+					break;	
+				case 'av_unit': //units
+				case 'av_project': //projects
+					$wpQuery = new WP_Query($wp_query->query_vars);
+					$parentIDs = array();
+					$metaKey='av_unit';
+					if($postType === 'av_project') $metaKey='projectname';
+					//echo $metaKey;
+					if($wpQuery->have_posts()) {
+						while($wpQuery->have_posts()) {
+							$wpQuery->the_post();
+							if( get_post_meta( get_the_ID(),'opportunity_status' , true )==="opened")
+								$parentIDs[] = get_post_meta( get_the_ID(),$metaKey , true );
+						}
+						/* Restore original Post Data 
+						 * NB: Because we are using new WP_Query we aren't stomping on the 
+						 * original $wp_query and it does not need to be reset with 
+						 * wp_reset_query(). We just need to set the post data back up with
+						 * wp_reset_postdata().
+						 */
+					  wp_reset_postdata();
+					}
+					$units = array_unique($parentIDs);
+					$args = array( 'post_type' => $postType, 
+								 'tax_query' => array(),
+								 'post__in'=>$units);
+					$query->query_vars = $args; 
+					break;	
+				default: //opportunities
+					$args = array( 'meta_key' => 'opportunity_status', 
+								 'meta_value' => 'opened');
+					$query->query_vars = $args; 
+					break;	
+			}
+			break;
+	}
 	return $query;
 }
 
@@ -261,16 +221,14 @@ function sy_quick_nav_items( $items, $args )
 --------- Modify menus to access the units --------------
 */
 add_filter( 'wp_get_nav_menu_items','nav_items', 11, 3 );
-function nav_items( $items, $menu, $args ) 
-{
-    foreach( $items as $item ) 
-    {
+function nav_items( $items, $menu, $args ) {
+	$wtParent="";
+    foreach( $items as $item ) {
         if( 'Work Area (Units)' == $item->post_title)
             $wtParent = $item->ID;
     }
 	//echo "Parent".$wtParent;
-	foreach( $items as $item ) 
-    {
+	foreach( $items as $item ) {
         if( $wtParent == $item->menu_item_parent)
             $item->url .= '?postType=av_unit';
     }
@@ -362,7 +320,11 @@ function sy_register_opportunity(){
 		   $textResult = "Unselected!";
 		}	
 	   }
-      update_post_meta($profilePostId,'express_opportunities',$newexpressOpportunities);
+	  if(expressOpportunitiesMeta == ""){
+		add_post_meta($profilePostId,'express_opportunities',$newexpressOpportunities);
+	  }else{
+		update_post_meta($profilePostId,'express_opportunities',$newexpressOpportunities);
+	  }
 	die();
  }	
 }

@@ -58,7 +58,7 @@
 					                                	?>
                 					                            	<div class="entry">
                                                                         <!--If no results are found-->
-                                                                        	<p><?php esc_html_e('No Opportunity Specified','Divi'); ?></p>
+                                                                        	<?php esc_html_e('No Opportunity Specified','Divi'); ?>
                                                                         	
                                                                     </div>
                                             					<?php	}	?>	

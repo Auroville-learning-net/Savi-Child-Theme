@@ -32,7 +32,7 @@ $term_work_type=get_the_terms(get_the_ID() , 'savi_opp_cat_work_type' );
 
 	</div>
 	<div id="left-Content">
-		<h2><?php echo get_the_title(); ?></h2>
+		<h2><a href="<?php the_permalink(); ?>"><?php echo get_the_title(); ?></a></h2>
 		<article id="post-<?php the_ID(); ?>" <?php post_class( 'et_pb_post' ); ?>>
 			<div class="table1">
 				<ul>
@@ -53,7 +53,7 @@ $term_work_type=get_the_terms(get_the_ID() , 'savi_opp_cat_work_type' );
 								else{
 								?>
 								<div class="entry">
-									<p><?php esc_html_e('No Opportunity Specified','Divi'); ?></p>
+									<?php esc_html_e('No Opportunity Specified','Divi'); ?>
 								</div>
 								<?php	} ?>	
 							</div>

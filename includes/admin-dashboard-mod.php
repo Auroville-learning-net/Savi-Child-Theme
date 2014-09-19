@@ -1,5 +1,21 @@
 <?php
 /*
+ * 
+ * */
+add_filter( 'cac/column/value', 'myplugin_cac_column_featured_image_value', 10, 4 );
+ 
+function myplugin_cac_column_featured_image_value( $value, $postid, $column, $post_type ) {
+ 
+if ( $column->properties->type == 'column-modified' && $post_type==='view_0') {
+ 
+ //$value = '<em>' . __( 'No featured image', 'myplugin' ) . '</em>';
+ $value = date('D jS M',strtotime($value));
+ 
+}
+ 
+return $value;
+}
+/*
 ----------- ADMIN DASHBOARD CSS STYLING --------------------
 */
 add_action( 'admin_enqueue_scripts', 'savi_admin_scripts_styles', 10, 1 );
@@ -1072,6 +1088,7 @@ function savi_page_settings() {
      register_setting( 'default', $labels[$i] );   	
    	
    }
+   register_setting( 'default', "test_mentor_email" );
     
 }
 function validate_page_options($input) {
@@ -1088,7 +1105,7 @@ function validate_page_options($input) {
   						array("Pre Visa","Sending the soft copy of the Visa Letter to Voluteer"),
   						array("Confirm Visa","Confirmation of the Visa and fixing of the  Arrival Date. Informing what to expect upon arrival at Auroville (india of course))"),
   						array("Induction Instructions","Sending email of Induction instructions to the vlounteer"),
-  						array("Volunteer Profile Offer","Sending email of mentor when opportunites reviews selcted for the vlounteer"),
+  						array("Volunteer Profile Offer","Sending email of mentor when opportunites reviews selected for the volunteer"),
   						array("Instruction for Auroville VISA application","Instruction to volunteer about the Auroville VISA application")
   );
 
@@ -1107,7 +1124,7 @@ function validate_page_options($input) {
 
 function savi_page_settings_menu (){
 
-	add_options_page( 'Page Settings for PDF / Email', 'Page Settings PDF / EMAIL', 'manage_options', 'todo_page_options', 'savi_page_settings_pdf_email' );
+	add_options_page( 'Savi Settings', 'Savi Settings', 'manage_options', 'todo_page_options', 'savi_page_settings_pdf_email' );
 }
 
 function savi_page_settings_pdf_email() {
@@ -1123,7 +1140,7 @@ function savi_page_settings_pdf_email() {
   						array("Pre Visa","Sending the soft copy of the Visa Letter to Voluteer"),
   						array("Confirm Visa","Confirmation of the Visa and fixing of the  Arrival Date. Informing what to expect upon arrival at Auroville (india of course))"),
   						array("Induction Instructions","Sending email of Induction instructions to the vlounteer"),
-  						array("Volunteer Profile Offer","Sending email of mentor when opportunites reviews selcted for the vlounteer"),
+  						array("Volunteer Profile Offer","Sending email of mentor when opportunites reviews selected for the volunteer"),
   						array("Instruction for Auroville VISA application","Instruction to volunteer about the Auroville VISA application")
   );
  $labels = array("Inital_Enquiry","Profile_Reviews","Opportunity_Selection","Opportunity_Confirmation",
@@ -1141,7 +1158,7 @@ function savi_page_settings_pdf_email() {
 	$i++;
   }
  //echo"<pre>", print_r($pages_array),"</pre>";
-	echo"<h1 style='padding:30px;'>Page Settings For PDF or Email";
+	echo"<h1 style='padding:30px;'>Savi Settings For PDF or Email Page Template</h1>";
 	echo '<form method="post" action="options.php"> ';
 	 settings_fields('default'); 
 	echo "<table class='wp-list-table widefat fixed posts' style='width:95%;margin-top:40px'>";
@@ -1180,6 +1197,17 @@ function savi_page_settings_pdf_email() {
    echo"</table>";
    
   echo "<br><br>";
+  $test_mentor_email = get_option("test_mentor_email");
+   echo "<div class='disp-row rwmb-textarea-wrapper'>";
+            // Field Definition for Comments
+                echo " <div class='rwmb-label'>";
+                    echo "<label for='revisions'>Test Mentor Email</label>\n";
+                echo " </div>";
+                echo "<div class='rwmb-input'>\n";
+                    echo "<input type='text' name='test_mentor_email' id='test_mentor_email' value='$test_mentor_email'/>";
+                echo "</div>";
+  echo "</div>";
+  
   submit_button();
    echo '</form>';
 }
@@ -1274,8 +1302,19 @@ add_action( 'edit_savi_opp_cat_work_area', 'workarea_edit', 10, 2 );
 add_action( 'delete_savi_opp_cat_work_area', 'workarea_delete', 10, 2 );
 
 function workarea_create($term_id,$t_id )
-{     $term = get_term_by('id',$term_id,'savi_opp_cat_work_area');
-	  wp_insert_term( $term->name,'events_categories',array('slug' => $term->slug."WA_". $term_id));
+{     global $wpdb;
+	  $term = get_term_by('id',$term_id,'savi_opp_cat_work_area');
+	  $parent_id = $wpdb->get_var("SELECT parent FROM wp_term_taxonomy WHERE term_id = ".$term_id);
+	 
+	  if($parent_id == 0){
+		wp_insert_term( $term->name,'events_categories',array('slug' => $term->slug."wa_".$term_id));
+	  }else{
+		   $check_slug = $wpdb->get_var("SELECT slug FROM wp_terms WHERE term_id = ".$parent_id)."wa_". $parent_id;
+		   $events_parent_id = $wpdb->get_var("SELECT term_id FROM wp_terms WHERE slug LIKE '%$check_slug%'");
+		   
+		  wp_insert_term( $term->name,'events_categories',array('parent' => $events_parent_id,'slug' => $term->slug."wa_". $term_id));
+	  
+	  }	 
 }
 function workarea_edit($term_id,$t_id)
 {     
@@ -1284,7 +1323,7 @@ function workarea_edit($term_id,$t_id)
 	 $new_term_name = $wpdb->get_var("SELECT name FROM wp_terms WHERE term_id =".$term_id);
 	 $new_term_slug = $wpdb->get_var("SELECT slug FROM wp_terms WHERE term_id =".$term_id);
 	 $new_term = get_term_by('id',$term_id,'savi_opp_cat_work_area');
-	  wp_update_term( $ev_ter_id,'events_categories',array('name' => $new_term_name,'slug' => $new_term_slug."WA_". $term_id));
+	  wp_update_term( $ev_ter_id,'events_categories',array('name' => $new_term_name,'slug' => $new_term_slug."wa_". $term_id));
 	
 }
 function workarea_delete($term_id,$t_id)
@@ -1336,8 +1375,8 @@ function savi_manipulate_views( $what, $views )
       $currentdate = date("Y-m-d");
       $two_months_from_now = strtotime("+2 months",strtotime($currentdate));
       $checked_date = date("Y-m-d",$two_months_from_now);
-      $two_month_arrival = $wpdb->get_var("SELECT COUNT(*) FROM wp_posts wp, wp_postmeta wpm WHERE wp.post_type = '$what' AND wpm.meta_key='savi_views_stay-details_duration'  AND wpm.meta_value <= '$checked_date' AND wp.ID = wpm.post_id");
-    
+      $two_month_arrival = $wpdb->get_var("SELECT COUNT(*) FROM wp_posts wp, wp_postmeta wpm WHERE wp.post_type = '$what' AND wpm.meta_key='savi_views_stay-details_planned-arrival'  AND wpm.meta_value <= '$checked_date' AND wp.ID = wpm.post_id");
+      
      if( $intership > 0 && ( $what == "view_1" || $what == "view_2" ) ) :
     	 $views['Intership'] = '<a href="edit.php?post_type='.$what.'&amp;post_meta=intership">Intership <span class="count">('.$intership.')</span></a>'; 
      endif;	
@@ -1442,11 +1481,22 @@ function savi_received__visa_request_letter() {
 				 $option_name = 'Instruction_for_Auroville_VISA_Application';
 				 $templatePage = (int) get_option($option_name);
 				 $printTemplate = get_post($templatePage);
-				 $content = apply_filters('the_content',$printTemplate->post_content);
-			     $printContent = str_replace("[SAVI_profile_full_name]", get_the_title($post_id), $content);  // Replace the fieldnames with the fieldvalues
+				 $content = $printTemplate->post_content;
+				 $savi_shortcodes = array();
+				 foreach($GLOBALS['shortcode_tags'] as $keys => $values){
+					if( substr( $keys, 0, 4 ) === "SAVI" ) $savi_shortcodes[] = $keys;
+				 }
+				$default_atts = 'profile_id="'.$post_id.'" user_id="'.$user_id.'" user_pwd="'.$random_password.'" need_visa=="'.$requires_visa.'" post_type=="'.$post_type.'" opportunity_id="'.$oppID.'"';
+				foreach($savi_shortcodes as $saviCodes){
+					if (has_shortcode($content, $saviCodes)) 
+						$content = str_replace('['.$saviCodes,'['.$saviCodes.' '.$default_atts,$content);
+				}
+			   $printContent = apply_filters('the_content',$content);
 				 add_filter( 'wp_mail_content_type', create_function('', 'return "text/html";') );
-				 $subject = "Instruction for Auroville VISA application: ".$site_url."";
-				 wp_mail($clientEmail, $subject, $printContent);	
+				 $blog_title = get_bloginfo('name');
+				 $TemplateTitle = get_the_title($templatePage);
+				 $subject = $blog_title." - ".$TemplateTitle;
+     			 wp_mail($clientEmail, $subject, $printContent);	
 				  
 				  echo $action;
 			  else:
@@ -1561,5 +1611,54 @@ function savi_create_work_type(){
   }		 
    
 }
+add_action( 'before_delete_post', 'savi_before_delete_post_func' );
+/*==============================================================================
+ * hook to called the to check the user id available in the ordered_new_volunteer
+ * post meta field from expressed_opportunities and delete the user id from the
+ * ordere_new_volunteer list before the the post delete
+ * ===========================================================================*/
+function savi_before_delete_post_func( $postid ){
+    
+    // We check if the global post type isn't ours and just return
+    global $post_type,$wpdb;  
+   // echo $post_type.$postid;
+   //  die;
+    if ( $post_type != 'view_0' && $post_type != 'view_1' ){
+     
+	     	$expressOpportunitiesIDs = array();
+            $ordered_new_volunteerMeta = array();
+            $removed_ordered_new_volunteerIDs = array();
+            $expressedVolunteerMeta = array();
+            $removed_expressedVolunteerIDs = array();
+            $profile_user_id =  get_post_meta($postid,'user_id',true);
+            $expressOpportunitiesMeta = get_post_meta( $postid, 'express_opportunities', false );
+            $allexpressOpportunities = $expressOpportunitiesMeta[0];
+            if (sizeof($allexpressOpportunities) > 0 && is_array($allexpressOpportunities)) {
+            	foreach($allexpressOpportunities as $key=>$expressOpportunity) {
+               	  $expressOpportunitiesIDs[] = $expressOpportunity['express_opportunity'];
+                 }
+            } 
+            foreach($expressOpportunitiesIDs as $expressOpportunitiesID){
+				$ordered_new_volunteerMeta = get_post_meta( $expressOpportunitiesID, 'ordered_new_volunteer',true);
+        		 foreach($ordered_new_volunteerMeta as $vol_user_id){
+					if($vol_user_id != $profile_user_id ):
+						$removed_ordered_new_volunteerIDs[] = $vol_user_id;				
+					endif; 
+				 }
+                 update_post_meta($expressOpportunitiesID,'ordered_new_volunteer',$removed_ordered_new_volunteerIDs);
+                 $expressedVolunteerMeta = get_post_meta( $expressOpportunitiesID, 'expressed_volunteer', true );
+                  foreach($expressedVolunteerMeta as $expressedVolunteer_user_id){
+					if($expressedVolunteer_user_id != $profile_user_id ):
+						$removed_expressedVolunteerIDs[] = $expressedVolunteer_user_id;				
+					endif; 
+				 } 
+				 update_post_meta($expressOpportunitiesID,'expressed_volunteer',$removed_expressedVolunteerIDs);   
+				  unset($removed_ordered_new_volunteerIDs);
+			      unset($removed_expressedVolunteerIDs);
+	        }   
+	       
+   }
 
+    // My custom stuff for deleting my custom post type here
+}
 ?>

@@ -1,5 +1,4 @@
-<?php
-get_header();?>
+<?php get_header(); ?>
 
 <div id="main-content">
 	<div class="container">
@@ -9,7 +8,7 @@ get_header();?>
 				<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 				
 					<div class="et_main_title">
-						<h1><?php the_title(); ?></h1>
+						<h1><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h1>
 						<span class="et_project_categories"><?php echo get_the_term_list( get_the_ID(), 'project_category', '', ', ' ); ?></span>
 					</div>
 					<div class="entry-content">

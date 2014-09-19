@@ -128,7 +128,7 @@ function SAVI_profile_opportunity_func($atts){
 	$volunteer_opportunity_id = get_post_meta($postID,'volunteer_opportunity',true);
 	$SAVI_profile_opportunity__permalink = get_permalink($volunteer_opportunity_id);
 	$SAVI_profile_opportunity = "<a href='".$SAVI_profile_opportunity__permalink ."'>".get_the_title($volunteer_opportunity_id)."</a>";
-	return $SAVI_form_oppOrder;
+	return $SAVI_profile_opportunity;
 }
 
 add_shortcode( 'SAVI_profile_arrival_date', 'SAVI_profile_arrival_date_func' );
@@ -277,7 +277,7 @@ function SAVI_Opportunity_title_link_func($atts){
 	if($oppID<1) return $a['error_message']; 
 	$oppTitle = get_the_title($oppID);
 	$SAVI_Opportunity_title_permalink = get_permalink($oppID);
-	$SAVI_Opportunity_title_link ="<a href='".SAVI_Opportunity_title_permalink."'>".$oppTitle."</a>";
+	$SAVI_Opportunity_title_link ="<a href='".$SAVI_Opportunity_title_permalink."'>".$oppTitle."</a>";
 	return $SAVI_Opportunity_title_link;
 
 }
@@ -383,7 +383,7 @@ function SAVI_opportunity_title_func($atts){
         'need_visa'=>'false',
         'post_type'=>'',
 		'opportunity_id'=>'0',
-		'error_message' => 'Hello, Profile Registered confirm is an error, please contact the Savi team!'
+		'error_message' => 'Hello, Profile Opportunity Title is an error, please contact the Savi team!'
     ), $atts );
 	$oppID = $a['opportunity_id'];
 	if($oppID<1) return $a['error_message']; 
@@ -401,13 +401,47 @@ function SAVI_opportunity_unit_func($atts){
         'need_visa'=>'false',
         'post_type'=>'',
 		'opportunity_id'=>'0',
-		'error_message' => 'Hello, Profile Registered confirm is an error, please contact the Savi team!'
+		'error_message' => 'Hello, Profile Opportunity Unit is an error, please contact the Savi team!'
     ), $atts );
 	$oppID = $a['opportunity_id'];
 	if($oppID<1) return $a['error_message']; 
 	$unitID = get_post_meta($oppID,'av_unit',true);
 	$unitTitle = get_the_title($unitID);
 	return $unitTitle;
+}
+add_shortcode( 'SAVI_profile_passport', 'SAVI_profile_passport_func' );
+function SAVI_profile_passport_func($atts){
+	//print_r($atts);
+   $a = shortcode_atts( array(
+        'profile_id' => '0',
+        'user_id'=> '0',
+        'user_pwd'=>'',
+        'need_visa'=>'false',
+        'post_type'=>'',
+		'opportunity_id'=>'0',
+		'error_message' => 'Hello, Profile Passport Number is an error, please contact the Savi team!'
+    ), $atts );
+	$profile_id = $a['profile_id'];
+	if($profile_id<1) return $a['error_message']; 
+	$profile_passport = get_post_meta($profile_id,'savi_views_visa-details_passport-number',true);
+	return $profile_passport;
+}
+add_shortcode( 'SAVI_profile_address', 'SAVI_profile_address_func' );
+function SAVI_profile_address_func($atts){
+	//print_r($atts);
+   $a = shortcode_atts( array(
+        'profile_id' => '0',
+        'user_id'=> '0',
+        'user_pwd'=>'',
+        'need_visa'=>'false',
+        'post_type'=>'',
+		'opportunity_id'=>'0',
+		'error_message' => 'Hello, Profile Address is an error, please contact the Savi team!'
+    ), $atts );
+	$profile_id = $a['profile_id'];
+	if($profile_id<1) return $a['error_message']; 
+	$profile_address = get_post_meta($profile_id,'savi_views_contact-details_address',true);
+	return $profile_address;
 }
 
 ?>
