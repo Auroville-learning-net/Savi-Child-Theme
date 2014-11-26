@@ -42,13 +42,27 @@ img#logo {
 }
 nav#top-menu {
     padding-top: 0;
+	float: left;
+}
+#et-top-navigation {
+	float: none;
+}
+#main-header nav#top-menu-nav {
+padding-top: 22px;
+margin-left: 4%;
+padding-bottom: 7px;
 }
 #et_top_search {
-    margin-top: 8px;
-
+margin-top: 6px;
+margin-right: 7px;
 }
 #top-menu li > a {
     padding-bottom: 10px;
+}
+#top-menu li {
+    padding-right: 1.5em;
+	font-size: 18px;
+font-weight: 100;
 }
 #quick-menu {
     float: right;
@@ -84,8 +98,156 @@ nav#top-menu {
     padding-bottom: 6px;
 }
 /*
+--------- OTHER HOME PAGE Adjustments
+*/
+.home .et_pb_section {
+padding: 0px 0;
+}
+#home-gallery .et_pb_column {
+margin-right: 0.4%;
+}
+#home-gallery .et_pb_row .et_pb_column:last-child {
+	margin-right: 0;
+}
+#home-gallery .et_pb_blurb {
+margin-bottom: 0;
+}
+#home-gallery .et_pb_main_blurb_image {
+margin-bottom: 0;
+line-height: 0;
+}
+#home-gallery .et_pb_blurb h4 {
+position: absolute;
+padding: 14px 20px;
+background-color: rgba(185, 170, 142, 0.7);
+opacity:0;
+}
+#home-gallery .et_pb_blurb.bottom-right h4 {
+bottom: 7px;
+right: 7px;
+opacity: 1;
+-webkit-animation: fadeLeft 1s 1 cubic-bezier(0.77,0,.175,1);
+-moz-animation: fadeLeft 1s 1 cubic-bezier(0.77,0,.175,1);
+-o-animation: fadeLeft 1s 1 cubic-bezier(0.77,0,.175,1);
+animation: fadeLeft 1s 1 cubic-bezier(0.77,0,.175,1);
+}
+#home-gallery .et_pb_blurb.bottom-left h4 {
+bottom: 7px;
+left: 7px;
+opacity: 1;
+-webkit-animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+-moz-animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+-o-animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1); 
+}
+#home-gallery .et_pb_blurb.middle-left h4 {
+top: 50%;
+left: 7px;
+margin-top: -23px;
+opacity: 1;
+-webkit-animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+-moz-animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+-o-animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+}
+#home-gallery .et_pb_blurb.middle-right h4 {
+top: 50%;
+right: 7px;
+margin-top: -23px;
+opacity: 1;
+-webkit-animation: fadeLeft 1s 1 cubic-bezier(0.77,0,.175,1);
+-moz-animation: fadeLeft 1s 1 cubic-bezier(0.77,0,.175,1);
+-o-animation: fadeLeft 1s 1 cubic-bezier(0.77,0,.175,1);
+animation: fadeLeft 1s 1 cubic-bezier(0.77,0,.175,1);
+}
+#home-gallery .et_pb_blurb.bottom-centre h4 {
+bottom: 7px;
+left: 50%;
+margin-left: -70px;
+opacity: 1;
+-webkit-animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+-moz-animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+-o-animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+}
+#home-gallery .et_pb_blurb.training h4 {
+bottom: 12%;
+left: 42%;
+/* margin-top: -23px; */
+opacity: 1;
+-webkit-animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+-moz-animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+-o-animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+animation: fadeRight 1s 1 cubic-bezier(0.77,0,.175,1);
+}
+#home-gallery .et_pb_blurb.apply h4 {
+top: 37%;
+right: 5%;
+margin-top: -23px;
+opacity: 1;
+-webkit-animation: fadeLeft 2s 1 cubic-bezier(0.77,0,.175,1);
+-moz-animation: fadeLeft 2s 1 cubic-bezier(0.77,0,.175,1);
+-o-animation: fadeLeft 2s 1 cubic-bezier(0.77,0,.175,1);
+animation: fadeLeft 2s 1 cubic-bezier(0.77,0,.175,1);
+}
+#home-gallery .et_pb_blurb.learning h4 {
+bottom: 40%;
+right: 7px;
+opacity: 1;
+-webkit-animation: fadeLeft 2s 1 cubic-bezier(0.77,0,.175,1);
+-moz-animation: fadeLeft 2s 1 cubic-bezier(0.77,0,.175,1);
+-o-animation: fadeLeft 2s 1 cubic-bezier(0.77,0,.175,1);
+animation: fadeLeft 2s 1 cubic-bezier(0.77,0,.175,1);
+}
+#home-gallery .et_pb_blurb.networked h4 {
+bottom: 2%;
+left: 50%;
+opacity: 1;
+-webkit-animation: fadeRight 2s 1 cubic-bezier(0.77,0,.175,1);
+-moz-animation: fadeRight 2s 1 cubic-bezier(0.77,0,.175,1);
+-o-animation: fadeRight 2s 1 cubic-bezier(0.77,0,.175,1);
+animation: fadeRight 2s 1 cubic-bezier(0.77,0,.175,1);
+margin-left: -64px;
+}
+#home-gallery .et_pb_blurb.auroville h4 {
+bottom: 28%;
+right: 2%;
+opacity: 1;
+-webkit-animation: fadeLeft 2s 1 cubic-bezier(0.77,0,.175,1);
+-moz-animation: fadeLeft 2s 1 cubic-bezier(0.77,0,.175,1);
+-o-animation: fadeLeft 2s 1 cubic-bezier(0.77,0,.175,1);
+animation: fadeLeft 2s 1 cubic-bezier(0.77,0,.175,1);
+}
+@media all{
+	#home-gallery .et_pb_column_1_3 {
+		width: 41.3%;
+		max-width: 445px;
+	}
+	#home-gallery .et_pb_row {
+		padding-top: 0.25%;
+		width: 65%;
+	}
+	#home-gallery .et_pb_column_2_3 {
+		max-width: 630px;
+		width:58.3%
+	}
+	#home-gallery .et_pb_column_2_3 .et_pb_blurb_content {
+	max-width: 630px;
+	}
+	#home-gallery .et_pb_column_1_3 .et_pb_blurb_content {
+	max-width: 445px;
+	}
+}
+div#home-gallery {
+padding-bottom: 55px;
+}
+section#home-quote {
+padding: 25px 0;
+}
+/*
 --------- OTHER Adjustments
 */
+
 .excerpt_post{
 	width:100%;
 	float:left;
@@ -325,9 +487,7 @@ p {
 line-height: 16px;
 }
 
-#top-menu li {
-    padding-right: 11px;
-}
+
 
 
 
@@ -519,3 +679,15 @@ padding-bottom: 15px;
 .page-template-volunteers-my-opportunity-page-php #left-area h4 {
 	color: #133FEF;
 }
+
+/**** ADDITIONS ****/
+img#logo {
+    margin-top: 25px;
+}
+
+
+/* Footer menu */
+ul.bottom-nav {margin:10px 0;overflow:hidden;}
+ul.bottom-nav li {padding:0 30px 0 34px;list-style-type:none;display:inline;}
+ul.bottom-nav li a,#footernav a:active,#footernav a:visited{color:#<strong>COLOR OF CHOICE</strong>;text-decoration:none;}
+ul.bottom-nav li a:hover{text-decoration:underline;}

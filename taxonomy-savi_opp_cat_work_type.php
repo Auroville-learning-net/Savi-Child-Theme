@@ -1,74 +1,84 @@
 <?php
-$postType = $_GET['postType']; // Get the post type ai1ec_event, av_unit, av_opportunity
-get_header(); 
-//$unitIDs = array();
-switch( $postType ) { // step 1:check if client wants Events		
-	case 'ai1ec_event':
+$postType = $_GET ['postType']; // Get the post type ai1ec_event, av_unit, av_opportunity
+get_header ();
+// $unitIDs = array();
+switch ($postType) { // step 1:check if client wants Events
+	case 'ai1ec_event' :
 		$postName = 'Events';
 		break;
-	case 'av_unit': // step 2:check if client wants unit			 				
+	case 'av_unit' : // step 2:check if client wants unit
 		$postName = 'Units';
 		break;
-	case 'av_project': // step 2:check if client wants projects								
+	case 'av_project' : // step 2:check if client wants projects
 		$postName = 'Projects';
 		break;
-	default: // default is av_opportunity
+	default : // default is av_opportunity
 		$postName = 'Opportunities';
 		break;
 }
 ?>
 <div id="main-content">
-	<div class="container">
-		<div id="content" class="clearfix">
-			<h2><?php echo $postName;?> for work type : <?php single_cat_title(); ?></h2>
-				<div id="left-area">
-					<?php 
-						if ( have_posts() ) { 
-							while ( have_posts() ) {
-								the_post();	
-									switch( $postType ) { // step 1:check if client wants Events		
-										case 'ai1ec_event':
-											get_template_part( 'includes/ai1ec', 'event' );	
-											break;
-										case 'av_unit': // step 2:check if client wants unit	
-											// echo get_the_ID();
-											get_template_part( 'includes/summary', 'unit' );			 				
-											break;
-										case 'av_project': // step 2:check if client wants projects	
-											get_template_part( 'includes/summary', 'project' );												
-											break;
-										default: // default is av_opportunity
-											get_template_part( 'includes/summary', 'opportunity' );	
-											break;
-									}
-								}
-								if ( function_exists( 'wp_pagenavi' ) )
-									wp_pagenavi();
-								else{ ?>
-								<div class="pagination clearfix">
-									<div class="alignleft"><?php next_posts_link('&laquo; More '.$postName) ?></div>
-									<div class="alignright"><?php previous_posts_link('Previous '.$postName.' &raquo;') ?></div>
-								</div>
-							<?php }
-						}else{
-							switch( $postType ) { // step 1:check if client wants Events		
-								case 'ai1ec_event':
-									get_template_part( 'includes/no', 'events' ); 
+	<div class="et_pb_section et_section_specialty">
+
+		<div class="et_pb_row">
+			<div class="et_pb_column et_pb_column_1_4">
+					<?php get_sidebar(); ?>
+				</div>
+			<div class="et_pb_column et_pb_column_3_4">
+
+				<h2><?php echo $postName;?> for work type : <?php single_cat_title(); ?></h2>
+					<?php
+					
+					if (have_posts ()) {
+						while ( have_posts () ) {
+							the_post ();
+							switch ($postType) { // step 1:check if client wants Events
+								case 'ai1ec_event' :
+									get_template_part ( 'includes/ai1ec', 'event' );
 									break;
-								case 'av_unit': // step 2:check if client wants unit	
-									get_template_part( 'includes/no', 'units' ); 
+								case 'av_unit' : // step 2:check if client wants unit
+								                 // echo get_the_ID();
+									get_template_part ( 'includes/summary', 'unit' );
 									break;
-								case 'av_project': // step 2:check if client wants projects	
-									get_template_part( 'includes/no', 'projects' ); 
+								case 'av_project' : // step 2:check if client wants projects
+									get_template_part ( 'includes/summary', 'project' );
 									break;
-								default: // default is av_opportunity
-									get_template_part( 'includes/no', 'opportunity' ); 
+								default : // default is av_opportunity
+									get_template_part ( 'includes/summary', 'opportunity' );
 									break;
 							}
-						}?>
-				   </div> <!-- end #left-area -->
-			<?php get_sidebar(); ?>
-		</div> <!-- end #content -->
-	</div> <!-- end .container -->
-</div> <!-- end #main-area -->
+						}
+						if (function_exists ( 'wp_pagenavi' ))
+							wp_pagenavi ();
+						else {
+							?>
+								<div class="pagination clearfix">
+					<div class="alignleft"><?php next_posts_link('&laquo; More '.$postName) ?></div>
+					<div class="alignright"><?php previous_posts_link('Previous '.$postName.' &raquo;') ?></div>
+				</div>
+							<?php
+						}
+					} else {
+						switch ($postType) { // step 1:check if client wants Events
+							case 'ai1ec_event' :
+								get_template_part ( 'includes/no', 'events' );
+								break;
+							case 'av_unit' : // step 2:check if client wants unit
+								get_template_part ( 'includes/no', 'units' );
+								break;
+							case 'av_project' : // step 2:check if client wants projects
+								get_template_part ( 'includes/no', 'projects' );
+								break;
+							default : // default is av_opportunity
+								get_template_part ( 'includes/no', 'opportunity' );
+								break;
+						}
+					}
+					
+					?>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end #main-area -->
 <?php get_footer(); ?>			   

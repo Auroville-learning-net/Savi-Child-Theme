@@ -1,0 +1,65 @@
+/* Headline in the opportunity's summary */
+.opportunity_summary {
+	background-color: #eee;
+	background: -webkit-linear-gradient(#FFF, #EEE);	/* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#FFF, #EEE); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#FFF, #EEE);	/* For Firefox 3.6 to 15 */
+	background: linear-gradient(#FFF, #EEE); /* Standard syntax */
+}
+
+.sum_op_headline {
+	/* 	background: white; */
+	/* 	padding: 10px !important; */
+	/* 	margin-bottom: 10px; */
+	/* 	margin-top: 5px; */
+	display: block;
+}
+
+.sum_op_thumbnail {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.sum_op_content {
+	display: inline-block;
+	width: 70%;
+	vertical-align: top;
+}
+
+/* .sum_op_skills_gain { */
+/* 	margin-top: 7px; */
+/* } */
+
+/* .sum_op_workcategories { */
+/* 	margin-top: 7px; */
+/* } */
+
+/* .sum_op_workareas { */
+/* 	width: 35%; */
+/* 	display: inline-block; */
+/* 	vertical-align: top; */
+/* } */
+
+/* .sum_op_worktypes { */
+/* 	width: 35%; */
+/* 	display: inline-block; */
+/* 	vertical-align: top; */
+/* } */
+span.sum_op_label {
+	display: inline-block;
+	width: 15%;
+	vertical-align: top;
+}
+
+/* div.sum_op_longtext { */
+/* 	display: inline-block; */
+/* 	width: 75%; */
+/* 	vertical-align: top; */
+/* } */
+.opportunity_summary .op_title {
+	font-size: 1.5em;
+}
+
+.opportunity_summary .opp_unit {
+	font-size: 1.25em;
+}
