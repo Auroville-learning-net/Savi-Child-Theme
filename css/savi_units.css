@@ -1,5 +1,5 @@
 /* Headline in the opportunity's summary */
-.opportunity_summary {
+.unit_summary {
 	background-color: #eee;
 	background: -webkit-linear-gradient(#FFF, #EEE);	/* For Safari 5.1 to 6.0 */
 	background: -o-linear-gradient(#FFF, #EEE); /* For Opera 11.1 to 12.0 */
@@ -10,31 +10,21 @@
 	margin-bottom: 10px;
 }
 
-.sum_op_headline {
+.unit_summary .sum_unit_headline {
 	display: block;
 }
 
-.sum_op_thumbnail {
+.unit_summary .sum_unit_thumbnail {
 	display: inline-block;
 	margin-right: 10px;
 }
 
-.sum_op_content {
+.unit_summary .sum_unit_content {
 	display: inline-block;
 	width: 70%;
 	vertical-align: top;
 }
 
-span.sum_op_label {
-	display: inline-block;
-	width: 15%;
-	vertical-align: top;
-}
-
-.opportunity_summary .op_title {
+.unit_summary .unit_title {
 	font-size: 1.5em;
-}
-
-.opportunity_summary .opp_unit {
-	font-size: 1.25em;
 }

@@ -1,12 +1,13 @@
-<?php
-get_header(); 
-
- ?>
+<?php get_header(); ?>
 <div id="main-content">
-	<div class="container">
-		<div id="content-area" class="clearfix">
-			<div id="left-area">
-				<?php while ( have_posts() ) : the_post(); ?>
+	<div class="et_pb_section et_section_specialty">
+
+		<div class="et_pb_row">
+			<div class="et_pb_column et_pb_column_1_4">
+					<?php get_sidebar(); ?>
+				</div>
+			<div class="et_pb_column et_pb_column_3_4">
+ 				<?php while ( have_posts() ) : the_post(); ?>
 					<?php if (et_get_option('divi_integration_single_bottom') <> '' && et_get_option('divi_integrate_singlebottom_enable') == 'on') echo(et_get_option('divi_integration_single_bottom')); ?>
 						<article id="post-<?php the_ID(); ?>" <?php post_class( 'et_pb_post' ); ?>>
 							<h1 class="main_title"><?php the_title(); ?></h1>		
@@ -109,7 +110,6 @@ get_header();
 					<?php if (et_get_option('divi_integration_single_bottom') <> '' && et_get_option('divi_integrate_singlebottom_enable') == 'on') echo(et_get_option('divi_integration_single_bottom')); 
 				endwhile; ?>
 			</div> <!-- #left-area -->
-			<?php get_sidebar(); ?>
 		</div> <!-- #content-area -->
 	</div> <!-- .container -->
 </div> <!-- #main-content -->

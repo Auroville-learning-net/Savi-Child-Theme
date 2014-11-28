@@ -65,7 +65,7 @@ if ($query->have_posts ()) {
 
 ?>
 
-<article id="left-grid" class="opportunity_summary">
+<article class="opportunity_summary">
 	<div class="sum_op_thumbnail">
 		<?php
 		if ('on' == et_get_option ( 'divi_thumbnails_index', 'on' ) && '' !== $thumb) :

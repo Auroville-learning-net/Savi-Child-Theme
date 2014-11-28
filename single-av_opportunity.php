@@ -1,8 +1,12 @@
 <?php get_header(); ?>
 <div id="main-content">
-	<div class="container">
-		<div id="content-area" class="clearfix">
-			<div id="left-area">
+	<div class="et_pb_section et_section_specialty">
+
+		<div class="et_pb_row">
+			<div class="et_pb_column et_pb_column_1_4">
+					<?php get_sidebar(); ?>
+				</div>
+			<div class="et_pb_column et_pb_column_3_4">
 			<?php while ( have_posts() ) : the_post(); 
 					$term_work_type=get_the_terms(get_the_ID() , 'savi_opp_cat_work_type' ); 
 					$terms_work_area=get_the_terms(get_the_ID() , 'savi_opp_cat_work_area' ); 
@@ -262,8 +266,7 @@ and		wp_posts.ID = wp_postmeta.post_id");
 						}
 						if (et_get_option('divi_integration_single_bottom') <> '' && et_get_option('divi_integrate_singlebottom_enable') == 'on') echo(et_get_option('divi_integration_single_bottom'));  
 					endwhile; ?>
-				</div> <!-- #left-area -->
-			<?php get_sidebar(); ?>
+			</div> <!-- #left-area -->
 		</div> <!-- #content-area -->
 	</div> <!-- .container -->
 </div> <!-- #main-content -->
