@@ -54,6 +54,9 @@ switch ($postType) { // step 1:check if area client wants Events
 					if ($query->have_posts ()) {
 						while ( $query->have_posts () ) {
 							$query->the_post ();
+							?>
+							<article id="post-<?php the_ID(); ?>" <?php post_class( 'et_pb_post' ); ?>>
+							<?php
 							switch ($postType) { // step 1:check if client wants Events
 								case 'ai1ec_event' :
 									get_template_part ( 'includes/ai1ec', 'event' );
@@ -72,6 +75,9 @@ switch ($postType) { // step 1:check if area client wants Events
 									$postName = 'Opportunities';
 									break;
 							}
+							?>
+							</article>
+							<?php														
 						}
 						if (function_exists ( 'wp_pagenavi' ))
 							wp_pagenavi ();
@@ -79,20 +85,8 @@ switch ($postType) { // step 1:check if area client wants Events
 							get_template_part ( 'includes/navigation', 'index' );
 						}
 					} else {
-						switch ($postType) { // step 1:check if client wants Events
-							case 'ai1ec_event' :
-								get_template_part ( 'includes/no', 'events' );
-								break;
-							case 'av_unit' : // step 2:check if client wants unit
-								get_template_part ( 'includes/no', 'units' );
-								break;
-							case 'av_project' : // step 2:check if client wants projects
-								get_template_part ( 'includes/no', 'projects' );
-								break;
-							default : // default is av_opportunity
-								get_template_part ( 'includes/no', 'opportunity' );
-								break;
-						}
+						/** nothing found ;( **/
+						get_template_part ( 'includes/no', 'opportunity' );
 					}
 					
 					?>

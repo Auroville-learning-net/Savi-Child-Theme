@@ -691,3 +691,8 @@ ul.bottom-nav {margin:10px 0;overflow:hidden;}
 ul.bottom-nav li {padding:0 30px 0 34px;list-style-type:none;display:inline;}
 ul.bottom-nav li a,#footernav a:active,#footernav a:visited{color:#<strong>COLOR OF CHOICE</strong>;text-decoration:none;}
 ul.bottom-nav li a:hover{text-decoration:underline;}
+
+/* override posts (mainly used in lists) */
+.et_pb_post {
+	margin-bottom: 15px;	
+}

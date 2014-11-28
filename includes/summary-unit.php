@@ -17,7 +17,7 @@ $thumbnail = get_thumbnail ( $width, $height, $classtext, $titletext, $titletext
 $thumb = $thumbnail ["thumb"];
 
 ?>
-<article class="unit_summary">
+<div class="unit_summary">
 	<div class="sum_unit_thumbnail">
 		<?php
 		if ('on' == et_get_option ( 'divi_thumbnails_index', 'on' ) && '' !== $thumb) :
@@ -30,7 +30,7 @@ $thumb = $thumbnail ["thumb"];
 		endif;
 		?>
  	</div>
-	<div id="post-<?php the_ID(); ?>" class="sum_op_content">
+	<div id="post-<?php the_ID(); ?>" class="sum_unit_content">
 		<div class="sum_unit_headline">
 			<a href="<?php echo $unit_permalink; ?>" class="unit_title"><?php echo $titletext; ?></a>
 		</div>
@@ -38,4 +38,4 @@ $thumb = $thumbnail ["thumb"];
 			<?php echo $excerpt; ?>
 		</div>
 	</div>
-</article>
+</div>

@@ -65,7 +65,7 @@ if ($query->have_posts ()) {
 
 ?>
 
-<article class="opportunity_summary">
+<div class="opportunity_summary">
 	<div class="sum_op_thumbnail">
 		<?php
 		if ('on' == et_get_option ( 'divi_thumbnails_index', 'on' ) && '' !== $thumb) :
@@ -91,4 +91,4 @@ if ($query->have_posts ()) {
 			<span class="sum_op_label">Daily tasks: </span><?php echo $terms_daily_tasks; ?>
 		</div>
 	</div>
-</article>
+</div>
