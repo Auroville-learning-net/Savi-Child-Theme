@@ -58,10 +58,7 @@ if ($query->have_posts ()) {
 		$unit_permalink = get_permalink ();
 		$unit_name = get_the_title ();
 	}
-} else {
-	$unit_name = esc_html_e ( 'No unit Specified', 'Divi' );
-	$unit_permalink = "#";
-}
+} 
 
 ?>
 
