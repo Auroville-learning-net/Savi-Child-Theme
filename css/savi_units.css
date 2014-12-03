@@ -1,14 +1,24 @@
 /* Headline in the opportunity's summary */
 .unit_summary {
-	background-color: #eee;
-	background: -webkit-linear-gradient(#FFF, #EEE);	/* For Safari 5.1 to 6.0 */
-	background: -o-linear-gradient(#FFF, #EEE); /* For Opera 11.1 to 12.0 */
-	background: -moz-linear-gradient(#FFF, #EEE);	/* For Firefox 3.6 to 15 */
-	background: linear-gradient(#FFF, #EEE); /* Standard syntax */
+	/* http://www.colorzilla.com/gradient-editor */
+	background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
 
 	padding: 10px;
 	margin-bottom: 10px;
 }
+
+article.av_unit{
+	background-image: url(images/organization_bg.png);
+	background-position-x: 100%;
+	background-repeat: no-repeat;
+}
+
 
 .unit_summary .sum_unit_headline {
 	display: block;

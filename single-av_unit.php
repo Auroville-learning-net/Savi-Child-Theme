@@ -42,38 +42,8 @@
 						</div>
 					</div>
 					<div class="et_pb_row_inner">
-						<div class="et_pb_column et_pb_column_4_4 et_pb_column_inner">
-						</div>
+						<p>&nbsp;</p>
 					</div>
-
-					<div class="et_pb_row_inner">
-						<div class="et_pb_column et_pb_column_4_4 et_pb_column_inner">
-							<!-- Start Opportunities list -->
-							<?php
-							$OppQuery = new WP_Query ( array (
-									'meta_key' => 'av_unit',
-									'meta_value' => get_the_ID (),
-									'meta_compare' => '=',
-									'post_type' => 'av_opportunity' 
-							) );
-							if ($OppQuery->have_posts ()) {
-								echo "<H2>Opportunities at " . $unit_title . "</H2>";
-								while ( $OppQuery->have_posts () ) {
-									$OppQuery->the_post ();
-									get_template_part ( 'includes/summary', 'opportunity' );
-								}
-							} else {
-								?>
-							<div class="entry">
-								<!--If no results are found-->
-								<p><?php esc_html_e('No Opportunity Found','Divi'); ?></p>
-							</div>
-											<?php	} ?>
-							
-							<!-- End Opportunities list -->
-						</div>
-					</div>
-
 					<div class="et_pb_row_inner">
 						<div class="et_pb_column et_pb_column_1_4 et_pb_column_inner">
 							<!-- First column -->
@@ -105,10 +75,40 @@
 						</div>
 						<div class="et_pb_column et_pb_column_1_4 et_pb_column_inner"></div>
 					</div>
-
+					<div class="et_pb_row_inner">
+						<div class="et_pb_column et_pb_column_4_4 et_pb_column_inner">
+							<!-- Start Opportunities list -->
+							<?php
+							$OppQuery = new WP_Query ( array (
+									'meta_key' => 'av_unit',
+									'meta_value' => get_the_ID (),
+									'meta_compare' => '=',
+									'post_type' => 'av_opportunity' 
+							) );
+							if ($OppQuery->have_posts ()) {
+								echo "<H2>Opportunities at " . $unit_title . "</H2>";
+								while ( $OppQuery->have_posts () ) {
+									$OppQuery->the_post ();
+									?>
+									<article id="post-<?php the_ID(); ?>" <?php post_class( 'et_pb_post' ); ?>>
+									<?php 
+									get_template_part ( 'includes/summary', 'opportunity' );
+									?>
+									</article>
+									<?php 
+								}
+							} else {
+								?>
+							<div class="entry">
+								<!--If no results are found-->
+								<p><?php esc_html_e('No Opportunity Found','Divi'); ?></p>
+							</div>
+											<?php	} ?>
+							
+							<!-- End Opportunities list -->
+						</div>
+					</div>
 				</article>
-				<!-- END OF NEW POSTING FORMAT -->
-				<!-- .et_pb_post -->
 					<?php
 					if (et_get_option ( 'divi_integration_single_bottom' ) != '' && et_get_option ( 'divi_integrate_singlebottom_enable' ) == 'on')
 						echo (et_get_option ( 'divi_integration_single_bottom' ));
