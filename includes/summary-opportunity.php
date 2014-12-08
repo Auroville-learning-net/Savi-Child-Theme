@@ -41,6 +41,8 @@ $classtext = 'et_pb_post_main_image';
 $titletext = get_the_title ();
 $thumbnail = get_thumbnail ( $width, $height, $classtext, $titletext, $titletext, false, 'Blogimage' );
 $thumb = $thumbnail ["thumb"];
+$thumbHTML = print_thumbnail($thumb, $thumbnail["use_timthumb"], $titletext,
+		$width, $height, '', false);
 
 /* we're going to search for the unit now. */
 $unit_id = get_post_meta ( get_the_ID (), "av_unit", true );
@@ -68,7 +70,7 @@ if ($query->have_posts ()) {
 		if ('on' == et_get_option ( 'divi_thumbnails_index', 'on' ) && '' !== $thumb) :
 			?>
 			<a href="<?php echo $opportunity_permalink; ?>">
-				<?php print_thumbnail( $thumb, $thumbnail["use_timthumb"], $titletext, $width, $height ); ?>
+				<?php echo $thumbHTML; ?>
 			</a>
 		
 		
