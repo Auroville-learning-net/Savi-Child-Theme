@@ -258,6 +258,12 @@ padding: 25px 0;
 	float:left;
 	font-weight:bolder;
 }
+.fieldlabel {
+	min-width: 90px;
+	display: inline-block;
+	font-weight: bold;
+}
+	
 .table1{
 	margin-bottom:15px;
 	}
@@ -695,4 +701,16 @@ ul.bottom-nav li a:hover{text-decoration:underline;}
 /* override posts (mainly used in lists) */
 .et_pb_post {
 	margin-bottom: 15px;	
+}
+
+/*** Unit detail page ***/
+.unit_text_excerpt {
+	margin-bottom: 22px;
+}
+.unit_thumbnail {
+	width: 225px;
+	height: 120px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	float: right;
 }
