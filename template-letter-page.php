@@ -109,3 +109,8 @@ Template Name: My custom letter Page
 </div> <!-- #main-content -->
 
 <?php get_footer('letter'); ?>
+ontent-area -->
+	</div> <!-- .container -->
+</div> <!-- #main-content -->
+
+<?php get_footer('letter'); ?>

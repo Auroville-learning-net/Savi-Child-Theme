@@ -284,8 +284,8 @@ function savi_skills_workarea_styles(){ ?>
 		jQuery(function($) {
 			//Indian Visa requirement make the field disabled
 		/*		$('#field_19nbo42').attr('disabled', 'disabled');
-			$('#field_jmlqv').attr('readonly', 'readonly'); */
-			$('#field_19nbo42').attr('readonly', 'readonly');
+			$('#field_jmlqv').attr('readonly', 'readonly'); 
+			$('#field_19nbo42').attr('readonly', 'readonly');  // this is now enabled (support ticket #289) */
 			
 			//Any work area field in Volunteer Profile Registration Form
 			$('#field_467-999').click(function () {

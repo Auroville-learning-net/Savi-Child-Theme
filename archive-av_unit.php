@@ -2,11 +2,13 @@
 
 
 
-<div id="main-content">
-	<div class="container">
-		<div id="content-area" class="clearfix">
-			<div id="left-area">
-			
+<div id="main-content"><!-- main-Content -->
+	<div class="et_pb_section et_section_specialty container"><!-- container -->
+		<div id="content-area" class="et_pb_row"><!-- content-area -->
+			<div class="et_pb_column et_pb_column_1_4"> <!-- col 1/4-->
+					<?php get_sidebar(); ?>
+			</div>
+			<div id="content" class="et_pb_column et_pb_column_3_4"><!-- col 3/4, #content for infinite scroll-->
 		<?php
 			if ( have_posts() ) :
 				while ( have_posts() ) : the_post();
@@ -24,13 +26,8 @@
 				endif;
 			?>
 			
-			</div> <!-- #left-area -->
-
-			<?php get_sidebar(); ?>
+			</div> <!-- col 3/4-->
 		</div> <!-- #content-area -->
 	</div> <!-- .container -->
 </div> <!-- #main-content -->
-
-
-
 <?php get_footer(); ?>

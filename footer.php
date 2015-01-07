@@ -13,7 +13,7 @@ if ( ! is_page_template( 'page-template-blank.php' ) ) : ?>
 						<?php
 							wp_nav_menu( array(
 								'theme_location' => 'footer-menu',
-								'depth'          => '1',
+ 								/* 'depth'          => '1', we want full depth in the footer */
 								'menu_class'     => 'bottom-nav',
 								'container'      => '',
 								'fallback_cb'    => '',
@@ -44,4 +44,4 @@ if ( ! is_page_template( 'page-template-blank.php' ) ) : ?>
 
 	<?php wp_footer(); ?>
 </body>
-</html>
+</html>/html>

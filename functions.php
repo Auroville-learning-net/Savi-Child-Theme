@@ -1,5 +1,32 @@
 <?php
-define( 'SAVI_2014_VERSION', '0.3' );
+define( 'SAVI_2014_VERSION', '1.5' );
+/*functionality to display current template being loaded when admin is logged in*/
+function echo_admin($echoStr=null){
+	$isAdmin = current_user_can( 'manage_options' );
+	if($echoStr && $isAdmin) echo $echoStr;
+    return $isAdmin;
+	//return false;
+}
+add_action('template_redirect','beta_site_redirect');
+function beta_site_redirect() {
+	$admin = $_GET ['admin'];
+    if (!is_user_logged_in() && !is_admin() && isBetaSite() ) {
+		if($admin) return;
+        //&& !'redirect.html'==get_current_template()
+        wp_redirect('/redirect.html');
+        exit();
+    }
+}
+function sy_get_domain_name(){
+	$domain_name =  preg_replace('/^www\./','',$_SERVER['SERVER_NAME']);
+	return $domain_name; 
+}
+function isBetaSite(){
+	if("beta.auroville-learning.net" == sy_get_domain_name()) return true;
+	if("localhost" == sy_get_domain_name()) return true;
+	if("savi.pe.hu" == sy_get_domain_name()) return true;
+	return false;
+}
 
 /* Disable WordPress Admin Bar for all users but admins. */
 add_filter('show_admin_bar', '__return_false');
@@ -104,6 +131,8 @@ add_action( 'wp_enqueue_scripts', 'savi_header_styles' );
 function savi_header_styles(){
 	$template_dir = get_stylesheet_directory_uri();
 	wp_enqueue_style( 'av_unit-map',$template_dir . '/css/av_unit-map.css' , array(), null );
+	wp_enqueue_style('media-test',$template_dir . '/css/media-below-980.css' , array('divi-style'), '1.0', '(max-width: 980px)');
+	wp_enqueue_style('media-portrait',$template_dir . '/css/media-portrait.css' , array('divi-style'), '1.0', '(orientation:portrait)');
 }
 
 

@@ -17,3 +17,5 @@ if ( ! is_page_template( 'page-template-blank.php' ) ) : ?>
 	<?php wp_footer(); ?>
 </body>
 </html>
+</body>
+</html>

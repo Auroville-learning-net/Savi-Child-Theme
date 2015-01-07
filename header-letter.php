@@ -55,4 +55,5 @@
 			<div class="container clearfix">
 			</div> <!-- .container -->
 		</header> <!-- #main-header -->
+		<div id="et-main-area">/header> <!-- #main-header -->
 		<div id="et-main-area">

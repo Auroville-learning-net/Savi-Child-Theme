@@ -58,3 +58,8 @@ Template Name: Volunteers Opportunity Page
 
 
 <?php get_footer(); ?>
+
+</div> <!-- #main-content -->
+
+
+<?php get_footer(); ?>

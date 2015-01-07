@@ -121,4 +121,9 @@ $user_ID = $curauth->ID; // get the user id
 	</div> <!-- .container -->
 </div> <!-- #main-content -->
  
+<?php get_footer(); ?> ?>
+		</div> <!-- #content-area -->
+	</div> <!-- .container -->
+</div> <!-- #main-content -->
+ 
 <?php get_footer(); ?>

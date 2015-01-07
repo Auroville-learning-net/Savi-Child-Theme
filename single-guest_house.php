@@ -32,4 +32,6 @@
 	</div> <!-- end .container -->
 </div> <!-- end #main-area -->
 
+<?php get_footer(); ?>area -->
+
 <?php get_footer(); ?>

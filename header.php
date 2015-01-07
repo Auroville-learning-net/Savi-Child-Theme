@@ -41,7 +41,7 @@
 	
 </head>
 <body <?php body_class(); ?>>
-	<?php if( current_user_can( 'manage_options' ) ) printf( '<div><strong>Current template:</strong> %s</div>', get_current_template() ); ?>
+	<?php if( echo_admin() ) printf( '<div><strong>Current template:</strong> %s</div>', get_current_template() ); ?>
 	<div id="page-container">
 <?php
 	if ( is_page_template( 'page-template-blank.php' ) ) {
@@ -231,6 +231,13 @@
 						</form>
 					</div>
 					<?php endif; // true === et_get_option( 'show_search_icon', false ) ?>
+
+					<?php do_action( 'et_header_top' ); ?>
+				</div> <!-- #et-top-navigation -->
+			</div> <!-- .container -->
+		</header> <!-- #main-header -->
+
+		<div id="et-main-area">	<div id="et-main-area">// true === et_get_option( 'show_search_icon', false ) ?>
 
 					<?php do_action( 'et_header_top' ); ?>
 				</div> <!-- #et-top-navigation -->

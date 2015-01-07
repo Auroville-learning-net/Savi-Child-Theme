@@ -1,9 +1,11 @@
 <?php get_header(); ?>
 <div id="main-content">
-	<div class="container">
-		<div id="content-area" class="clearfix">
-			<div id="left-area">
-			
+	<div class="et_pb_section et_section_specialty">
+		<div class="et_pb_row">
+			<div class="et_pb_column et_pb_column_1_4">
+					<?php get_sidebar(); ?>
+				</div>
+			<div class="et_pb_column et_pb_column_3_4">
         		<?php
         			if ( have_posts() ) :
         				while ( have_posts() ) : the_post();
@@ -144,10 +146,11 @@
 		    	?>
 			
 			</div> <!-- #left-area -->
-
-			<?php get_sidebar(); ?>
 		</div> <!-- #content-area -->
 	</div> <!-- .container -->
+</div> <!-- #main-content -->
+
+<?php get_footer(); ?>ainer -->
 </div> <!-- #main-content -->
 
 <?php get_footer(); ?>

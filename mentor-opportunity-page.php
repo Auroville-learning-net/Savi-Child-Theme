@@ -1,31 +1,35 @@
 <?php
 /*
-Template Name: Mentor My Opportunity Page
+Template Name: Mentor Opportunities
 */
  get_header(); 
  ?>
 
 <div id="main-content">
-	<div class="container">
-		<div id="content-area" class="clearfix">
-			<div id="left-area">
+	<div class="et_pb_section et_section_specialty">
+
+		<div class="et_pb_row">
+			<div class="et_pb_column et_pb_column_1_4">
+					<?php get_sidebar(); ?>
+			</div>
+			<div class="et_pb_column et_pb_column_3_4">
 			<?php
 			$user_id = get_current_user_id();
 			$mentor = get_user_meta($user_id,'savi_role',true);
 			//get the savi role mentor or volunteers 
 			if ( is_user_logged_in() ) { //if user is loggrd in 
-					if($mentor=="opportunity-owner"){   //if mentor role is mentor
+				if($mentor=="opportunity-owner"){   //if mentor role is mentor
 					$args = array(
-							'post_type' => 'av_opportunity',
-							'meta_query' => array(
-												array(
-													'key' => 'contact_user',
-													'value' => $user_id,
-													'compare' => '=',
-													'type' => NUMERIC,
-												)
-											),									
-							);
+						'post_type' => 'av_opportunity',
+						'meta_query' => array(
+											array(
+												'key' => 'contact_user',
+												'value' => $user_id,
+												'compare' => '=',
+												'type' => NUMERIC,
+											)
+								),									
+					);
 					query_posts($args);		
 					//query_postsis passing all opportunity posts with contact user id = logged in users
 					if ( have_posts() ) :
@@ -177,10 +181,9 @@ Template Name: Mentor My Opportunity Page
 				echo "<h2>Please Log in to view this page</h2>";
 			}
 			?>
-				</div> <!-- #left-area -->
-			<?php get_sidebar(); ?>
-		</div> <!-- #content-area -->
-	</div> <!-- .container -->
+			</div> <!-- et_pb_column_3_4 -->
+		</div> <!-- et_pb_row -->
+	</div> <!-- et_pb_sectio -->
 </div> <!-- #main-content -->
 
 <script type="text/javascript" >
@@ -209,6 +212,15 @@ Template Name: Mentor My Opportunity Page
 		jQuery('.my_vol').show();
 		jQuery('#sortable-'+oppID).css({ opacity: 1.0 });
 		  }	
+		});
+	});
+	jQuery('.wait_for_prof').click(function(e){
+		alert('Please wait for more profile');
+	});
+</script>
+
+<?php get_footer(); ?>
+
 		});
 	});
 	jQuery('.wait_for_prof').click(function(e){
