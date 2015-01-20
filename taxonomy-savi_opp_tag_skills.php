@@ -1,11 +1,13 @@
 <?php get_header(); ?>
 
-<div id="main-area">
-	<div class="container">
-		<?php get_template_part( 'includes/breadcrumbs', 'index' ); ?>
-        <h2>taxonomy-savi_prerequisites.php</h2>
-		<div id="content" class="clearfix">
-			<div id="left-area">
+<div id="main-content"><!-- main-Content -->
+	<div class="et_pb_section et_section_specialty container"><!-- container -->
+		<div id="content-area" class="et_pb_row"><!-- content-area -->
+			<div class="et_pb_column et_pb_column_1_4"> <!-- col 1/4-->
+					<?php get_sidebar(); ?>
+			</div>
+			<div class="et_pb_column et_pb_column_3_4"><!-- col 3/4-->
+			
 				<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 					<?php get_template_part( 'includes/entry', 'index' ); ?>
 				<?php
@@ -15,11 +17,9 @@
 				else:
 					get_template_part( 'includes/no-results', 'entry' );
 				endif; ?>
-			</div> <!-- end #left-area -->
-
-			<?php get_sidebar(); ?>
-		</div> <!-- end #content -->
-	</div> <!-- end .container -->
-</div> <!-- end #main-area -->
+			</div> <!-- col 3/4-->
+		</div> <!-- #content-area -->
+	</div> <!-- .container -->
+</div> <!-- #main-content -->
 
 <?php get_footer(); ?>

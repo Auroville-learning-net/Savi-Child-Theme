@@ -7,7 +7,7 @@ $postType = $_GET ['postType']; // Get the post type ai1ec_event, av_unit, av_op
 
 $display_count = 10;
 $page = $wp_query->query ['paged'] ? $wp_query->query ['paged'] : 1;
-$offset = ($page - 1) * $display_count;
+//$offset = ($page - 1) * $display_count;
 
 get_header ();
 // $unitIDs = array();
@@ -43,13 +43,13 @@ switch ($postType) { // step 1:check if client wants Events
 					$args = array (
 							'savi_opp_cat_work_type' => $term->slug,
 							'post_type' => 'av_opportunity',
-							
-							// 'orderby' => 'date',
-							// 'order' => 'desc',
-							'number' => $display_count,
-							'page' => $page,
-							'offset' => $offset 
+							'orderby' => 'title',
+							'order' => 'asc',
+							'paged' => $page
 					);
+					//'number' => $display_count,
+ 					//'page' => $page
+					//'offset' => $offset --- removed by Vrata, there is no need for this here!!!
 					$query = new WP_Query ( $args );
 					
 					if ($query->have_posts ()) {

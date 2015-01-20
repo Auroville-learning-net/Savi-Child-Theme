@@ -1,11 +1,12 @@
 <?php get_header(); ?>
-<div id="main-content">
-	<div class="et_pb_section et_section_specialty">
-		<div class="et_pb_row">
-			<div class="et_pb_column et_pb_column_1_4">
+<div id="main-content"><!-- main-Content -->
+	<div class="et_pb_section et_section_specialty container"><!-- container -->
+		<div id="content-area" class="et_pb_row"><!-- content-area -->
+			<div class="et_pb_column et_pb_column_1_4"> <!-- col 1/4-->
 					<?php get_sidebar(); ?>
-				</div>
-			<div class="et_pb_column et_pb_column_3_4">
+			</div>
+			<div class="et_pb_column et_pb_column_3_4"><!-- col 3/4-->
+			
         		<?php
         			if ( have_posts() ) :
         				while ( have_posts() ) : the_post();
@@ -145,12 +146,9 @@
 				endif;
 		    	?>
 			
-			</div> <!-- #left-area -->
+			</div> <!-- col 3/4-->
 		</div> <!-- #content-area -->
 	</div> <!-- .container -->
-</div> <!-- #main-content -->
-
-<?php get_footer(); ?>ainer -->
 </div> <!-- #main-content -->
 
 <?php get_footer(); ?>

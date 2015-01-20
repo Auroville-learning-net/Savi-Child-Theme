@@ -183,7 +183,7 @@ Template Name: Mentor Opportunities
 			?>
 			</div> <!-- et_pb_column_3_4 -->
 		</div> <!-- et_pb_row -->
-	</div> <!-- et_pb_sectio -->
+	</div> <!-- et_pb_section -->
 </div> <!-- #main-content -->
 
 <script type="text/javascript" >

@@ -439,5 +439,18 @@ add_action( 'wp_ajax_savi_volunteer_update_order', 'savi_volunteer_update_order'
 	update_post_meta( $opp_id, 'ordered_new_volunteer_date', $current_time_updated);
 	exit();
 }
+/**/
+// [OpportunityCount]
+function OpportunityCount_funtion( $atts ) { 
+	$post_type = 'av_opportunity';
+	 = 'opportunity_status';
+	global $wpdb;
+	$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM wp_posts wp
+								INNER JOIN wp_postmeta wpm
+								ON (wp.ID = wpm.post_id AND wpm.meta_key = $term_slug AND wpm.meta_value = 'opened')
+								WHERE wp.post_type = $post_type;"));
 
+    return $count;
+}
+add_shortcode( 'OpportunityCount', 'OpportunityCount_funtion' );
 ?>

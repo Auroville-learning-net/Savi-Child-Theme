@@ -19,20 +19,16 @@
 				$terms_startdate_formatted = date ( "M d, Y", strtotime ( $terms_startdate ) );
 				$terms_enddate = get_post_meta ( get_the_ID (), "enddate", true );
 				$terms_enddate_formatted = date ( "M d, Y", strtotime ( $terms_enddate ) );
-				
-				$terms_prerequisites = get_post_meta ( get_the_ID (), "prerequisites", true );
-				
+				$terms_prerequisites = get_post_meta ( get_the_ID (), "prerequisites", true );		
 				$terms_languages = get_the_terms ( get_the_ID (), 'savi_opp_tag_languages' );
 				$terms_soft = get_the_terms ( get_the_ID (), 'savi_opp_tag_soft' );
 				$terms_duration = get_post_meta ( get_the_ID (), "duration", true );
 				$terms_timing = get_post_meta ( get_the_ID (), "timing", true );
 				$terms_morning = get_post_meta ( get_the_ID (), "morningtimings", true );
-				$terms_afternoon = get_post_meta ( get_the_ID (), "afternoontimings", true );
-				
+				$terms_afternoon = get_post_meta ( get_the_ID (), "afternoontimings", true );		
 				$terms_architect_semester = get_post_meta ( get_the_ID (), "architect_semester", true );
 				$terms_computer_required = get_post_meta ( get_the_ID (), "computerrequired", true );
-				$terms_number_of_volunteers = get_post_meta ( get_the_ID (), "number_of_volunteers", true );
-				
+				$terms_number_of_volunteers = get_post_meta ( get_the_ID (), "number_of_volunteers", true );			
 				$contactName = get_post_meta ( get_the_ID (), "contactPerson", true );
 				$contactNumber = get_post_meta ( get_the_ID (), "contactPhone", true );
 				$contactEmail = get_post_meta ( get_the_ID (), "contactEmail", true );
@@ -103,7 +99,17 @@ and		wp_posts.ID = wp_postmeta.post_id" );
 				if ( current_user_can( 'manage_options' ) ) {
 					$showcontact = true;
 				}				
-
+				/* Check Public view content whether its shows frontend or not*/
+					$showcontent = false;
+					$current_user = wp_get_current_user();
+					switch($current_user->ID){
+						case 0:
+							$showcontent=false;
+						break;
+						default:
+							$showcontent=true;
+						break;
+					}
 				if (et_get_option ( 'divi_integration_single_bottom' ) != '' && et_get_option ( 'divi_integrate_singlebottom_enable' ) == 'on')
 					echo (et_get_option ( 'divi_integration_single_bottom' ));
 				$no_of_opportunities = get_post_meta ( get_the_ID (), "no_of_opportunities", true );
@@ -173,7 +179,7 @@ and		wp_posts.ID = wp_postmeta.post_id" );
 								</div>
 							</div>
 							<?php endif;?>
-							<?php if ($terms_skills_gain) : ?>
+							<?php if ($terms_skills_gain && $showcontent===true) : ?>
 							<div>
 								<p>
 									<strong>Skills gained</strong>
@@ -198,6 +204,7 @@ and		wp_posts.ID = wp_postmeta.post_id" );
 						</div>
 						<!-- End Row 2 -->
 					</div>
+					<?php if ($showcontent===true) { ?>
 					<div class="et_pb_row_inner">
 						<!-- Row 3 -->
 						<div class="et_pb_column et_pb_column_3_8 et_pb_column_inner">
@@ -390,7 +397,7 @@ and		wp_posts.ID = wp_postmeta.post_id" );
 						
 						<!-- end Row 9 -->
 					</div>
-					
+					<?php } ?>
 					<?php if ( $showcontact ) {	 ?>
 					<div class="et_pb_row_inner">
 						<!-- Row 10 -->

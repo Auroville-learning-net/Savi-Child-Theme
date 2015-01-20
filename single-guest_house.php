@@ -1,10 +1,12 @@
 <?php get_header(); ?>
 <?php $et_full_post = 'on' == get_post_meta( get_the_ID(), '_et_full_post', true ) ? true : false; ?>
-<div id="main-area">
-	<div class="container<?php if ( $et_full_post ) echo ' fullwidth'; ?>">
-		<?php get_template_part( 'includes/breadcrumbs', 'single' ); ?>
-		<div id="content" class="clearfix">
-			<div id="left-area">
+<div id="main-content">
+	<div class="et_pb_section et_section_specialty">
+		<div class="et_pb_row">
+			<div class="et_pb_column et_pb_column_1_4">
+					<?php get_sidebar(); ?>
+				</div>
+			<div class="et_pb_column et_pb_column_3_4">
 				<?php if (et_get_option('explorable_integration_single_top') <> '' && et_get_option('explorable_integrate_singletop_enable') == 'on') echo (et_get_option('explorable_integration_single_top')); 
 					  while ( have_posts() ) : the_post(); 
 						get_template_part( 'content', get_post_format() );  
@@ -25,13 +27,9 @@
 				<?php 	}
 					}
 				?>
-			</div> <!-- end #left-area -->
-
-			<?php if ( ! $et_full_post ) get_sidebar(); ?>
-		</div> <!-- end #content -->
-	</div> <!-- end .container -->
-</div> <!-- end #main-area -->
-
-<?php get_footer(); ?>area -->
+			</div> <!-- #left-area -->
+		</div> <!-- #content-area -->
+	</div> <!-- .container -->
+</div> <!-- #main-content -->
 
 <?php get_footer(); ?>

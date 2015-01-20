@@ -237,11 +237,4 @@
 			</div> <!-- .container -->
 		</header> <!-- #main-header -->
 
-		<div id="et-main-area">	<div id="et-main-area">// true === et_get_option( 'show_search_icon', false ) ?>
-
-					<?php do_action( 'et_header_top' ); ?>
-				</div> <!-- #et-top-navigation -->
-			</div> <!-- .container -->
-		</header> <!-- #main-header -->
-
-		<div id="et-main-area">
+		<div id="et-main-area">	

@@ -3,10 +3,13 @@
 get_header();
 
  ?>
-<div id="main-content"><!-- main-Content -->
-	<div class="container"><!-- container -->
-		<div id="content-area" class="clearfix"><!-- content-area -->
-			<div id="left-area"><!-- left-area -->
+<div id="main-content">
+	<div class="et_pb_section et_section_specialty">
+		<div class="et_pb_row">
+			<div class="et_pb_column et_pb_column_1_4">
+					<?php get_sidebar(); ?>
+				</div>
+			<div class="et_pb_column et_pb_column_3_4">
 			
 				<?php
 					if ( have_posts() ) :
@@ -48,7 +51,6 @@ get_header();
 						endif;
 					?>
 				</div> <!-- #left-area -->
-			<?php get_sidebar(); ?>
 		</div> <!-- #content-area -->
 	</div> <!-- .container -->
 </div> <!-- #main-content -->

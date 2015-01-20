@@ -17,14 +17,14 @@ switch( $postType ) { // step 1:check if client wants Events
 }
  ?>
 
-<div id="main-content">
-	<div class="et_pb_section et_section_specialty">
-
-		<div class="et_pb_row">
-			<div class="et_pb_column et_pb_column_1_4">
-			<?php get_sidebar(); ?>
+<div id="main-content"><!-- main-Content -->
+	<div class="et_pb_section et_section_specialty container"><!-- container -->
+		<div id="content-area" class="et_pb_row"><!-- content-area -->
+			<div class="et_pb_column et_pb_column_1_4"> <!-- col 1/4-->
+					<?php get_sidebar(); ?>
 			</div>
-			<div class="et_pb_column et_pb_column_3_4">
+			<div class="et_pb_column et_pb_column_3_4"><!-- col 3/4-->
+			
 				<h2><?php echo $postName;?> for Software : <?php single_tag_title(); ?></h2>
 				<div id="opportunities">
 				<?php 
@@ -75,9 +75,9 @@ switch( $postType ) { // step 1:check if client wants Events
 							}
 					}?>
 				</div> <!-- end #opportunities -->
-			</div> <!-- end .et_pb_column_3_4 -->
-		</div> <!-- end .et_pb_row -->
-	</div> <!-- end et_pb_section -->
-</div> <!-- end #main-area -->
+			</div> <!-- col 3/4-->
+		</div> <!-- #content-area -->
+	</div> <!-- .container -->
+</div> <!-- #main-content -->
 
 <?php get_footer(); ?>

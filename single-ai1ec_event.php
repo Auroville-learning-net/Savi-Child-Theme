@@ -1,9 +1,13 @@
 <?php get_header(); ?>
 
 <div id="main-content">
-	<div class="container">
-		<div id="content-area" class="clearfix">
-			<div id="left-area">
+	<div class="et_pb_section et_section_specialty">
+
+		<div class="et_pb_row">
+			<div class="et_pb_column et_pb_column_1_4">
+					<?php get_sidebar(); ?>
+			</div>
+			<div class="et_pb_column et_pb_column_3_4">
 			<?php if ( have_posts() ) : the_post(); ?>
 				<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 				
@@ -18,10 +22,8 @@
 			<?php endif;
 			
 			?>
-			</div> <!-- #left-area -->
-			<?php get_sidebar(); ?>
+			</div> <!-- col 3/4-->
 		</div> <!-- #content-area -->
 	</div> <!-- .container -->
 </div> <!-- #main-content -->
-<?php get_footer(); ?>>
 <?php get_footer(); ?>
