@@ -14,10 +14,10 @@ Template Name: Mentor Opportunities
 			</div>
 			<div class="et_pb_column et_pb_column_3_4">
 			<?php
-			$user_id = get_current_user_id();
-			$mentor = get_user_meta($user_id,'savi_role',true);
 			//get the savi role mentor or volunteers 
-			if ( is_user_logged_in() ) { //if user is loggrd in 
+			if ( is_user_logged_in() ) { //if user is loggrd in
+				$user_id = get_current_user_id();
+				$mentor = get_user_meta($user_id,'savi_role',true);
 				if($mentor=="opportunity-owner"){   //if mentor role is mentor
 					$args = array(
 						'post_type' => 'av_opportunity',

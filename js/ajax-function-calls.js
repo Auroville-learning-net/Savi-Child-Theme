@@ -3,7 +3,7 @@ jQuery(document).ready(function($){
    		var div = $(this).parent().find('div#selectResult');
 		var site_url = $('#hidden_blog_url').val();
    		$('label[for="select-icon"]').hide();
-   		$('#loading_image').show();
+   		$('#loading_image').css( 'display', 'inline');
    		$.post(site_url+'/wp-admin/admin-ajax.php', {
    			action: 'sy_register_opportunity',
    			post_id: $(this).attr('value'),

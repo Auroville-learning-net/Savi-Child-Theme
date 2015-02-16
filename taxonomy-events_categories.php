@@ -14,8 +14,8 @@ get_header();
 				<?php
 					if ( have_posts() ) :
 						while ( have_posts() ) : the_post();
-						$terms_work_area=get_the_terms(get_the_ID() , 'savi_opp_cat_work_area' ); 
-						$terms_skills_gain=get_post_meta( get_the_ID(), "skills_gain", true );
+						//$terms_work_area=get_the_terms(get_the_ID() , 'savi_opp_cat_work_area' ); 
+						//$terms_skills_gain=get_post_meta( get_the_ID(), "skills_gain", true );
 						?>
 							<div id="left-grid"><!-- left-grid -->
 								<div id="left-image"><!-- left-image -->

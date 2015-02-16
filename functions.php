@@ -156,16 +156,10 @@ function savi_taxonomy_alter_query($query) {
 	//gets the global query var object
 	global $wp_query;
 	$postType = $_GET['postType']; // get the post type form url
-	$eventType = $_GET['eventType'];	// get the event type form url
-	if($eventType == '') $eventType= 'workshop-2'; // if the event category is workshop display workshop by default
-	//archive of ai1ec_event event post type
-	switch(true){
-		case is_tax('savi_opp_cat_work_area'):
-		case is_tax('savi_opp_cat_work_type'):
-		case is_tax('savi_opp_tag_soft'):
-		case is_tax('savi_opp_tag_languages'):
-			switch($postType) {
-				case 'ai1ec_event': //events
+	//$eventType = $_GET['eventType'];	// get the event type form url
+	//if($eventType == '') $eventType= 'workshop-2'; // if the event category is workshop display workshop by default
+	/* Removed the following case as the events_categories is a spearare taxonomy
+	 case 'ai1ec_event': //events
 					$args = array( 'post_type' => $postType, 
 								 'tax_query' => array(
 											array(
@@ -177,6 +171,14 @@ function savi_taxonomy_alter_query($query) {
 									);
 					$query->query_vars = $args; 
 					break;	
+	 */
+	//archive of ai1ec_event event post type
+	switch(true){
+		case is_tax('savi_opp_cat_work_area'):
+		case is_tax('savi_opp_cat_work_type'):
+		case is_tax('savi_opp_tag_soft'):
+		case is_tax('savi_opp_tag_languages'):
+			switch($postType) {
 				case 'av_unit': //units
 				case 'av_project': //projects
 					$wpQuery = new WP_Query($wp_query->query_vars);
@@ -441,16 +443,121 @@ add_action( 'wp_ajax_savi_volunteer_update_order', 'savi_volunteer_update_order'
 }
 /**/
 // [OpportunityCount]
-function OpportunityCount_funtion( $atts ) { 
+function OpportunityCount_funtion() { 
 	$post_type = 'av_opportunity';
-	 = 'opportunity_status';
+	$term_slug = 'opportunity_status';
 	global $wpdb;
 	$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM wp_posts wp
 								INNER JOIN wp_postmeta wpm
-								ON (wp.ID = wpm.post_id AND wpm.meta_key = $term_slug AND wpm.meta_value = 'opened')
-								WHERE wp.post_type = $post_type;"));
-
+								ON (wp.ID = wpm.post_id AND wpm.meta_key ='".$term_slug."' AND wpm.meta_value = 'opened')
+								AND wp.post_status='publish'
+								WHERE wp.post_type ='".$post_type."'"));
     return $count;
 }
 add_shortcode( 'OpportunityCount', 'OpportunityCount_funtion' );
+
+
+// [UnitCount]
+function UnitCount_funtion() { 
+	$post_type = 'av_unit';
+	global $wpdb;
+	$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM wp_posts wp WHERE wp.post_type ='".$post_type."'"));
+    return $count;
+}
+add_shortcode( 'UnitCount', 'UnitCount_funtion' );
+
+//custom taxonomy custom post counts
+function get_work_area_count($post_type, $term_id){
+	switch($post_type){
+		case "av_project":
+			$sql =  get_savi_taxonomy_count_sql("savi_opp_cat_work_area", $term_id, "projectname");
+			break;
+		case "av_unit":
+			$sql =  get_savi_taxonomy_count_sql("savi_opp_cat_work_area", $term_id, "av_unit");
+			break;
+		case "ai1ec_event":
+			$sql=get_event_taxonomy_count_sql_default($term_id);
+			break;
+		default : //"av_opportunity"
+			$sql=get_savi_taxonomy_count_sql_default("savi_opp_cat_work_area", $term_id);  
+			break;
+	}
+	global $wpdb;
+	$count = $wpdb->get_var($wpdb->prepare($sql));
+	return $count;
+}
+/*
+ * Function to retrieve the sql string for projects/units with opportunities either in work type, work_area, languages, softwares
+ * @param string $taxonomy the taxonomy slug required, eg savi_opp_cat_work_area for work areas
+ * @param int $term_ID the id of the specific term required for requested $taxonomy
+ * @param string $meta_key 'projectname' for projects, 'av_unit' for units
+ * @return string sql string required to get count of opportunities
+ */
+function get_savi_taxonomy_count_sql($taxonomy, $term_ID, $meta_key){
+	$sql_query = "SELECT COUNT(DISTINCT parentmeta.meta_value) ";
+	$sql_query .="FROM	wp_postmeta parentmeta,";
+	$sql_query .="	wp_postmeta opstatus,";
+	$sql_query .="	wp_posts,";
+	$sql_query .="	(select object_id from wp_term_relationships, wp_term_taxonomy ";
+	$sql_query .="		where  	wp_term_taxonomy.term_id = ".$term_ID;
+	$sql_query .="		and 	wp_term_taxonomy.taxonomy = '".$taxonomy."'";
+	$sql_query .="		and		wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id) termtaxonomy";
+	$sql_query .="WHERE	opstatus.post_id = termtaxonomy.object_id";
+	$sql_query .="AND		opstatus.meta_key = 'opportunity_status'";
+	$sql_query .="AND		opstatus.meta_value = 'opened'		";
+	$sql_query .="AND		parentmeta.post_id = termtaxonomy.object_id";
+	$sql_query .="AND		parentmeta.meta_key = '".$meta_key."'";
+	$sql_query .="AND		wp_posts.ID = termtaxonomy.object_id";
+	$sql_query .="AND		wp_posts.post_status = 'publish'";
+	$sql_query .="AND		wp_posts.post_type = 'av_opportunity'";
+	if($meta_key==="projectname") $sql_query .="AND     parentmeta.meta_value > 0";
+	return $sql_query;
+}
+/*
+ * Function to retrieve the sql string for opportunities either in work type, work_area, languages, softwares
+ * @param string $taxonomy the taxonomy slug required, eg savi_opp_cat_work_area for work areas
+ * @param int $term_ID the id of the specific term required for requested $taxonomy
+ * @return string sql string required to get count of opportunities
+ */
+function get_savi_taxonomy_count_sql_default($taxonomy, $term_ID){
+	$sql_query = "SELECT count(DISTINCT wp_posts.ID) ";
+	$sql_query .="FROM	wp_postmeta opstatus,wp_posts,";
+	$sql_query .="	(select object_id from wp_term_relationships, wp_term_taxonomy ";
+	$sql_query .="		where  	wp_term_taxonomy.term_id = ".$term_ID;
+	$sql_query .="		and 	wp_term_taxonomy.taxonomy = '".$taxonomy."'";
+	$sql_query .="		and		wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id) termtaxonomy";
+	$sql_query .="WHERE	opstatus.post_id = termtaxonomy.object_id";
+	$sql_query .="AND		opstatus.meta_key = 'opportunity_status'";
+	$sql_query .="AND		opstatus.meta_value = 'opened'		";
+	$sql_query .="AND		wp_posts.ID = termtaxonomy.object_id";
+	$sql_query .="AND		wp_posts.post_status = 'publish'";
+	$sql_query .="AND		wp_posts.post_type = 'av_opportunity'";
+	return $sql_query;
+}
+/*
+ * Function to retrieve the sql string for events either in  work_area
+ * @param string $taxonomy the taxonomy slug required, eg savi_opp_cat_work_area for work areas
+ * @param int $term_ID the id of the specific term required for requested $taxonomy
+ * @return string sql string required to get count of events
+ */
+function get_event_taxonomy_count_sql_default($opp_work_area_term_ID){
+	$sql_query = "SELECT count(DISTINCT wp_posts.ID) ";
+	$sql_query .="FROM	wp_term_taxonomy, wp_terms, wp_term_relationships,wp_posts,";
+	$sql_query .="	(select concat(wp_terms.slug , 'wa_' , wp_terms.term_id) slug from wp_terms ";
+	$sql_query .="		where	wp_terms.term_id = ".$opp_work_area_term_ID."	) eventsSlug";
+	$sql_query .="WHERE wp_terms.slug = eventsSlug.slug";
+	$sql_query .="AND   wp_term_taxonomy.term_id = wp_terms.term_id";
+	$sql_query .="AND   wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id";
+	$sql_query .="AND   wp_term_relationships.object_id = wp_posts.ID";
+	$sql_query .="AND	wp_posts.post_status = 'publish'";
+	return $sql_query;
+}
+/*
+ * Function to return the events_categories slug for a given work area term.
+ * This function takes a term ID and slug for the savi_opp_cat_work_area taxonomy and
+ * returns the equivalent term slug for the events_categories taxonomy
+ */
+function workArea_event_category_equivalent_slug($work_area_term_slug, $work_area_term_id){
+	return $work_area_term_slug."wa_".$work_area_term_id;
+}
 ?>

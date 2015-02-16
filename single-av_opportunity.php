@@ -45,85 +45,93 @@
 				$thumb = $thumbnail ["thumb"];
 				
 				$oppID = get_the_ID ();
+				
+				/*By default hide info and select button*/
 				$showcontact = FALSE;
 				$express_opp_button = FALSE;
-				global $wpdb;
-				$user_ID = get_current_user_id ();
-				// echo $user_ID;
-				$profile = $wpdb->get_results ( "select post_type from wp_posts, wp_postmeta
-where	wp_postmeta.meta_key = 'user_id'
-and		wp_postmeta.meta_value = $user_ID
-and		wp_posts.ID = wp_postmeta.post_id" );
-				$profilepostsarray = array ();
-				foreach ( $profile as $profileposts ) {
-					$profilepostsarray [] = $profileposts->post_type;
-				}
-				$profilepost = join ( ", ", $profilepostsarray );
-				// echo $profilepost;
-				switch ($profilepost) {
-					case 'view_0' :
-						$showcontact = false;
-						$express_opp_button = false;
-						break;
-					case 'view_1' :
-						$showcontact = false;
-						$express_opp_button = false;
-						break;
-					case 'view_2' :
-						$showcontact = false;
-						$express_opp_button = true;
-						break;
-					case 'view_3' :
+				$is_opportunity_selected =false; //in case the button is show, by default this opp is not selected
+				//is the visitor logged in?
+				if ( is_user_logged_in() ) { //if user is loggrd in
+					$user_ID = get_current_user_id ();
+					//let's check if this is a volunteers
+					$userSaviRole = get_user_meta($user_ID,'savi_role',true);
+					$isVolunteer = false;
+					if($userSaviRole=="volunteers") $isVolunteer = true;
+					//if this is a volunteers, let's find out which view_x they current are in
+					if($isVolunteer){
+						/* get the users's profile post*/
+						$profile_post_id = get_user_meta($user_ID, 'profile_post_id', true); //user profile post id
+						// get the post type for this profile post
+						$profilePostType = get_post_type( $profile_post_id );
+						switch ($profilePostType) {
+							case 'view_0' :
+								$showcontact = false;
+								$express_opp_button = true;
+								break;
+							case 'view_1' :
+								$showcontact = false;
+								$express_opp_button = true;
+								break;
+							case 'view_2' :
+								$showcontact = false;
+								$express_opp_button = true;
+								break;
+							case 'view_3' :
+								$showcontact = true;
+								$express_opp_button = true;
+								break;
+							case 'view_4' :
+								$showcontact = false;
+								$express_opp_button = false;
+								break;
+							case 'view_5' :
+								$showcontact = false;
+								$express_opp_button = false;
+								break;
+							case 'view_6' :
+								$showcontact = false;
+								$express_opp_button = false;
+								break;
+							case 'view_7' :
+								$showcontact = false;
+								$express_opp_button = false;
+								break;
+						}
+						if($express_opp_button){ //we need to see if this opportunity has already been selected
+							$allexpressOpportunities = get_post_meta( $profile_post_id, 'express_opportunities', true ); // All Express Opportunities
+							$allexpressOpportunities_id = array();
+							if (sizeof($allexpressOpportunities) > 0 && is_array($allexpressOpportunities)) {
+								foreach($allexpressOpportunities as $key=>$expressOpportunity) {
+									$expressOpportunitiesID = $expressOpportunity['express_opportunity'];
+									$allexpressOpportunities_id[] = $expressOpportunitiesID;                             
+								}
+							}
+							//chekc if the current oppotunity being displayed, id=$oppID, is in expresses Oppornities of volunteer profile
+							if(in_array($oppID,$allexpressOpportunities_id)):
+								$is_opportunity_selected =true; // Check here Opportunity Exists or Not
+							endif;
+						}
+					}else if ( current_user_can( 'manage_options' ) ) {
+						/** SHOW THE CONTACT INFORMATION ALWAYS IF USER IS AN ADMIN **/
 						$showcontact = true;
-						$express_opp_button = true;
-						break;
-					case 'view_4' :
-						$showcontact = false;
 						$express_opp_button = false;
-						break;
-					case 'view_5' :
-						$showcontact = false;
-						$express_opp_button = false;
-						break;
-					case 'view_6' :
-						$showcontact = false;
-						$express_opp_button = false;
-						break;
-					case 'view_7' :
-						$showcontact = false;
-						$express_opp_button = false;
-						break;
-				}
+					}		
+				}// else user is not logged in
 				
-				/** SHOW THE CONTACT INFORMATION ALWAYS IF USER IS AN ADMIN **/
-				if ( current_user_can( 'manage_options' ) ) {
-					$showcontact = true;
-				}				
-				/* Check Public view content whether its shows frontend or not*/
-					$showcontent = false;
-					$current_user = wp_get_current_user();
-					switch($current_user->ID){
-						case 0:
-							$showcontent=false;
-						break;
-						default:
-							$showcontent=true;
-						break;
-					}
 				if (et_get_option ( 'divi_integration_single_bottom' ) != '' && et_get_option ( 'divi_integrate_singlebottom_enable' ) == 'on')
 					echo (et_get_option ( 'divi_integration_single_bottom' ));
 				$no_of_opportunities = get_post_meta ( get_the_ID (), "no_of_opportunities", true );
 				if ($no_of_opportunities > 0) {
 					?>
-<style>
-.et_pb_column_2_4 {
-	width: 450px;
-}
-
-.et_pb_row_inner {
-	margin-top: 10px;
-}
-</style>
+				<style>
+				.et_pb_column_2_4 {
+					width: 450px;
+				}
+				
+				.et_pb_row_inner {
+					margin-top: 10px;
+				}
+				</style>
 				<article id="post-<?php the_ID(); ?>" <?php post_class( 'et_pb_post' ); ?>>
 					<div class="et_pb_row_inner">
 						<!-- Row 1 -->
@@ -196,7 +204,7 @@ and		wp_posts.ID = wp_postmeta.post_id" );
 						<div class="et_pb_column et_pb_column_1_4 et_pb_column_inner">
 							<!-- Thumbnail -->
 							<div class="opportunity_image">
-								<?php
+								<?php //echo '1. divi_thumbnails_index '.et_get_option ( 'divi_thumbnails_index', 'on' ).'</br>2. thumb '. $thumb.'</br>3. width '.$width.'</br>4. height '.$height. '</br>5. classtext '. $classtext. '</br>6. titletext '. $titletext. '</br>7. thumbnail '. $thumbnail. '</br>8. thumb  '. $thumb. '</br>9. thumbHTML  '. $thumbHTML;
 					if ('on' === et_get_option ( 'divi_thumbnails', 'on' ) && '' !== $thumb)
 						print_thumbnail ( $thumb, $thumbnail ["use_timthumb"], $titletext, $width, $height );
 					?>
@@ -415,14 +423,22 @@ and		wp_posts.ID = wp_postmeta.post_id" );
 					</div>
 					<?php } ?>
 					
-					<?php if (is_user_logged_in ()) { ?> 
+					<?php if ($express_opp_button) { ?> 
 					<div class="et_pb_row_inner">
 						<div id="select-icon-container">
-							<input type="checkbox" name="<?php echo wp_get_current_user()->ID ?>" value="<?php echo $oppID; ?>" id="select-icon" <?php if($is_opportunity_exists == 'yes'): ?> checked='checked' <?php endif;?> /> <label for="select-icon"></label> <label id="opp-click-info">Please Click the Logo to Select the opportunity</label> <input type="hidden" id="hidden_blog_url" value="<?php bloginfo('url'); ?>" />
 							<div id="loading_image" style="display: none">
 								<img src="<?php echo $loading_image ?>" alt="">
 							</div>
-							<!--div id="selectResult"><p>Post ID :<?php #echo $oppID; ?>, User :<?php #echo wp_get_current_user()->ID ?></p></div-->
+							<input type="checkbox" name="<?php echo wp_get_current_user()->ID ?>" value="<?php echo $oppID; ?>" id="select-icon" <?php if($is_opportunity_selected): ?> checked='checked' <?php endif;?> /> 
+								<label for="select-icon"></label>
+								<label class="opp-click-info">Click to select this opportunity</label>
+								<label class="oppselected">Click to unselect this opportunity.</label>
+								<p class="opp-click-info">By toggling the logo on, you can register interest in this opportunity.
+									You will be able to find a list of your bookmarked opportunities in your <a href="/opportunity-selection-preference/">Opportunity page</a>.
+									Your shortlisted opportunities will be taken into considereation when assigning you an opportunity. </p>
+								<p  class="oppselected">By toggling the logo off, you can remove this opportunity form your list
+									of bookmarked opportunities.</p>
+								<input type="hidden" id="hidden_blog_url" value="<?php bloginfo('url'); ?>" />
 						</div>
 					</div>
 					<?php } ?>						
@@ -443,6 +459,29 @@ and		wp_posts.ID = wp_postmeta.post_id" );
 	</div>
 	<!-- .container -->
 </div>
+<script>
+jQuery( document ).ready(function() {
+	jQuery('#select-icon').click(function() {
+		if(this.checked){
+			jQuery(".opp-click-info").css("display", "none");
+			jQuery("label.oppselected").css("display", "inline");
+			jQuery("p.oppselected").css("display", "block");
+		}else{
+			jQuery(".oppselected").css("display", "none");
+			jQuery("label.opp-click-info").css("display", "inline");
+			jQuery("p.opp-click-info").css("display", "block");
+		}
+	});
+	if(jQuery("#select-icon").is(':checked')){
+		jQuery(".opp-click-info").css("display", "none");
+		jQuery("label.oppselected").css("display", "inline");
+		jQuery("p.oppselected").css("display", "block");
+	}else{
+		jQuery(".oppselected").css("display", "none");
+		jQuery("label.opp-click-info").css("display", "inline");
+		jQuery("p.opp-click-info").css("display", "block");
+	}
+});
+</script>
 <!-- #main-content -->
 <?php get_footer(); ?>
-			

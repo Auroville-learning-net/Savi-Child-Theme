@@ -763,14 +763,6 @@ a.dashicons.dashicons-info:hover {
 #post-1331 p:last-of-type {
 padding-bottom: 15px;
 }
-#opp-click-info{
-	display: inline;
-    font-size: 20px;
-    font-weight: bolder;
-    margin-left: 5px;
-    margin-top: 10px;
-    position: absolute;
-}
 .single-av_opportunity #respond{
 	clear:both;
 }
@@ -835,11 +827,6 @@ div#home-gallery {padding-bottom:3px}
 .homefivegallery .et_pb_blurb_content h4 {bottom: 5%!important;width: 100%;padding: 0;right: inherit!important;background: transparent;left: inherit!important;color: white;font-weight:bold;position: absolute;text-shadow: darkgray 1px 1px;}
 .homefivegallery .et_pb_row {padding-top:2px;padding-bottom:2px}
 
-/* Repair the multicolumn-taxonomy-list width */
-.multi-column-taxonomy-list ul {
-width: 100%;
-}
-
 .numberCircle {
 height: 40px;
 width: 40px;
@@ -900,5 +887,20 @@ background: white;
 
 /* Repair the multicolumn-taxonomy-list width */
 .multi-column-taxonomy-list ul {
-width: 100%;
+width: 100%!important;
+}
+/*opportunity select button on single-opportunity.php*/
+label.opp-click-info, label.oppselected{
+    font-size: 20px;
+    font-weight: bolder;
+    margin-left: 5px;
+    margin-top: 10px;
+    position: absolute;
+}
+div#select-icon-container div#loading_image img {
+margin: 4px;
+vertical-align: bottom;
+}
+input#select-icon + label {
+vertical-align: bottom;
 }

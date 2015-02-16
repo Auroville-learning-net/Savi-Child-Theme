@@ -158,10 +158,12 @@ function ai1ec_post_type_init() {
 	
         // globalize the post types array and some plugin settings we'll need
         global $wp_post_types, $ai1ec_settings, $ai1ec_app_helper;
-
+        global $submenu;
         // unset the original post type created by the plugin
         unset( $wp_post_types[ AI1EC_POST_TYPE ] );
-		
+		 //$labels_tax = &$wp_taxonomies['events_tags']->labels;
+	//	$submenu['']
+
 		$labels = array(
 			'name'               => Ai1ec_I18n::_x( 'Events', 'Custom post type name' ),
 			'singular_name'      => Ai1ec_I18n::_x( 'Events', 'Custom post type name (singular)' ),
@@ -198,6 +200,8 @@ function ai1ec_post_type_init() {
 		);
 		
 		register_post_type( AI1EC_POST_TYPE, $args );
+		
+             //   unset( $wp_taxonomies[ 'events_tags' ] );
 		
 	endif; // AI1EC_POST_TYPE // ai1ec_initiate_constants()
  
@@ -387,7 +391,46 @@ function ai1ec_custom_tags_init() {
 			array( AI1EC_POST_TYPE ),
 			$intended_audience_events_tag_args
 		);
+                
+                $savi_events_tag_labels = array(
+		'name'                       => Ai1ec_I18n::_x( 'Event Types', 'Taxonomy General Name', 'text_domain' ),
+		'singular_name'              => Ai1ec_I18n::_x( 'Event Type', 'Taxonomy Singular Name', 'text_domain' ),
+		'menu_name'                  => __( 'Event Type', 'text_domain' ),
+		'all_items'                  => __( 'All Event Types', 'text_domain' ),
+		'parent_item'                => __( 'Parent Event Type', 'text_domain' ),
+		'parent_item_colon'          => __( 'Parent Event Type:', 'text_domain' ),
+		'new_item_name'              => __( 'New Event Type', 'text_domain' ),
+		'add_new_item'               => __( 'Add new Event Type', 'text_domain' ),
+		'edit_item'                  => __( 'Edit Event Type', 'text_domain' ),
+		'update_item'                => __( 'Update Event Type', 'text_domain' ),
+		'separate_items_with_commas' => __( 'Separate Event Types with commas', 'text_domain' ),
+		'search_items'               => __( 'Search Event Types', 'text_domain' ),
+		'add_or_remove_items'        => __( 'Add or remove Event Type', 'text_domain' ),
+		'choose_from_most_used'      => __( 'Choose from the most used Event Type', 'text_domain' ),
+	);
 	
+	// ================================
+		// = args for event feeds taxonomy =
+		// ================================
+		$savi_events_tag_args = array(
+			'labels'       => $savi_events_tag_labels,
+			'hierarchical' => false,
+			'rewrite'      => array( 'slug' => 'events-tags' ),
+			'capabilities' => array(
+				'manage_terms' => 'manage_events_categories',
+				'edit_terms'   => 'manage_events_categories',
+				'delete_terms' => 'manage_events_categories',
+				'assign_terms' => 'edit_ai1ec_events'
+			)
+		);
+	        // ================================
+		// = register event tags
+		// ================================
+	/*	register_taxonomy(
+			'events_tags',
+			array( AI1EC_POST_TYPE ),
+			$savi_events_tag_args
+		);*/
 }
 function ai1ec_custom_event_meta_box_container() {
 	       remove_meta_box( 'commentsdiv',AI1EC_POST_TYPE,'normal' );
@@ -963,6 +1006,14 @@ function savi_custom_correct_current_menu(){
 		jQuery("#mymetabox_OtherDetails").addClass("closed");
 		jQuery("#mymetabox_AdminDetails").addClass("closed");
 		
+		<?php if(($_REQUEST["taxonomy"] == "savi_opp_cat_work_area") && ($_REQUEST["post_type"] == "av_opportunity") ) :?>
+		           
+		    jQuery("#edittag .form-table #slug").attr('disabled','disabled');
+		    jQuery("#posts-filter table.tags a.editinline").click(function(){
+			       jQuery("input[name='slug']").attr('disabled','disabled');
+		    });  
+		<?php endif; ?>
+		
 	});
 	
 	</script>
@@ -986,10 +1037,12 @@ global $submenu;
 	remove_menu_page( 'edit.php?post_type=view_6');
 	remove_menu_page( 'edit.php?post_type=view_7');
 	unset($submenu['edit.php?post_type=ai1ec_event'][15]);
-        unset($submenu['edit.php?post_type=ai1ec_event'][16]);
-        remove_meta_box('tagsdiv-events_tags', 'ai1ec_event', 'side');
+        //unset($submenu['edit.php?post_type=ai1ec_event'][16]);
+      //  remove_meta_box('tagsdiv-events_tags', 'ai1ec_event', 'side');
         add_submenu_page( 'edit.php?post_type=ai1ec_event', 'Add New Seminar', 'Add New Seminar', 'manage_categories', 'post-new.php?post_type=ai1ec_event&event_type=seminar','', 10); 
-//echo"<pre>",print_r($submenu),"</pre>"; die;
+add_submenu_page( 'edit.php?post_type=ai1ec_event', 'Work Areas', 'Work Areas', 'manage_categories', 'edit-tags.php?taxonomy=savi_opp_cat_work_area&post_type=av_opportunity', '' );  
+
+//echo"<pre>",print_r($submenu['edit.php?post_type=ai1ec_event']),"</pre>"; die;
 }
 
 add_action( 'admin_head', 'add_menu_icons_styles' );
@@ -1211,19 +1264,38 @@ function savi_page_settings_pdf_email() {
   submit_button();
    echo '</form>';
 }
-add_filter( 'custom_menu_order', 'wpse_73006_submenu_order' );
+add_filter( 'custom_menu_order', 'savi_admin_submenu_order' );
 
-function wpse_73006_submenu_order( $menu_ord ) 
+function savi_admin_submenu_order( $menu_ord ) 
 {
     global $submenu,$menu,$current_user;
-    		$user_role = $current_user->roles[0];
+    global $wp_taxonomies;
+    $events_tags_labels = &$wp_taxonomies['events_tags']->labels;
+    $user_role = $current_user->roles[0];
     // Enable the next line to see all menu orders
     //echo '<pre>',print_r($submenu['edit.php?post_type=ai1ec_event']),'</pre>';
- 
+  
     $arr = array();
     $arr1 = array();
- 
-    
+    /* Modify the Event tags to Event Type by syllogic -sathya on 22 Jan 2015 */
+      $submenu['edit.php?post_type=ai1ec_event'][16][0] ="Event Type";
+      $events_tags_labels->name ="Event Types";
+      $events_tags_labels->singular_name ="Event Type";
+      $events_tags_labels->search_items ="Search Types";
+      $events_tags_labels->popular_items ="Popular Types";
+      $events_tags_labels->all_items ="Event Types";
+      $events_tags_labels->edit_item ="Edit Type";
+      $events_tags_labels->view_item ="View Type";
+      $events_tags_labels->update_item ="Update Type";
+      $events_tags_labels->add_new_item ="Add New Type ";
+      $events_tags_labels->new_item_name ="New Type Name";
+      $events_tags_labels->add_or_remove_items ="Add or remove types";
+      $events_tags_labels->choose_from_most_used ="Choose from the most used types";
+      $events_tags_labels->not_found ="No types found";
+      $events_tags_labels->menu_name ="Event Types";
+      $events_tags_labels->name_admin_bar ="Event Type";
+      
+    /* Modify the Event tags to Event Type by syllogic -sathya on 22 Jan 2015 */
     if($user_role == "editor" )
     {
    		$arr1[] = $menu[2];   
@@ -1235,27 +1307,36 @@ function wpse_73006_submenu_order( $menu_ord )
    		$arr1[] = $menu[30];   
    		$arr1[] = $menu[27];   
    		$arr1[] = $menu[32];   
- 		   $arr1[] = $menu[59];   
+ 		$arr1[] = $menu[59];   
    		$menu = $arr1;
    		
-   		 $arr[] = $submenu['edit.php?post_type=ai1ec_event'][5];     
+   		  $arr[] = $submenu['edit.php?post_type=ai1ec_event'][5];     
           $arr[] = $submenu['edit.php?post_type=ai1ec_event'][10];
           $arr[] = $submenu['edit.php?post_type=ai1ec_event'][20];
+          $arr[] = $submenu['edit.php?post_type=ai1ec_event'][16];
+          $arr[] = $submenu['edit.php?post_type=ai1ec_event'][27];
+          $arr[] = $submenu['edit.php?post_type=ai1ec_event'][28];
           $arr[] = $submenu['edit.php?post_type=ai1ec_event'][17];
           $arr[] = $submenu['edit.php?post_type=ai1ec_event'][18];
           $arr[] = $submenu['edit.php?post_type=ai1ec_event'][19];
+          $arr[] = $submenu['edit.php?post_type=ai1ec_event'][26];
   } 
   else{
    
-     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][5];     
+    $arr[] = $submenu['edit.php?post_type=ai1ec_event'][5];     
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][10];
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][23];
+    $arr[] = $submenu['edit.php?post_type=ai1ec_event'][16];
+    //$arr[]= array("Event Type","manage_events_categories","edit-tags.php?taxonomy=events_tags&post_type=ai1ec_event");
+    $arr[] = $submenu['edit.php?post_type=ai1ec_event'][27];
+    $arr[] = $submenu['edit.php?post_type=ai1ec_event'][28];
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][17];
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][18];
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][19];
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][20];
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][21];
     $arr[] = $submenu['edit.php?post_type=ai1ec_event'][22];
+    $arr[] = $submenu['edit.php?post_type=ai1ec_event'][26];
    
   
   }		
@@ -1298,40 +1379,84 @@ function mfields_set_default_object_terms( $post_id ) {
 }
 add_action( 'save_post', 'mfields_set_default_object_terms', 100, 2 ); 
 add_action( 'create_savi_opp_cat_work_area', 'workarea_create', 10, 2 );
-add_action( 'edit_savi_opp_cat_work_area', 'workarea_edit', 10, 2 );
-add_action( 'delete_savi_opp_cat_work_area', 'workarea_delete', 10, 2 );
 
-function workarea_create($term_id,$t_id )
-{     global $wpdb;
-	  $term = get_term_by('id',$term_id,'savi_opp_cat_work_area');
-	  $parent_id = $wpdb->get_var("SELECT parent FROM wp_term_taxonomy WHERE term_id = ".$term_id);
-	 
-	  if($parent_id == 0){
-		wp_insert_term( $term->name,'events_categories',array('slug' => $term->slug."wa_".$term_id));
-	  }else{
-		   $check_slug = $wpdb->get_var("SELECT slug FROM wp_terms WHERE term_id = ".$parent_id)."wa_". $parent_id;
-		   $events_parent_id = $wpdb->get_var("SELECT term_id FROM wp_terms WHERE slug LIKE '%$check_slug%'");
-		   
-		  wp_insert_term( $term->name,'events_categories',array('parent' => $events_parent_id,'slug' => $term->slug."wa_". $term_id));
-	  
-	  }	 
+add_action( 'delete_savi_opp_cat_work_area', 'workarea_delete', 10, 3 );
+
+function workarea_create($term_id,$t_id ){     
+	$wa_term = get_term_by('id',$term_id,'savi_opp_cat_work_area');
+	$parent_id = $wa_term->parent;
+	$ec_parent_id=0;
+	if($parent_id!=0) $ec_parent_id=savi_get_event_child($parent_id);
+	wp_insert_term( $wa_term->name,'events_categories',array('slug' => $wa_term->slug."wa_".$term_id, 'parent'=>$ec_parent_id));
+	write_log("New WA term create, id:".$term_id);
+	write_log("Inserted new Event term, slug:".$wa_term->slug."wa_".$term_id);
+	write_log("Parent WA term, id:".$parent_id);
+	write_log("Event parent set to term ID:".$ec_parent_id);
 }
-function workarea_edit($term_id,$t_id)
-{     
-	global $wpdb;
-	 $ev_ter_id = $wpdb->get_var("SELECT term_id FROM wp_terms WHERE slug LIKE '%wa_".$term_id."%'");
-	 $new_term_name = $wpdb->get_var("SELECT name FROM wp_terms WHERE term_id =".$term_id);
-	 $new_term_slug = $wpdb->get_var("SELECT slug FROM wp_terms WHERE term_id =".$term_id);
-	 $new_term = get_term_by('id',$term_id,'savi_opp_cat_work_area');
-	  wp_update_term( $ev_ter_id,'events_categories',array('name' => $new_term_name,'slug' => $new_term_slug."wa_". $term_id));
+add_action( 'edited_savi_opp_cat_work_area', 'workarea_edit', 10, 2 );
+function workarea_edit($term_id,$t_id){
+	//clean_term_cache( '','savi_opp_cat_work_area' );
+	$wa_term = get_term_by('id',$term_id,'savi_opp_cat_work_area');
+	//name change - do nothing
+	$ec_child_termID = savi_get_event_child($term_id);
+	wp_update_term( $ec_child_termID,'events_categories',array('name' => $wa_term->name));
+	//slug change - not allowed, grey out slug field
+	//parent change, reset ec parent
+	$wa_parent_id = $wa_term->parent;
 	
+	if($wa_parent_id != savi_get_wa_parent($ec_child_termID)){
+		//$ec_parent_termID = savi_get_event_parent($term_id);
+		$ec_parent_termID = savi_get_event_child($wa_parent_id);
+		wp_update_term( $ec_child_termID,'events_categories',array('parent' => $ec_parent_termID));
+		write_log("UPDATE WA term, id:".$term_id);
+		write_log("UPDATE Event term, id:".$ec_child_termID);
+		write_log("UPDATE Parent WA term, id:".$wa_parent_id);
+		write_log("UPDATE Event parent set to term ID:".$ec_parent_termID);
+	}
 }
-function workarea_delete($term_id,$t_id)
-{     
-	global $wpdb;
-	 $ev_ter_id = $wpdb->get_var("SELECT term_id FROM wp_terms WHERE slug LIKE '%wa_".$term_id."%'");
-	 	  wp_delete_term( $ev_ter_id,'events_categories');
+function workarea_delete($term_id,$t_id,$deleted_term){     
+
+	$event_term_slug = $deleted_term->slug.'wa_'.$term_id;
+	$ev_term = get_term_by('slug',$event_term_slug,'events_categories');
+	wp_delete_term( $ev_term->term_id,'events_categories');
+	write_log("DELETED WA term, id:".$term_id);
+	write_log($deleted_term);
+	write_log("DELETED Event term:".$ev_term->term_id);
+	write_log($ev_term);
+
+}
+function savi_get_event_child($wa_child_termID){
+	$wa_term = get_term_by('id',$wa_child_termID,'savi_opp_cat_work_area');
+	$wa_child_slug = $wa_term->slug;
+	$ec_term_slug = $wa_child_slug.'wa_'.$wa_child_termID;
+	$ev_term = get_term_by('slug',$ec_term_slug,'events_categories');
+	$ec_term_id = $ev_term->term_id;//get id for slug $ec_term_slug
+	return $ec_term_id;
+}
+function savi_get_event_parent($wa_child_termID){
+	//global $wpdb;
+	$ec_term_id = savi_get_event_child($wa_child_termID);
+	$ev_term = get_term_by('id',$ec_term_id,'events_categories');
+	$parent_ec_term_id= $ev_term->parent;
+	return $parent_ec_term_id;
+}
+
+function savi_set_event_parent_term_id($ec_child_termID, $ec_parent_termID){
+	wp_update_term( $ec_child_termID,'events_categories',array('parent' => $ec_parent_termID));
+}
+function savi_get_wa_parent($ec_child_termID){
+	$ev_child_term = get_term_by('id',$ec_child_termID,'events_categories');
+	$ec_child_slug = $ev_child_term->slug; //get slug from term id $ec_child_termID
+	$slug_explode = explode('wa_',$ec_child_slug);
+	$wa_child_termID = $slug_explode[1];  //<slug>wa_<id>
 	
+	$ec_parent_termID = savi_get_event_parent($wa_child_termID);
+	$ev_parent_term = get_term_by('id',$ec_parent_termID,'events_categories');
+	$ec_parent_slug = $ev_parent_term->slug; //get slug from term id $ec_parent_termID
+	
+	$slug_explode = explode('wa_',$ec_parent_slug);
+	$wa_parent_termID = $slug_explode[1];  //<slug>wa_<id>
+	return $wa_parent_termID;
 }
 
 /* Generate the custom quick view link to the custom post view_0 to view_7  starts  */
@@ -1661,4 +1786,5 @@ function savi_before_delete_post_func( $postid ){
 
     // My custom stuff for deleting my custom post type here
 }
+
 ?>

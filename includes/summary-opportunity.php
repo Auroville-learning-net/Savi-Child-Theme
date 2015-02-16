@@ -66,7 +66,7 @@ if ($query->have_posts ()) {
 
 <div class="opportunity_summary">
 	<div class="sum_op_thumbnail">
-		<?php
+		<?php     
 		if ('on' == et_get_option ( 'divi_thumbnails_index', 'on' ) && '' !== $thumb) :
 			?>
 			<a href="<?php echo $opportunity_permalink; ?>">
