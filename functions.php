@@ -223,9 +223,10 @@ function savi_taxonomy_alter_query($query) {
 */
 add_action( 'init', 'sy_conf_register_menu' ); // register additional menu
 function sy_conf_register_menu() {
-  register_nav_menu('quick-in-menu',__( 'Quick Loged-in Menu' ));
-  register_nav_menu('quick-out-menu',__( 'Quick Loged-out Menu' ));
-   register_nav_menu('quick-opp-menu',__( 'Quick opportunity Menu' ));
+	register_nav_menu('quick-in-menu',__( 'Quick Volunteers Loged-in Menu' ));
+	register_nav_menu('quick-out-menu',__( 'Quick Loged-out Menu' ));
+	register_nav_menu('quick-opp-menu',__( 'Quick Mentors Loged-in Menu' ));
+	register_nav_menu('quick-def-menu',__( 'Quick Loged-in Menu' ));
 }
 add_filter( 'wp_nav_menu_items','sy_quick_nav_items', 10, 2 );
 function sy_quick_nav_items( $items, $args ) 

@@ -141,35 +141,45 @@
 							if ( is_user_logged_in() ) {
 								$user_id = get_current_user_id(); 
 								$savi_role = get_user_meta($user_id, 'savi_role', true);
-								//echo $user_id.'user_id';
-								//echo $savi_role;
-								if($savi_role == 'opportunity-owner' ){
-									$quickNav = wp_nav_menu( array( 'theme_location' => 'quick-opp-menu', 'container' => '', 'fallback_cb' => '', 'menu_class' => $menuClass, 'menu_id' => 'quick-menu', 'echo' => false ) );
-									if ( '' == $quickNav ) : //in case the menus have not been setup
-									?>
-										<ul id="quick-menu">
-											<li><a href="<?php echo wp_logout_url(get_permalink()); ?>" title="Logout">Logout</a></li>
-										</ul>
-									<?php
-									else :
-										echo ( $quickNav );
-									endif;
-								} 
-								else{
-									//get the logged-out menu 
-									$quickNav = wp_nav_menu( array( 'theme_location' => 'quick-in-menu', 'container' => '', 'fallback_cb' => '', 'menu_class' => $menuClass, 'menu_id' => 'quick-menu', 'echo' => false ) );
-									if ( '' == $quickNav ) : //in case the menus have not been setup
-									?>
-										<ul id="quick-menu">
-											<li><a href="<?php echo wp_logout_url(get_permalink()); ?>" title="Logout">Logout</a></li>
-										</ul>
-									<?php
-									else :
-										echo ( $quickNav );
-									endif;
-								} 
-							}
-							else {
+								switch (true){
+									case ($savi_role == 'opportunity-owner' ):
+										$quickNav = wp_nav_menu( array( 'theme_location' => 'quick-opp-menu', 'container' => '', 'fallback_cb' => '', 'menu_class' => $menuClass, 'menu_id' => 'quick-menu', 'echo' => false ) );
+										if ( '' == $quickNav ) : //in case the menus have not been setup
+										?>
+											<ul id="quick-menu">
+												<li><a href="<?php echo wp_logout_url(get_permalink()); ?>" title="Logout">Logout</a></li>
+											</ul>
+										<?php
+										else :
+											echo ( $quickNav );
+										endif;
+										break;
+									case ($savi_role == 'volunteers'): 
+										$quickNav = wp_nav_menu( array( 'theme_location' => 'quick-in-menu', 'container' => '', 'fallback_cb' => '', 'menu_class' => $menuClass, 'menu_id' => 'quick-menu', 'echo' => false ) );
+										if ( '' == $quickNav ) : //in case the menus have not been setup
+										?>
+											<ul id="quick-menu">
+												<li><a href="<?php echo wp_logout_url(get_permalink()); ?>" title="Logout">Logout</a></li>
+											</ul>
+										<?php
+										else :
+											echo ( $quickNav );
+										endif;
+										break;
+									default:
+										$quickNav = wp_nav_menu( array( 'theme_location' => 'quick-def-menu', 'container' => '', 'fallback_cb' => '', 'menu_class' => $menuClass, 'menu_id' => 'quick-menu', 'echo' => false ) );
+										if ( '' == $quickNav ) : //in case the menus have not been setup
+										?>
+											<ul id="quick-menu">
+												<li><a href="<?php echo wp_logout_url(get_permalink()); ?>" title="Logout">Logout</a></li>
+											</ul>
+										<?php
+										else :
+											echo ( $quickNav );
+										endif;
+										break;
+								}
+							}else {
 								//get the logged-in menu
 								$quickNav = wp_nav_menu( array( 'theme_location' => 'quick-out-menu', 'container' => '', 'fallback_cb' => '', 'menu_class' => $menuClass, 'menu_id' => 'quick-menu', 'echo' => false ) );
 								if ( '' == $quickNav ) ://in case the menus have not been setup

@@ -164,8 +164,8 @@
 						</div>
 					</div>
 					<div class="et_pb_row_inner">
-						<div class="et_pb_column et_pb_column_4_4 et_pb_column_inner">
-							<?php get_template_part ( 'includes/summary', 'workshop' ); ?>
+						<div class="et_pb_column et_pb_column_4_4 et_pb_column_inner"> 
+						<?php	get_template_part ( 'includes/summary', 'workshop' ); ?>
 						</div>
 					</div>
 				</article>
