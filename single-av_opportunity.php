@@ -5,124 +5,125 @@
 		<div class="et_pb_row">
 			<div class="et_pb_column et_pb_column_1_4">
 					<?php get_sidebar(); ?>
-				</div>
+			</div>
 			<div class="et_pb_column et_pb_column_3_4">
 			<?php
 			
-			while ( have_posts () ) :
-				the_post ();
-				$term_work_type = get_the_terms ( get_the_ID (), 'savi_opp_cat_work_type' );
-				$terms_work_area = get_the_terms ( get_the_ID (), 'savi_opp_cat_work_area' );
-				$terms_skills_gain = get_post_meta ( get_the_ID (), "skills_gain", true );
-				$terms_daily_tasks = get_post_meta ( get_the_ID (), "daily_tasks", true );
-				$terms_startdate = get_post_meta ( get_the_ID (), "startdate", true );
-				$terms_startdate_formatted = date ( "M d, Y", strtotime ( $terms_startdate ) );
-				$terms_enddate = get_post_meta ( get_the_ID (), "enddate", true );
-				$terms_enddate_formatted = date ( "M d, Y", strtotime ( $terms_enddate ) );
-				$terms_prerequisites = get_post_meta ( get_the_ID (), "prerequisites", true );		
-				$terms_languages = get_the_terms ( get_the_ID (), 'savi_opp_tag_languages' );
-				$terms_soft = get_the_terms ( get_the_ID (), 'savi_opp_tag_soft' );
-				$terms_duration = get_post_meta ( get_the_ID (), "duration", true );
-				$terms_timing = get_post_meta ( get_the_ID (), "timing", true );
-				$terms_morning = get_post_meta ( get_the_ID (), "morningtimings", true );
-				$terms_afternoon = get_post_meta ( get_the_ID (), "afternoontimings", true );		
-				$terms_architect_semester = get_post_meta ( get_the_ID (), "architect_semester", true );
-				$terms_computer_required = get_post_meta ( get_the_ID (), "computerrequired", true );
-				$terms_number_of_volunteers = get_post_meta ( get_the_ID (), "number_of_volunteers", true );			
-				$contactName = get_post_meta ( get_the_ID (), "contactPerson", true );
-				$contactNumber = get_post_meta ( get_the_ID (), "contactPhone", true );
-				$contactEmail = get_post_meta ( get_the_ID (), "contactEmail", true );
-				$content = get_the_content ();
-				
-				$thumb = '';
-				$template_dir = get_stylesheet_directory_uri ();
-				$loading_image = $template_dir . "/images/ajax-loader.gif";
-				$width = ( int ) apply_filters ( 'et_pb_index_blog_image_width', 400 );
-				$height = ( int ) apply_filters ( 'et_pb_index_blog_image_height', 270 );
-				$classtext = 'et_featured_image';
-				$titletext = get_the_title ();
-				$thumbnail = get_thumbnail ( $width, $height, $classtext, $titletext, $titletext, false, 'Blogimage' );
-				$thumb = $thumbnail ["thumb"];
-				
-				$oppID = get_the_ID ();
-				
-				/*By default hide info and select button*/
-				$showcontact = FALSE;
-				$express_opp_button = FALSE;
-				$is_opportunity_selected =false; //in case the button is show, by default this opp is not selected
-				//is the visitor logged in?
-				if ( is_user_logged_in() ) { //if user is loggrd in
-					$user_ID = get_current_user_id ();
-					//let's check if this is a volunteers
-					$userSaviRole = get_user_meta($user_ID,'savi_role',true);
-					$isVolunteer = false;
-					if($userSaviRole=="volunteers") $isVolunteer = true;
-					//if this is a volunteers, let's find out which view_x they current are in
-					if($isVolunteer){
-						/* get the users's profile post*/
-						$profile_post_id = get_user_meta($user_ID, 'profile_post_id', true); //user profile post id
-						// get the post type for this profile post
-						$profilePostType = get_post_type( $profile_post_id );
-						switch ($profilePostType) {
-							case 'view_0' :
-								$showcontact = false;
-								$express_opp_button = true;
-								break;
-							case 'view_1' :
-								$showcontact = false;
-								$express_opp_button = true;
-								break;
-							case 'view_2' :
-								$showcontact = false;
-								$express_opp_button = true;
-								break;
-							case 'view_3' :
-								$showcontact = true;
-								$express_opp_button = true;
-								break;
-							case 'view_4' :
-								$showcontact = false;
-								$express_opp_button = false;
-								break;
-							case 'view_5' :
-								$showcontact = false;
-								$express_opp_button = false;
-								break;
-							case 'view_6' :
-								$showcontact = false;
-								$express_opp_button = false;
-								break;
-							case 'view_7' :
-								$showcontact = false;
-								$express_opp_button = false;
-								break;
-						}
-						if($express_opp_button){ //we need to see if this opportunity has already been selected
-							$allexpressOpportunities = get_post_meta( $profile_post_id, 'express_opportunities', true ); // All Express Opportunities
-							$allexpressOpportunities_id = array();
-							if (sizeof($allexpressOpportunities) > 0 && is_array($allexpressOpportunities)) {
-								foreach($allexpressOpportunities as $key=>$expressOpportunity) {
-									$expressOpportunitiesID = $expressOpportunity['express_opportunity'];
-									$allexpressOpportunities_id[] = $expressOpportunitiesID;                             
-								}
-							}
-							//chekc if the current oppotunity being displayed, id=$oppID, is in expresses Oppornities of volunteer profile
-							if(in_array($oppID,$allexpressOpportunities_id)):
-								$is_opportunity_selected =true; // Check here Opportunity Exists or Not
-							endif;
-						}
-					}else if ( current_user_can( 'manage_options' ) ) {
-						/** SHOW THE CONTACT INFORMATION ALWAYS IF USER IS AN ADMIN **/
+	while ( have_posts () ) :
+		the_post ();
+		$term_work_type = get_the_terms ( get_the_ID (), 'savi_opp_cat_work_type' );
+		$terms_work_area = get_the_terms ( get_the_ID (), 'savi_opp_cat_work_area' );
+		$terms_skills_gain = get_post_meta ( get_the_ID (), "skills_gain", true );
+		$terms_daily_tasks = get_post_meta ( get_the_ID (), "daily_tasks", true );
+		$terms_startdate = get_post_meta ( get_the_ID (), "startdate", true );
+		$terms_startdate_formatted = date ( "M d, Y", strtotime ( $terms_startdate ) );
+		$terms_enddate = get_post_meta ( get_the_ID (), "enddate", true );
+		$terms_enddate_formatted = date ( "M d, Y", strtotime ( $terms_enddate ) );
+		$terms_prerequisites = get_post_meta ( get_the_ID (), "prerequisites", true );		
+		$terms_languages = get_the_terms ( get_the_ID (), 'savi_opp_tag_languages' );
+		$terms_soft = get_the_terms ( get_the_ID (), 'savi_opp_tag_soft' );
+		$terms_duration = get_post_meta ( get_the_ID (), "duration", true );
+		$terms_timing = get_post_meta ( get_the_ID (), "timing", true );
+		$terms_morning = get_post_meta ( get_the_ID (), "morningtimings", true );
+		$terms_afternoon = get_post_meta ( get_the_ID (), "afternoontimings", true );		
+		$terms_architect_semester = get_post_meta ( get_the_ID (), "architect_semester", true );
+		$terms_computer_required = get_post_meta ( get_the_ID (), "computerrequired", true );
+		$terms_number_of_volunteers = get_post_meta ( get_the_ID (), "number_of_volunteers", true );			
+		$contactName = get_post_meta ( get_the_ID (), "contactPerson", true );
+		$contactNumber = get_post_meta ( get_the_ID (), "contactPhone", true );
+		$contactEmail = get_post_meta ( get_the_ID (), "contactEmail", true );
+		$content = get_the_content ();
+		
+		$thumb = '';
+		$template_dir = get_stylesheet_directory_uri ();
+		$loading_image = $template_dir . "/images/ajax-loader.gif";
+		$width = ( int ) apply_filters ( 'et_pb_index_blog_image_width', 400 );
+		$height = ( int ) apply_filters ( 'et_pb_index_blog_image_height', 270 );
+		$classtext = 'et_featured_image';
+		$titletext = get_the_title ();
+		$thumbnail = get_thumbnail ( $width, $height, $classtext, $titletext, $titletext, false, 'Blogimage' );
+		$thumb = $thumbnail ["thumb"];
+		
+		$oppID = get_the_ID ();
+		
+		/*By default hide info and select button*/
+		$showcontact = false;
+		$showcontent = false;
+		$express_opp_button = false;
+		$is_opportunity_selected =false; //in case the button is show, by default this opp is not selected
+		//is the visitor logged in?
+		if ( is_user_logged_in() ) { //if user is loggrd in
+			$showcontent = true;
+			$user_ID = get_current_user_id ();
+			//let's check if this is a volunteers
+			$userSaviRole = get_user_meta($user_ID,'savi_role',true);
+			$isVolunteer = false;
+			if($userSaviRole=="volunteers") $isVolunteer = true;
+			//if this is a volunteers, let's find out which view_x they current are in
+			if($isVolunteer){
+				/* get the users's profile post*/
+				$profile_post_id = get_user_meta($user_ID, 'profile_post_id', true); //user profile post id
+				// get the post type for this profile post
+				$profilePostType = get_post_type( $profile_post_id );
+				switch ($profilePostType) {
+					case 'view_0' :
+						$showcontact = false;
+						$express_opp_button = true;
+						break;
+					case 'view_1' :
+						$showcontact = false;
+						$express_opp_button = true;
+						break;
+					case 'view_2' :
+						$showcontact = false;
+						$express_opp_button = true;
+						break;
+					case 'view_3' :
 						$showcontact = true;
+						$express_opp_button = true;
+						break;
+					case 'view_4' :
+						$showcontact = false;
 						$express_opp_button = false;
-					}		
-				}// else user is not logged in
-				
-				if (et_get_option ( 'divi_integration_single_bottom' ) != '' && et_get_option ( 'divi_integrate_singlebottom_enable' ) == 'on')
-					echo (et_get_option ( 'divi_integration_single_bottom' ));
-				$no_of_opportunities = get_post_meta ( get_the_ID (), "no_of_opportunities", true );
-				if ($no_of_opportunities > 0) {
-					?>
+						break;
+					case 'view_5' :
+						$showcontact = false;
+						$express_opp_button = false;
+						break;
+					case 'view_6' :
+						$showcontact = false;
+						$express_opp_button = false;
+						break;
+					case 'view_7' :
+						$showcontact = false;
+						$express_opp_button = false;
+						break;
+				}
+				if($express_opp_button){ //we need to see if this opportunity has already been selected
+					$allexpressOpportunities = get_post_meta( $profile_post_id, 'express_opportunities', true ); // All Express Opportunities
+					$allexpressOpportunities_id = array();
+					if (sizeof($allexpressOpportunities) > 0 && is_array($allexpressOpportunities)) {
+						foreach($allexpressOpportunities as $key=>$expressOpportunity) {
+							$expressOpportunitiesID = $expressOpportunity['express_opportunity'];
+							$allexpressOpportunities_id[] = $expressOpportunitiesID;                             
+						}
+					}
+					//chekc if the current oppotunity being displayed, id=$oppID, is in expresses Oppornities of volunteer profile
+					if(in_array($oppID,$allexpressOpportunities_id)):
+						$is_opportunity_selected =true; // Check here Opportunity Exists or Not
+					endif;
+				}
+			}else if ( current_user_can( 'manage_options' ) ) {
+				/** SHOW THE CONTACT INFORMATION ALWAYS IF USER IS AN ADMIN **/
+				$showcontact = true;
+				$express_opp_button = false;
+			}		
+		}// else user is not logged in
+		
+		if (et_get_option ( 'divi_integration_single_bottom' ) != '' && et_get_option ( 'divi_integrate_singlebottom_enable' ) == 'on')
+			echo (et_get_option ( 'divi_integration_single_bottom' ));
+		$no_of_opportunities = get_post_meta ( get_the_ID (), "no_of_opportunities", true );
+		if ($no_of_opportunities > 0) {?>
 				<style>
 				.et_pb_column_2_4 {
 					width: 450px;
@@ -187,7 +188,7 @@
 								</div>
 							</div>
 							<?php endif;?>
-							<?php if ($terms_skills_gain && $showcontent===true) : ?>
+							<?php if ($terms_skills_gain ) : ?>
 							<div>
 								<p>
 									<strong>Skills gained</strong>
@@ -212,14 +213,15 @@
 						</div>
 						<!-- End Row 2 -->
 					</div>
-					<?php if ($showcontent===true) { ?>
+		<?php  //Logged in users content ------------
+			if ($showcontent) { ?>
 					<div class="et_pb_row_inner">
 						<!-- Row 3 -->
 						<div class="et_pb_column et_pb_column_3_8 et_pb_column_inner">
 							<p>
 								<strong>Area</strong>
 							</p>
-													<?php
+					<?php
 					if ($terms_work_area && ! is_wp_error ( $terms_work_area )) {
 						$i = 0;
 						foreach ( $terms_work_area as $terms_work_area ) {
@@ -393,20 +395,14 @@
 						<?php if ($terms_number_of_volunteers && ! is_wp_error($terms_number_of_volunteers)) { ?>
 						<div class="et_pb_column et_pb_column_3_8 et_pb_column_inner">
 							<p>
-								<strong>Number of volunteers needed</strong>
+								<strong>Number of volunteers needed: </strong><?php echo $terms_number_of_volunteers; ?>
 							</p>
-							<div>
-								<p>
-									<?php echo $terms_number_of_volunteers; ?>
-								</p>
-							</div>
 						</div>
 						<?php } ?>
-						
 						<!-- end Row 9 -->
 					</div>
-					<?php } ?>
-					<?php if ( $showcontact ) {	 ?>
+		<?php } //Logged in users content ------------END -------------------
+				if ( $showcontact ) {	 ?>
 					<div class="et_pb_row_inner">
 						<!-- Row 10 -->
 						<div class="et_pb_column et_pb_column_4_4 et_pb_column_inner">
@@ -430,7 +426,7 @@
 								<img src="<?php echo $loading_image ?>" alt="">
 							</div>
 							<input type="checkbox" name="<?php echo wp_get_current_user()->ID ?>" value="<?php echo $oppID; ?>" id="select-icon" <?php if($is_opportunity_selected): ?> checked='checked' <?php endif;?> /> 
-								<label for="select-icon"></label>
+									<label for="select-icon"></label>
 								<label class="opp-click-info">Click to select this opportunity</label>
 								<label class="oppselected">Click to unselect this opportunity.</label>
 								<p class="opp-click-info">By toggling the logo on, you can register interest in this opportunity.
@@ -443,16 +439,16 @@
 					</div>
 					<?php } ?>						
 				</article>
-				<!-- .et_pb_post -->
-				<?php
-				} else {
-					echo "Sorry, This Opportunity is already taken";
-				}
-				if (et_get_option ( 'divi_integration_single_bottom' ) != '' && et_get_option ( 'divi_integrate_singlebottom_enable' ) == 'on')
-					echo (et_get_option ( 'divi_integration_single_bottom' ));
-			endwhile
-			;
-			?>
+		<!-- .et_pb_post -->
+		<?php
+		} else {
+			echo "Sorry, This Opportunity is already taken";
+		}
+		if (et_get_option ( 'divi_integration_single_bottom' ) != '' && et_get_option ( 'divi_integrate_singlebottom_enable' ) == 'on')
+			echo (et_get_option ( 'divi_integration_single_bottom' ));
+	endwhile
+	;
+	?>
 			</div>
 		</div>
 		<!-- #content-area -->
