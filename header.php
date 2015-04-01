@@ -41,7 +41,7 @@
 	
 </head>
 <body <?php body_class(); ?>>
-	<?php if( echo_admin() ) printf( '<div><strong>Current template:</strong> %s</div>', get_current_template() ); ?>
+	<?php //if( echo_admin() ) printf( '<div><strong>Current template:</strong> %s</div>', get_current_template() ); ?>
 	<div id="page-container">
 <?php
 	if ( is_page_template( 'page-template-blank.php' ) ) {

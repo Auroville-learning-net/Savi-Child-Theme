@@ -10,8 +10,7 @@
 			<?php the_post (); ?>
 			<?php
 				$unit_title = get_the_title();
-				$unit_abbrev = get_post_meta(get_the_ID(), "unit_short_name", true);
-				if ($unit_abbrev <> "" ) $unit_abbrev = "(" . $unit_abbrev . ")";
+
 				$contactperson = get_post_meta ( get_the_ID (), "unit_name", true );
 				$contactperson_phone = get_post_meta ( get_the_ID (), "contact_number", true );
 				$contactperson_email = get_post_meta ( get_the_ID (), "contact_email", true );
@@ -56,7 +55,7 @@
 				<article id="post-<?php the_ID(); ?>" <?php post_class( 'et_pb_post' ); ?>>
 					<div class="et_pb_row_inner">
 						<div class="et_pb_column et_pb_column_4_4 et_pb_column_inner">
-							<h1><?php echo $unit_title . " " . $unit_abbrev; ?></h1>
+							<h1><?php echo $unit_title; ?></h1>
 						</div>
 					</div>
 					<div class="et_pb_row_inner">

@@ -93,8 +93,22 @@ function savi_load_scripts_in_footer(){
 		case is_page( 'opportunity-selection-preference' ): 
 			savi_javascript_sortable_list();
 			break;
+		case is_front_page():
+			?>
+ <script>
+		jQuery(document).ready(function($) {
+			var slideTextH = $(".home .et_pb_slide_description").height();
+			var headerH = $("header").height();
+			var slideTextTopPadding= parseInt($(".home .et_pb_slide_description").css('padding-top'));
+			var windowReminder = $( window ).height() - slideTextH - headerH - slideTextTopPadding;
+			$(".home .et_pb_slide_description").css('padding-bottom',windowReminder+'px');
+		 });
+</script>
+		<?php
+			break;
 	}
 }
+
 function savi_javascript_sortable_list($id="sortable", $fieldId="orderedOpps", $editable=false){ ?>
  <script>
 		jQuery(document).ready(function($) {
@@ -444,31 +458,96 @@ add_action( 'wp_ajax_savi_volunteer_update_order', 'savi_volunteer_update_order'
 }
 /**/
 // [OpportunityCount]
-function OpportunityCount_funtion() { 
+function get_opportunity_count() { 
 	$post_type = 'av_opportunity';
 	$term_slug = 'opportunity_status';
 	global $wpdb;
-	$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM wp_posts wp
+	$count = $wpdb->get_col($wpdb->prepare("SELECT COUNT(*) FROM wp_posts wp
 								INNER JOIN wp_postmeta wpm
-								ON (wp.ID = wpm.post_id AND wpm.meta_key ='".$term_slug."' AND wpm.meta_value = 'opened')
+								ON (wp.ID = wpm.post_id AND wpm.meta_key ='%s' AND wpm.meta_value = 'opened')
 								AND wp.post_status='publish'
-								WHERE wp.post_type ='".$post_type."'"));
-    return $count;
+								WHERE wp.post_type ='%s'",$term_slug,$post_type));
+    return $count[0];
 }
-add_shortcode( 'OpportunityCount', 'OpportunityCount_funtion' );
+add_shortcode( 'OpportunityCount', 'get_opportunity_count' );
 
+//[OpportunityCounter color="" bgColor="" textColor=""]
+function display_opp_counter($atts){
+	wp_enqueue_script( 'easypiechart' );
+	$a = shortcode_atts( array(
+        'color' => '#ff7200',
+		'bgColor' => 'transparent',
+		'textColor' => '#606060',
+		'title' => 'Opportunities',
+    ), $atts );
+	$count=get_opportunity_count();
+	$output ='
+	<div class="et_pb_number_counter et_pb_bg_layout_light opportunityCounter" data-number-value="'.$count.'" style="background-color:'.$a["bgColor"].';">
+		<div class="percent" style="color:'.$a["color"].';"><p style="visibility: hidden;"><span class="percent-value">'.$count.'</span></p></div>
+		<h3 style="color:'.$a["textColor"].';">'.$a["title"].'</h3>
+		<canvas width="0" height="0"></canvas>
+	</div>';
+	return $output;
+}
+add_shortcode( 'OpportunityCounter', 'display_opp_counter' );
+
+//[UnitsCounter color="" bgColor="" textColor=""]
+function display_unit_counter($atts){
+	wp_enqueue_script( 'easypiechart' );
+	$atts = shortcode_atts( array(
+        'color' => '#ff7200',
+		'bgColor' => 'transparent',
+		'textColor' => '#606060',
+		'title' => 'Units',
+    ), $atts );
+	$count=get_unit_count();
+	$output ='
+	<div class="et_pb_number_counter et_pb_bg_layout_light unitCounter" data-number-value="'.$count.'" style="background-color:'.$atts["bgColor"].';">
+		<div class="percent" style="color:'.$atts["color"].';"><p style="visibility: hidden;"><span class="percent-value">'.$count.'</span></p></div>
+		<h3 style="color:'.$atts["textColor"].';">'.$atts["title"].'</h3>
+		<canvas width="0" height="0"></canvas>
+	</div>';
+	return $output;
+}
+add_shortcode( 'UnitsCounter', 'display_unit_counter' );
+
+//[WorkshopCounter color="" bgColor="" textColor=""]
+function display_workshop_counter($atts){
+	wp_enqueue_script( 'easypiechart' );
+	$a = shortcode_atts( array(
+        'color' => '#ff7200',
+		'bgColor' => 'transparent',
+		'textColor' => '#606060',
+		'title' => 'Workshops',
+    ), $atts );
+	$count=0;
+	$events = wp_count_posts('ai1ec_event');
+	if( isset($events) ) $count=$events->publish;
+	$output ='
+	<div class="et_pb_number_counter et_pb_bg_layout_light unitCounter" data-number-value="'.$count.'" style="background-color:'.$a["bgColor"].';">
+		<div class="percent" style="color:'.$a["color"].';">
+			<p style="visibility: hidden;"><span class="percent-value">'.$count.'</span></p>
+		</div>
+		<h3 style="color:'.$a["textColor"].';">'.$a["title"].'</h3>
+		<canvas width="0" height="0"></canvas>
+	</div>';
+	return $output;
+}
+add_shortcode( 'WorkshopCounter', 'display_workshop_counter' );
 
 // [UnitCount]
-function UnitCount_funtion() { 
+function get_unit_count() {
 	$post_type = 'av_unit';
 	global $wpdb;
-	$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM wp_posts wp WHERE wp.post_type ='".$post_type."'"));
-    return $count;
+	$count = $wpdb->get_col($wpdb->prepare("SELECT COUNT(*) FROM wp_posts wp WHERE wp.post_type ='%s'",$post_type));
+	
+    return $count[0];
 }
-add_shortcode( 'UnitCount', 'UnitCount_funtion' );
+add_shortcode( 'UnitCount', 'get_unit_count' );
 
 //custom taxonomy custom post counts
 function get_work_area_count($post_type, $term_id){
+	$sql="";
 	switch($post_type){
 		case "av_project":
 			$sql =  get_savi_taxonomy_count_sql("savi_opp_cat_work_area", $term_id, "projectname");
@@ -483,9 +562,28 @@ function get_work_area_count($post_type, $term_id){
 			$sql=get_savi_taxonomy_count_sql_default("savi_opp_cat_work_area", $term_id);  
 			break;
 	}
+	//echo '<pre>'.$sql.'</pre>';
 	global $wpdb;
-	$count = $wpdb->get_var($wpdb->prepare($sql));
-	return $count;
+	$count = $wpdb->get_col($wpdb->prepare($sql,$term_id,$term_id));
+	return $count[0];
+}
+function get_work_type_count($post_type, $term_id){
+	$sql="";
+	switch($post_type){
+		case "av_project":
+			$sql =  get_savi_taxonomy_count_sql("savi_opp_cat_work_type", $term_id, "projectname");
+			break;
+		case "av_unit":
+			$sql =  get_savi_taxonomy_count_sql("savi_opp_cat_work_type", $term_id, "av_unit");
+			break;
+		default : //"av_opportunity"
+			$sql=get_savi_taxonomy_count_sql_default("savi_opp_cat_work_type", $term_id);  
+			break;
+	}
+	//echo '<pre>'.$sql.'</pre>';
+	global $wpdb;
+	$count = $wpdb->get_col($wpdb->prepare($sql,$term_id,$term_id));
+	return $count[0];
 }
 /*
  * Function to retrieve the sql string for projects/units with opportunities either in work type, work_area, languages, softwares
@@ -499,18 +597,18 @@ function get_savi_taxonomy_count_sql($taxonomy, $term_ID, $meta_key){
 	$sql_query .="FROM	wp_postmeta parentmeta,";
 	$sql_query .="	wp_postmeta opstatus,";
 	$sql_query .="	wp_posts,";
-	$sql_query .="	(select object_id from wp_term_relationships, wp_term_taxonomy ";
-	$sql_query .="		where  	wp_term_taxonomy.term_id = ".$term_ID;
+	$sql_query .="	(select DISTINCT object_id from wp_term_relationships, wp_term_taxonomy ";
+	$sql_query .="		where  	wp_term_taxonomy.term_id = %d OR wp_term_taxonomy.parent = %d)";
 	$sql_query .="		and 	wp_term_taxonomy.taxonomy = '".$taxonomy."'";
-	$sql_query .="		and		wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id) termtaxonomy";
-	$sql_query .="WHERE	opstatus.post_id = termtaxonomy.object_id";
-	$sql_query .="AND		opstatus.meta_key = 'opportunity_status'";
-	$sql_query .="AND		opstatus.meta_value = 'opened'		";
-	$sql_query .="AND		parentmeta.post_id = termtaxonomy.object_id";
-	$sql_query .="AND		parentmeta.meta_key = '".$meta_key."'";
-	$sql_query .="AND		wp_posts.ID = termtaxonomy.object_id";
+	$sql_query .="		and		wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id) termtaxonomy ";
+	$sql_query .="WHERE	opstatus.post_id = termtaxonomy.object_id ";
+	$sql_query .="AND		opstatus.meta_key = 'opportunity_status' ";
+	$sql_query .="AND		opstatus.meta_value = 'opened' ";
+	$sql_query .="AND		parentmeta.post_id = termtaxonomy.object_id ";
+	$sql_query .="AND		parentmeta.meta_key = '".$meta_key."' ";
+	$sql_query .="AND		wp_posts.ID = termtaxonomy.object_id ";
 	$sql_query .="AND		wp_posts.post_status = 'publish'";
-	$sql_query .="AND		wp_posts.post_type = 'av_opportunity'";
+	$sql_query .="AND		wp_posts.post_type = 'av_opportunity' ";
 	if($meta_key==="projectname") $sql_query .="AND     parentmeta.meta_value > 0";
 	return $sql_query;
 }
@@ -523,16 +621,16 @@ function get_savi_taxonomy_count_sql($taxonomy, $term_ID, $meta_key){
 function get_savi_taxonomy_count_sql_default($taxonomy, $term_ID){
 	$sql_query = "SELECT count(DISTINCT wp_posts.ID) ";
 	$sql_query .="FROM	wp_postmeta opstatus,wp_posts,";
-	$sql_query .="	(select object_id from wp_term_relationships, wp_term_taxonomy ";
-	$sql_query .="		where  	wp_term_taxonomy.term_id = ".$term_ID;
+	$sql_query .="	(select DISTINCT object_id from wp_term_relationships, wp_term_taxonomy ";
+	$sql_query .="		where  	(wp_term_taxonomy.term_id = %d OR wp_term_taxonomy.parent = %d)";
 	$sql_query .="		and 	wp_term_taxonomy.taxonomy = '".$taxonomy."'";
-	$sql_query .="		and		wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id) termtaxonomy";
-	$sql_query .="WHERE	opstatus.post_id = termtaxonomy.object_id";
-	$sql_query .="AND		opstatus.meta_key = 'opportunity_status'";
-	$sql_query .="AND		opstatus.meta_value = 'opened'		";
-	$sql_query .="AND		wp_posts.ID = termtaxonomy.object_id";
-	$sql_query .="AND		wp_posts.post_status = 'publish'";
-	$sql_query .="AND		wp_posts.post_type = 'av_opportunity'";
+	$sql_query .="		and		wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id) termtaxonomy ";
+	$sql_query .="WHERE	opstatus.post_id = termtaxonomy.object_id ";
+	$sql_query .="AND		opstatus.meta_key = 'opportunity_status' ";
+	$sql_query .="AND		opstatus.meta_value = 'opened' ";
+	$sql_query .="AND		wp_posts.ID = termtaxonomy.object_id ";
+	$sql_query .="AND		wp_posts.post_status = 'publish' ";
+	$sql_query .="AND		wp_posts.post_type = 'av_opportunity' ";
 	return $sql_query;
 }
 /*
@@ -545,12 +643,12 @@ function get_event_taxonomy_count_sql_default($opp_work_area_term_ID){
 	$sql_query = "SELECT count(DISTINCT wp_posts.ID) ";
 	$sql_query .="FROM	wp_term_taxonomy, wp_terms, wp_term_relationships,wp_posts,";
 	$sql_query .="	(select concat(wp_terms.slug , 'wa_' , wp_terms.term_id) slug from wp_terms ";
-	$sql_query .="		where	wp_terms.term_id = ".$opp_work_area_term_ID."	) eventsSlug";
-	$sql_query .="WHERE wp_terms.slug = eventsSlug.slug";
-	$sql_query .="AND   wp_term_taxonomy.term_id = wp_terms.term_id";
-	$sql_query .="AND   wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id";
-	$sql_query .="AND   wp_term_relationships.object_id = wp_posts.ID";
-	$sql_query .="AND	wp_posts.post_status = 'publish'";
+	$sql_query .="		where	wp_terms.term_id = ".$opp_work_area_term_ID." and wp_terms.term_id = ".$opp_work_area_term_ID."	) eventsSlug";
+	$sql_query .="WHERE wp_terms.slug = eventsSlug.slug ";
+	$sql_query .="AND   (wp_term_taxonomy.term_id = wp_terms.term_id OR wp_term_taxonomy.parent = wp_terms.term_id)";
+	$sql_query .="AND   wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id ";
+	$sql_query .="AND   wp_term_relationships.object_id = wp_posts.ID ";
+	$sql_query .="AND	wp_posts.post_status = 'publish' ";
 	return $sql_query;
 }
 /*

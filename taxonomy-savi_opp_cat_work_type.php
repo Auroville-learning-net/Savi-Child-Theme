@@ -35,7 +35,7 @@ switch ($postType) { // step 1:check if client wants Events
 				</div>
 			<div class="et_pb_column et_pb_column_3_4">
 
-				<h2><?php echo $postName;?> for type : <?php single_cat_title(); ?></h2>
+				<h2><?php echo get_work_type_count($postType,$term->term_id).' '.$postName;?> for type : <?php single_cat_title(); ?></h2>
 				<div id="opportunities">
 					<?php
 					
