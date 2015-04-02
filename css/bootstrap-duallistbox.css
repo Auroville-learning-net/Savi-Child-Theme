@@ -1,0 +1,31 @@
+.main-input{
+	width: 100%;
+}
+.main-input .left-select{
+	display: inline-block;
+	width: 40%;
+}
+.main-input .left-select #to_select_list{
+	height: 150px;
+	width: 100%;
+}
+.main-input .middle{
+	display: inline-block;
+	position: relative;
+	top: -85px;
+}
+.main-input .middle input{
+	font-size: 8px;
+}
+.main-input .right-select {
+	display: inline-block;
+	width: 50%;
+}
+.main-input .right-select #from_select_list{
+	height: 150px;
+	width: 100%;
+	max-width: auto;
+}
+.main-input .right-select p,.main-input .left-select p{
+	width: 300px;
+}
