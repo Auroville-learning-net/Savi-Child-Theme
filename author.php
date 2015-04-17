@@ -1,18 +1,24 @@
 <?php
 $curauth = (isset($_GET['author_name'])) ? get_user_by('slug', $author_name) : get_userdata(intval($author));
 $user_ID = $curauth->ID; // get the user id
+$savi_role = get_usermeta($user_ID, 'savi_role', true);
  get_header(); ?>
  <div id="main-content">
-	<div class="container">
-		<div id="content-area" class="clearfix">
-			<div id="left-area">
+	<div class="et_pb_section et_section_specialty">
+
+		<div class="et_pb_row">
+			<div class="et_pb_column et_pb_column_1_4">
+					<?php get_sidebar(); ?>
+			</div>
+			<div class="et_pb_column et_pb_column_3_4">
 				<?php
-					if ( is_user_logged_in() ) {
+					if ( is_user_logged_in() && $savi_role == "volunteers" ) {
 							?>
 							<article id="post-<?php the_ID(); ?>" <?php post_class( 'et_pb_post' ); ?>>
 								<?php
 									$profile_post_id = get_user_meta($user_ID, 'profile_post_id', true); // get the profile post id
 								//	echo $profile_post_id;
+									$user_email = get_the_author_meta( 'user_email', $user_ID );
 									$terms_work_area = FrmProEntriesController::get_field_value_shortcode(array('field_id' => 467, 'user_id' => $user_ID)); // get the work area
 									$terms_work_type = FrmProEntriesController::get_field_value_shortcode(array('field_id' => 468, 'user_id' => $user_ID)); // get the work type
 									$education = FrmProEntriesController::get_field_value_shortcode(array('field_id' => 414, 'user_id' => $user_ID)); // get the education
@@ -24,14 +30,16 @@ $user_ID = $curauth->ID; // get the user id
 									$skills = get_post_meta($profile_post_id, "savi_views_skills_fields-of-interest", true ); // get the skills
 									$motivations = get_post_meta($profile_post_id, "savi_views_motivations_goals-skills-to-be-gained", true ); // get the motivations
 									$internship = get_post_meta( $profile_post_id, "savi_views_education-details_intership", true ); // get the internship
+									$phone_number = get_post_meta( $profile_post_id, "savi_views_contact-details_phone-number", true ); // get the phone number
+									$phone_number_in_india = get_post_meta( $profile_post_id, "savi_views_contact-details_phone-number-in-india", true ); // get the phone number in india
 									$showinfo = FALSE;	
 									$profilepost = get_post_type( $profile_post_id ); // get the post type
 									switch($profilepost){
 										case 'view_0':
-											$showinfo=true;
+											$showinfo=false;
 										break;
 										case 'view_1':
-											$showinfo=true;
+											$showinfo=false;
 										break;
 										case 'view_2':
 											$showinfo=true;
@@ -40,7 +48,7 @@ $user_ID = $curauth->ID; // get the user id
 											$showinfo=true;
 										break;
 										case 'view_4':
-											$showinfo=true;		
+											$showinfo=false;		
 										break;
 										case 'view_5':
 											$showinfo=true;
@@ -58,6 +66,9 @@ $user_ID = $curauth->ID; // get the user id
 									echo '<h2>Contact</h2>';
 									echo '<h6><span class="bold">Full Name: '.$first_name .' '.$last_name.'</h6>';
 									echo '<h6><span class="bold">Nationality:</span> '.$nationality.'</h6>';
+									echo '<h6><span class="bold">Phone Number:</span> '.$phone_number.'</h6>';
+									if($phone_number_in_india) echo '<h6><span class="bold">Phone Number in India:</span> '.$phone_number_in_india.'</h6>';
+									echo '<p><span class="bold">Email:</span> <a href="mailto:'.$user_email.'">'.$user_email.'</a></p>';
 									echo '<h6><span class="bold">Stay duration:</span> '.$stay_duration.'</h6>';
 									// Displaying Work area
 									if( $terms_work_area == 'savi0'){
@@ -79,7 +90,7 @@ $user_ID = $curauth->ID; // get the user id
 										}
 										else{
 											 // display single terms starts 
-											echo '<h6><span class="bold">Work Area:</span> '. $terms_work_area.'</h6>'; 
+											echo '<h6><span class="bold">Work Area:</span> '. get_term( $terms_work_area, 'savi_opp_cat_work_type' )->name.'</h6>'; 
 										}
 									}
 									// Displaying Work type
@@ -98,7 +109,7 @@ $user_ID = $curauth->ID; // get the user id
 										// display array of terms ends
 									}else{
 										// display single terms starts 
-										echo '<h6><span class="bold">Work Area:</span> '. $terms_work_type.'</h6>'; 
+										echo '<h6><span class="bold">Work Area:</span> '. get_term( $terms_work_type, 'savi_opp_cat_work_type' )->name.'</h6>'; 
 									}
 									echo '<h6><span class="bold">Skills:</span> '.$skills.'</h6>';
 									echo '<h6><span class="bold">Motivation:</span> '.$motivations.'</h6>';
@@ -115,10 +126,9 @@ $user_ID = $curauth->ID; // get the user id
 						?>
 							</article> <!-- .et_pb_post -->
 							
-			</div> <!-- #left-area -->
-			<?php get_sidebar(); ?>
-		</div> <!-- #content-area -->
-	</div> <!-- .container -->
+			</div> <!-- et_pb_column_3_4 -->
+		</div> <!-- et_pb_row -->
+	</div> <!-- et_pb_section -->
 </div> <!-- #main-content -->
  
 <?php get_footer(); ?> ?>
