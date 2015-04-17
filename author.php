@@ -34,12 +34,15 @@ $savi_role = get_usermeta($user_ID, 'savi_role', true);
 									$phone_number_in_india = get_post_meta( $profile_post_id, "savi_views_contact-details_phone-number-in-india", true ); // get the phone number in india
 									$showinfo = FALSE;	
 									$profilepost = get_post_type( $profile_post_id ); // get the post type
+									$message = "Volunteer profile details.";
 									switch($profilepost){
 										case 'view_0':
 											$showinfo=false;
+											$message = "This volunteer is still filling up their profile";
 										break;
 										case 'view_1':
 											$showinfo=false;
+											$message = "This volunteer is still filling up their profile";
 										break;
 										case 'view_2':
 											$showinfo=true;
@@ -48,7 +51,8 @@ $savi_role = get_usermeta($user_ID, 'savi_role', true);
 											$showinfo=true;
 										break;
 										case 'view_4':
-											$showinfo=false;		
+											$showinfo=false;
+											$message = "This volunteer is no longer active, please contact the Savi team.";
 										break;
 										case 'view_5':
 											$showinfo=true;
@@ -63,7 +67,7 @@ $savi_role = get_usermeta($user_ID, 'savi_role', true);
 								if ( $showinfo ) {	 ?>
 									<div class="profile-view">
 								<?php 
-									echo '<h2>Contact</h2>';
+									echo '<h2>'.$message.'</h2>';
 									echo '<h6><span class="bold">Full Name: '.$first_name .' '.$last_name.'</h6>';
 									echo '<h6><span class="bold">Nationality:</span> '.$nationality.'</h6>';
 									echo '<h6><span class="bold">Phone Number:</span> '.$phone_number.'</h6>';
@@ -118,7 +122,7 @@ $savi_role = get_usermeta($user_ID, 'savi_role', true);
 									echo '<h6><span class="bold">Internship:</span> '.$internship.'</h6>';
 								?>
 								</div>
-						<?php 	}
+						<?php 	}else echo '<h2>'.$message.'</h2>';
 						 
 						}else{
 									echo '<h2>This page only for logged in mentor</h2>';
