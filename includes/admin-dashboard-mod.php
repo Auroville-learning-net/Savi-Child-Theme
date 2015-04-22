@@ -1258,6 +1258,8 @@ function savi_page_settings_pdf_email() {
                 echo " </div>";
                 echo "<div class='rwmb-input'>\n";
                     echo "<input type='text' name='test_mentor_email' id='test_mentor_email' value='$test_mentor_email'/>";
+					echo "<p>Set an email for all automated mails to be rerouted to this mail: No volunteers or mentors will receive mails.<br/>";
+					echo "Leave empty and automated mails will be sent to the right recipeient.</p>";
                 echo "</div>";
   echo "</div>";
   
@@ -1621,8 +1623,11 @@ function savi_received__visa_request_letter() {
 				 $blog_title = get_bloginfo('name');
 				 $TemplateTitle = get_the_title($templatePage);
 				 $subject = $blog_title." - ".$TemplateTitle;
-     			 wp_mail($clientEmail, $subject, $printContent);	
-				  
+				 $mail_headers[]='From: Auroville Learning Network <'. get_option( 'admin_email' ).'>' . "\r\n";
+				//Check if this is a test site
+			   $test_mentor_email = get_option("test_mentor_email");
+			   if($test_mentor_email!="") wp_mail($test_mentor_email, $subject, $printContent, $mail_headers);
+			   else wp_mail($clientEmail, $subject, $printContent, $mail_headers);
 				  echo $action;
 			  else:
 			     echo "already_receipt_sealed_enveloped_confirmed";

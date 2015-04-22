@@ -229,10 +229,35 @@ add_filter('frm_validate_field_entry', 'savi_validate_email', 10, 3);
 function savi_validate_email($errors, $posted_field, $posted_value){
 	if($posted_field->id == 268){ //email id field
 		$email = $_POST['item_meta'][268];
-		if(email_exists( $email )) $errors['field'. $posted_field->id] = 'This email has already been registered, please contact us!';
+		$error_message = "";
+		if(email_exists( $email )){
+			$errors['field'. $posted_field->id] = 'This email has already been registered, please contact us!';
+		}else{
+			$error_message = check_email_exits_view_0($email);
+			if(!empty($error_message)) $errors['field'. $posted_field->id] =$error_message;
+		}
 	}
 	return $errors;
-}/*
+}
+ 
+function check_email_exits_view_0($email){
+	$args = array(
+		'post_type' => 'view_0',
+		'meta_query' => array(
+							array(
+								'key'     => 'savi_views_contact-details_email',
+								'value'   => $email,
+								'meta_compare' => '=',
+							),
+						),
+	);
+	$query = new WP_Query( $args );
+	if ( $query->have_posts() ) return  'This email has already been registered, please contact us!'; 
+	return "";
+	
+}
+
+/*
 -----------------------MANAGE DATA Submitted by forms ---------------------------
 */
 add_action('frm_after_create_entry', 'save_opportunity_ordered_list', 30, 2);
@@ -313,32 +338,40 @@ function savi_skills_workarea_styles(){ ?>
 			  $("#field_f8138t2").datepicker({
 				dateFormat: "dd/mm/yy",
 					onSelect: function(arrival_date, instance){
-						date = $.datepicker.parseDate(instance.settings.dateFormat, arrival_date, instance.settings);
-						date.setMonth(date.getMonth() + floatinduration);
-						$("#field_gg05en2").datepicker("setDate", date);
-						arrival_date = $(this).attr('value');
+						$(this).change();
 					}
+				}).on("change", function() {
+					changeDepartureDate();
 				});
+				function changeDepartureDate(){
+				    date = $.datepicker.parseDate("dd/mm/yy", $( "#field_f8138t2" ).val()); //arrival date
+				    date.setMonth(date.getMonth() + floatinduration); //add the number of months planned on staying
+				    $("#field_gg05en2").datepicker("setDate", date); //departure date
+				}
 				//Math for month difference departure_date - arrival date (Volunteer Profile Registration Form)
-				function monthDiff(d1, d2) {
+				function changeStayLength() {
+				    d1 = $.datepicker.parseDate("dd/mm/yy", $( "#field_f8138t2" ).val()); //arrival date
+				    d2 = $.datepicker.parseDate("dd/mm/yy", $( "#field_gg05en2" ).val()); //departure date
+					if ($( "#field_f8138t2" ).val() =="") return;  //arrival date not filled do nothing
 					var months;
 					months = (d2.getFullYear() - d1.getFullYear()) * 12;
 					months -= d1.getMonth() + 0;
 					months += d2.getMonth();
 					days = d2.getDate() - d1.getDate();
 					months += Math.round(10* (days / 365) * 12)/10; 
-					return months <= 0 ? 0 : months; 
+					diff = ( months <= 0 ? 0 : months );
+					$('#field_wu6ol42').attr('value',diff);
 				}
 				
 				//departure_date for Volunteer Profile Registration Form
 				$("#field_gg05en2").datepicker({
 					dateFormat: "dd/mm/yy",
 					onSelect: function(departure_date, instance) {	
-						d1 = $.datepicker.parseDate("dd/mm/yy", $( "#field_f8138t2" ).val());
-						d2 = $.datepicker.parseDate("dd/mm/yy", $( "#field_gg05en2" ).val());
-						$('#field_wu6ol42').attr('value', monthDiff(d1, d2));
+						$(this).change();
 					}
-				})
+				}).on("change", function() {
+					changeStayLength();
+				});
 			});
 			
 			//Nationality field initial Registration Form
