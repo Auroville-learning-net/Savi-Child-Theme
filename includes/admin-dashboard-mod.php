@@ -1624,10 +1624,10 @@ function savi_received__visa_request_letter() {
 				 $TemplateTitle = get_the_title($templatePage);
 				 $subject = $blog_title." - ".$TemplateTitle;
 				 $mail_headers[]='From: Auroville Learning Network <'. get_option( 'admin_email' ).'>' . "\r\n";
-				//Check if this is a test site
+     			 //Check if this is a test site
 			   $test_mentor_email = get_option("test_mentor_email");
 			   if($test_mentor_email!="") wp_mail($test_mentor_email, $subject, $printContent, $mail_headers);
-			   else wp_mail($clientEmail, $subject, $printContent, $mail_headers);
+			   else wp_mail($clientEmail, $subject, $printContent, $mail_headers); 
 				  echo $action;
 			  else:
 			     echo "already_receipt_sealed_enveloped_confirmed";
