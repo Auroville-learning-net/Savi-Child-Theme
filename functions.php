@@ -29,7 +29,10 @@ function isBetaSite(){
 }
 
 /* Disable WordPress Admin Bar for all users but admins. */
-add_filter('show_admin_bar', '__return_false');
+function savi_admin_bar($content) {
+    return current_user_can( 'edit_pages' );
+}
+add_filter( 'show_admin_bar' , 'savi_admin_bar'); 
 /*
 functions to access the current page being viewed for development purpose,
 when admin is logged in these fucntions are called from the header file to display the page being seen.
