@@ -28,7 +28,7 @@ function isBetaSite(){
 	return false;
 }
 
-/* Disable WordPress Admin Bar for all users but admins. */
+/* Disable WordPress Admin Bar for all users except administrator and editor. */
 function savi_admin_bar($content) {
     return current_user_can( 'edit_pages' );
 }
